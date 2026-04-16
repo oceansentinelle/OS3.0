@@ -1,0 +1,47 @@
+# =====================================================
+# Ocean Sentinel - GitIgnore
+# =====================================================
+
+# Fichiers de configuration sensibles
+.env
+*.env
+!.env.example
+
+# Données PostgreSQL
+/data/
+/opt/oceansentinel/data/
+
+# Logs
+*.log
+pg_log/
+logs/
+
+# Backups
+*.backup
+*.sql.gz
+*.dump
+
+# Certificats SSL
+*.key
+*.crt
+*.pem
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker
+docker-compose.override.yml
+
+# Temporaires
+*.tmp
+*.temp
+.cache/

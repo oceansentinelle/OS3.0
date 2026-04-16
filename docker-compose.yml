@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: oceansentinel_timescaledb
+    restart: unless-stopped
+    
+    environment:
+      # Authentification sécurisée
+      POSTGRES_USER: ${POSTGRES_USER:-oceansentinel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Variable POSTGRES_PASSWORD requise}
+      POSTGRES_DB: ${POSTGRES_DB:-oceansentinelle}
+      
+      # Configuration PostgreSQL
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+      
+      # Optimisations TimescaleDB
+      TIMESCALEDB_TELEMETRY: "off"
+      TS_TUNE_MEMORY: "8GB"
+      TS_TUNE_NUM_CPUS: "4"
+      TS_TUNE_MAX_CONNS: "100"
+      TS_TUNE_MAX_BG_WORKERS: "8"
+    
+    ports:
+      # Port non-standard pour sécurité (5432 -> 6543)
+      - "${POSTGRES_PORT:-6543}:5432"
+    
+    volumes:
+      # Persistance des données
+      - timescaledb_data:/var/lib/postgresql/data
+      
+      # Scripts d'initialisation
+      - ./init-scripts:/docker-entrypoint-initdb.d:ro
+      
+      # Configuration personnalisée
+      - ./postgresql-custom.conf:/etc/postgresql/postgresql.conf:ro
+    
+    command: 
+      - "postgres"
+      - "-c"
+      - "config_file=/etc/postgresql/postgresql.conf"
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-oceansentinel} -d ${POSTGRES_DB:-oceansentinelle}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+    # Sécurité : utilisateur non-root
+    user: postgres
+    
+    # Limites de ressources
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 7G
+        reservations:
+          cpus: '2'
+          memory: 4G
+    
+    networks:
+      - oceansentinel_network
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  timescaledb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/oceansentinel/data
+
+networks:
+  oceansentinel_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
