@@ -264,7 +264,9 @@ Write-Host "  - Voir logs orchestrateur:" -ForegroundColor White
 Write-Host "    ssh root@$VPS_IP 'cd /opt/oceansentinel && docker compose -f docker-compose-full.yml logs -f orchestrator'" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "  - Vérifier données:" -ForegroundColor White
-Write-Host "    ssh root@$VPS_IP 'docker exec os_postgres psql -U admin -d oceansentinel -c \"SELECT COUNT(*) FROM raw_ingestion_log;\"'" -ForegroundColor Cyan
+Write-Host '    ssh root@' -NoNewline -ForegroundColor Cyan
+Write-Host $VPS_IP -NoNewline -ForegroundColor Cyan
+Write-Host ' "docker exec os_postgres psql -U admin -d oceansentinel -c \"SELECT COUNT(*) FROM raw_ingestion_log;\""' -ForegroundColor Cyan
 Write-Host ""
 
 Write-Host "📋 Credentials sauvegardés dans .vps_credentials" -ForegroundColor Green
