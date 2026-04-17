@@ -26,7 +26,7 @@ from psycopg2.extras import RealDictCursor
 from psycopg2.pool import SimpleConnectionPool
 
 # Système d'alertes SACS
-from alerts import SACSAlertSystem
+# from alerts import SACSAlertSystem  # TODO: Implémenter plus tard
 
 # Routes
 from api.routes import health as health_routes
@@ -130,8 +130,8 @@ async def lifespan(app: FastAPI):
         logger.info("✅ Pool de connexions créé (1-2 connexions)")
         
         # Initialiser le système d'alertes SACS
-        sacs_alert_system = SACSAlertSystem(db_pool)
-        logger.info("✅ Système d'alertes SACS initialisé")
+        # sacs_alert_system = SACSAlertSystem(db_pool)  # TODO: Implémenter plus tard
+        # logger.info("✅ Système d'alertes SACS initialisé")
         
     except Exception as e:
         logger.error(f"❌ Erreur création pool: {e}")
@@ -349,40 +349,13 @@ async def get_measurement_history(
         logger.error(f"Error fetching history: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/v1/alerts/sacs", tags=["SACS Alerts"])
-async def check_sacs_alerts(station_id: Optional[str] = None):
-    """
-    Vérifie les alertes SACS (Vigilance Écologique)
-    
-    Seuils d'alerte:
-    - pH < 7.8 : Acidification (CRITICAL)
-    - pH < 7.9 : Acidification en approche (WARNING)
-    - Oxygène dissous < 150 µmol/kg : Hypoxie (CRITICAL)
-    - Oxygène dissous < 175 µmol/kg : Hypoxie en approche (WARNING)
-    
-    Args:
-        station_id: ID de la station (optionnel, défaut: toutes)
-    
-    Returns:
-        Dictionnaire des alertes actives
-    """
-    try:
-        alerts = sacs_alert_system.check_all(station_id)
-        
-        return {
-            "status": "checked",
-            "station_id": station_id or "all",
-            "timestamp": datetime.utcnow().isoformat(),
-            "total_alerts": alerts['total'],
-            "alerts": {
-                "ph": [alert.to_dict() for alert in alerts['ph']],
-                "oxygen": [alert.to_dict() for alert in alerts['oxygen']]
-            },
-            "sacs_protocol": True
-        }
-    except Exception as e:
-        logger.error(f"Error checking SACS alerts: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+# @app.get("/api/v1/alerts/sacs", tags=["SACS Alerts"])
+# async def check_sacs_alerts(station_id: Optional[str] = None):
+#     """
+#     Vérifie les alertes SACS (Vigilance Écologique)
+#     TODO: Implémenter plus tard
+#     """
+#     return {"status": "not_implemented", "message": "SACS alerts not yet implemented"}
 
 # ============================================================================
 # POINT D'ENTRÉE
