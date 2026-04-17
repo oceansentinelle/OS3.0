@@ -65,17 +65,17 @@ echo "=== ÉTAPE 3/5 - Configuration ==="
 # Copier .env
 cp .env.full.example .env
 
-# Générer mots de passe sécurisés
+# Générer mots de passe sécurisés (alphanumériques uniquement)
 echo "🔐 Génération mots de passe sécurisés..."
-POSTGRES_PASS=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-32)
-MINIO_PASS=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-32)
-API_SECRET=$(openssl rand -base64 64 | tr -d "=+/" | cut -c1-64)
+POSTGRES_PASS=$(openssl rand -hex 16)
+MINIO_PASS=$(openssl rand -hex 16)
+API_SECRET=$(openssl rand -hex 32)
 
-# Configurer .env
-sed -i "s/POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=$POSTGRES_PASS/" .env
-sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=$POSTGRES_PASS/" .env
-sed -i "s/MINIO_ROOT_PASSWORD=.*/MINIO_ROOT_PASSWORD=$MINIO_PASS/" .env
-sed -i "s/API_SECRET_KEY=.*/API_SECRET_KEY=$API_SECRET/" .env
+# Configurer .env (échapper les caractères spéciaux)
+sed -i "s|POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=${POSTGRES_PASS}|" .env
+sed -i "s|DB_PASSWORD=.*|DB_PASSWORD=${POSTGRES_PASS}|" .env
+sed -i "s|MINIO_ROOT_PASSWORD=.*|MINIO_ROOT_PASSWORD=${MINIO_PASS}|" .env
+sed -i "s|API_SECRET_KEY=.*|API_SECRET_KEY=${API_SECRET}|" .env
 
 # Activer seulement 2 sources au début
 echo "📡 Activation sources (ERDDAP COAST-HF, Hub'Eau)..."
