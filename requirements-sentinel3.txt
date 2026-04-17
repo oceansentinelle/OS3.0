@@ -1,0 +1,17 @@
+# ============================================================================
+# Ocean Sentinel V3.0 - Dépendances Ingestion Sentinel-3
+# ============================================================================
+
+# Base de données
+psycopg2-binary==2.9.9
+
+# Requêtes HTTP
+requests==2.31.0
+
+# Traitement données scientifiques (optionnel pour vraie API Copernicus)
+# numpy==1.24.3
+# xarray==2023.1.0
+# netCDF4==1.6.3
+
+# Logging et monitoring
+python-dotenv==1.0.0
