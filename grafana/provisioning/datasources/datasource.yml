@@ -1,0 +1,22 @@
+# ============================================================================
+# Ocean Sentinel V3.0 - Grafana Datasource Configuration
+# ============================================================================
+# Provisioning automatique de la connexion TimescaleDB
+
+apiVersion: 1
+
+datasources:
+  - name: TimescaleDB Ocean Sentinel
+    type: postgres
+    access: proxy
+    url: timescaledb:5432
+    database: oceansentinelle
+    user: oceansentinel
+    secureJsonData:
+      password: ${POSTGRES_PASSWORD}
+    jsonData:
+      sslmode: 'disable'
+      postgresVersion: 1600
+      timescaledb: true
+    isDefault: true
+    editable: false

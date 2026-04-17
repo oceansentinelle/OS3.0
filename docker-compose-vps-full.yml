@@ -1,0 +1,231 @@
+version: '3.8'
+
+# ============================================================================
+# Ocean Sentinel V3.0 - Configuration VPS Complète
+# ============================================================================
+# Optimisé pour VPS avec contraintes mémoire strictes
+# Services: TimescaleDB + Ingestion + API + Grafana
+# Total RAM: ~640 Mo (avec marge pour 512 Mo + swap)
+# ============================================================================
+
+services:
+
+  # ==========================================================================
+  # BASE DE DONNÉES TIMESCALEDB (Optimisée VPS)
+  # ==========================================================================
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: oceansentinel_timescaledb
+    restart: unless-stopped
+    
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-oceansentinel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Variable POSTGRES_PASSWORD requise}
+      POSTGRES_DB: ${POSTGRES_DB:-oceansentinelle}
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+      TIMESCALEDB_TELEMETRY: "off"
+      
+      # Optimisations mémoire VPS 512 Mo
+      TS_TUNE_MEMORY: "256MB"
+      TS_TUNE_NUM_CPUS: "1"
+      TS_TUNE_MAX_CONNS: "20"
+      TS_TUNE_MAX_BG_WORKERS: "2"
+    
+    ports:
+      - "${POSTGRES_PORT:-6543}:5432"
+    
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d:ro
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-oceansentinel} -d ${POSTGRES_DB:-oceansentinelle}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    networks:
+      - oceansentinel_network
+    
+    # Limites strictes VPS
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+  # ==========================================================================
+  # SERVICE D'INGESTION STREAMING (Optimisé VPS)
+  # ==========================================================================
+  ingestion:
+    build:
+      context: .
+      dockerfile: Dockerfile.ingestion
+    container_name: oceansentinel_ingestion
+    restart: unless-stopped
+    
+    environment:
+      DB_HOST: timescaledb
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-oceansentinelle}
+      DB_USER: ${POSTGRES_USER:-oceansentinel}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      
+      # Contrainte mémoire critique VPS
+      MEMORY_LIMIT_MB: "200"
+      CHUNK_SIZE_CSV: "2000"
+      CHUNK_SIZE_NETCDF: "500"
+      CHUNK_SIZE_ERDDAP: "1000"
+      BATCH_SIZE_DB: "250"
+      
+      # Configuration failover
+      DATA_DIR: /data
+      LOG_LEVEL: INFO
+    
+    volumes:
+      - ./data:/data:ro
+      - ./logs/ingestion:/logs
+      - ./scripts:/app/scripts:ro
+    
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    
+    networks:
+      - oceansentinel_network
+    
+    # Limites strictes VPS
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "3m"
+        max-file: "2"
+
+  # ==========================================================================
+  # API REST (Optimisée VPS)
+  # ==========================================================================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: oceansentinel_api
+    restart: unless-stopped
+    
+    environment:
+      DB_HOST: timescaledb
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-oceansentinelle}
+      DB_USER: ${POSTGRES_USER:-oceansentinel}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    
+    ports:
+      - "${API_PORT:-8000}:8000"
+    
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    
+    networks:
+      - oceansentinel_network
+    
+    # Limites strictes VPS
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "3m"
+        max-file: "2"
+
+  # ==========================================================================
+  # GRAFANA (Visualisation)
+  # ==========================================================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: oceansentinel_grafana
+    restart: unless-stopped
+    
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_INSTALL_PLUGINS: ""
+      GF_SERVER_ROOT_URL: "http://localhost:3000"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    
+    networks:
+      - oceansentinel_network
+    
+    # Limites strictes VPS
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "3m"
+        max-file: "2"
+
+# ============================================================================
+# VOLUMES PERSISTANTS
+# ============================================================================
+volumes:
+  timescaledb_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+# ============================================================================
+# RÉSEAU
+# ============================================================================
+networks:
+  oceansentinel_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
