@@ -28,6 +28,9 @@ from psycopg2.pool import SimpleConnectionPool
 # Système d'alertes SACS
 from alerts import SACSAlertSystem
 
+# Routes
+from api.routes import health as health_routes
+
 # Configuration logging
 logging.basicConfig(
     level=logging.INFO,
@@ -160,6 +163,9 @@ app.add_middleware(
     allow_methods=["GET"],
     allow_headers=["*"],
 )
+
+# Inclure les routes
+app.include_router(health_routes.router, prefix="/api/v1", tags=["Health"])
 
 # ============================================================================
 # ROUTES
