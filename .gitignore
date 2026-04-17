@@ -58,3 +58,13 @@ ENV/
 
 # Grafana
 grafana_data/
+
+# Windsurf IDE
+.windsurf/
+
+# Fichiers de test agent
+.agents/skills/*/grafana/
+.agents/skills/*/test_skill.sh
+
+# Fichiers de référence temporaires
+BACKUP_QUICK_REFERENCE.txt
