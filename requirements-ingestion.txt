@@ -1,0 +1,30 @@
+# ============================================================================
+# Ocean Sentinel V3.0 - Dépendances Service Ingestion
+# ============================================================================
+# Agent Data Engineer - Ingestion streaming
+# Contrainte: Optimisé pour faible consommation mémoire
+# ============================================================================
+
+# Base de données
+psycopg2-binary>=2.9.9
+
+# Lecture CSV (chunked)
+pandas>=2.1.0
+
+# Lecture NetCDF avec Dask (lazy loading)
+xarray>=2023.10.0
+dask[complete]>=2023.10.0
+netCDF4>=1.6.4
+
+# Lecture GRIB2
+pygrib>=2.1.4
+
+# Utilitaires
+numpy>=1.24.0
+python-dotenv>=1.0.0
+
+# Monitoring mémoire
+psutil>=5.9.0
+
+# Logging
+loguru>=0.7.0

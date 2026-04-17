@@ -1,0 +1,351 @@
+version: '3.8'
+
+# ============================================================================
+# Ocean Sentinel V3.0 - Architecture Multi-Services
+# ============================================================================
+# Agent DevOps - Infrastructure complète pour Google Antigravity
+# Services: TimescaleDB, Ingestion, ML Pipeline, API, Monitoring
+# ============================================================================
+
+services:
+
+  # ==========================================================================
+  # BASE DE DONNÉES TIMESCALEDB
+  # ==========================================================================
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: oceansentinel_timescaledb
+    restart: unless-stopped
+    
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-oceansentinel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Variable POSTGRES_PASSWORD requise}
+      POSTGRES_DB: ${POSTGRES_DB:-oceansentinelle}
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+      TIMESCALEDB_TELEMETRY: "off"
+      
+      # Optimisations mémoire
+      TS_TUNE_MEMORY: "8GB"
+      TS_TUNE_NUM_CPUS: "4"
+      TS_TUNE_MAX_CONNS: "100"
+      TS_TUNE_MAX_BG_WORKERS: "8"
+    
+    ports:
+      - "${POSTGRES_PORT:-6543}:5432"
+    
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d:ro
+      - ./postgresql-custom.conf:/etc/postgresql/postgresql.conf:ro
+    
+    command: 
+      - "postgres"
+      - "-c"
+      - "config_file=/etc/postgresql/postgresql.conf"
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-oceansentinel} -d ${POSTGRES_DB:-oceansentinelle}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+    networks:
+      - oceansentinel_network
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 7G
+        reservations:
+          cpus: '2'
+          memory: 4G
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ==========================================================================
+  # SERVICE D'INGESTION STREAMING
+  # ==========================================================================
+  ingestion:
+    build:
+      context: .
+      dockerfile: Dockerfile.ingestion
+    container_name: oceansentinel_ingestion
+    restart: unless-stopped
+    
+    environment:
+      DB_HOST: timescaledb
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-oceansentinelle}
+      DB_USER: oceansentinel_writer
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      
+      # Contrainte mémoire critique
+      MEMORY_LIMIT_MB: "256"
+      CHUNK_SIZE_CSV: "5000"
+      CHUNK_SIZE_NETCDF: "1000"
+      
+      # Répertoires de données
+      DATA_DIR: /data
+      LOG_LEVEL: INFO
+    
+    volumes:
+      - ./data:/data:ro
+      - ./logs/ingestion:/logs
+      - ./scripts:/app/scripts:ro
+    
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    
+    networks:
+      - oceansentinel_network
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M  # Limite stricte VPS Hostinger
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+  # ==========================================================================
+  # SERVICE ML PIPELINE
+  # ==========================================================================
+  ml_pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.ml
+    container_name: oceansentinel_ml
+    restart: unless-stopped
+    
+    environment:
+      DB_HOST: timescaledb
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-oceansentinelle}
+      DB_USER: ${POSTGRES_USER:-oceansentinel}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      
+      # Configuration ML
+      MODEL_DIR: /models
+      PREDICTION_INTERVAL: "1h"
+      ANOMALY_DETECTION_INTERVAL: "15m"
+      
+      # Seuils d'alerte (Vigilance Écologique)
+      ALERT_PH_MIN: "7.8"
+      ALERT_O2_MIN: "150"  # µmol/kg (hypoxie)
+      ALERT_TEMP_MAX: "25"
+    
+    volumes:
+      - ./models:/models
+      - ./logs/ml:/logs
+      - ./scripts:/app/scripts:ro
+    
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    
+    networks:
+      - oceansentinel_network
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ==========================================================================
+  # API REST (FastAPI)
+  # ==========================================================================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: oceansentinel_api
+    restart: unless-stopped
+    
+    environment:
+      DB_HOST: timescaledb
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-oceansentinelle}
+      DB_USER: oceansentinel_readonly
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      
+      API_PORT: 8000
+      API_WORKERS: 2
+      CORS_ORIGINS: "*"
+    
+    ports:
+      - "${API_PORT:-8000}:8000"
+    
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    
+    networks:
+      - oceansentinel_network
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+  # ==========================================================================
+  # MONITORING (Prometheus + Grafana)
+  # ==========================================================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: oceansentinel_prometheus
+    restart: unless-stopped
+    
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+    
+    ports:
+      - "9090:9090"
+    
+    networks:
+      - oceansentinel_network
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: oceansentinel_grafana
+    restart: unless-stopped
+    
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_INSTALL_PLUGINS: grafana-clock-panel
+    
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    
+    ports:
+      - "3000:3000"
+    
+    depends_on:
+      - prometheus
+      - timescaledb
+    
+    networks:
+      - oceansentinel_network
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ==========================================================================
+  # NGINX REVERSE PROXY
+  # ==========================================================================
+  nginx:
+    image: nginx:alpine
+    container_name: oceansentinel_nginx
+    restart: unless-stopped
+    
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    
+    ports:
+      - "80:80"
+      - "443:443"
+    
+    depends_on:
+      - api
+      - grafana
+    
+    networks:
+      - oceansentinel_network
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+# ============================================================================
+# VOLUMES PERSISTANTS
+# ============================================================================
+volumes:
+  timescaledb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/oceansentinel/data
+
+  prometheus_data:
+    driver: local
+
+  grafana_data:
+    driver: local
+
+# ============================================================================
+# RÉSEAU
+# ============================================================================
+networks:
+  oceansentinel_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16

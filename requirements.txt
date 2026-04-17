@@ -1,0 +1,12 @@
+# Ocean Sentinel - Dépendances Python
+# =====================================
+
+# Base de données PostgreSQL/TimescaleDB
+psycopg2-binary>=2.9.9
+
+# Alternative ORM (optionnel)
+# sqlalchemy>=2.0.0
+# timescaledb>=0.3.0
+
+# Utilitaires
+python-dotenv>=1.0.0
