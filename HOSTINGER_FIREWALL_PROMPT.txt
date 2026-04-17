@@ -1,0 +1,37 @@
+═══════════════════════════════════════════════════════════════
+🔥 CONFIGURATION PARE-FEU HOSTINGER - OCEAN SENTINEL
+═══════════════════════════════════════════════════════════════
+
+⚠️  ACTION CRITIQUE REQUISE : Autoriser le port TimescaleDB
+
+📍 ACCÈS AU PANEL
+1. Connectez-vous à : https://hpanel.hostinger.com
+2. Sélectionnez votre VPS (srv1341436)
+3. Menu latéral → VPS → Pare-feu
+
+🔧 CONFIGURATION DE LA RÈGLE
+┌─────────────────────────────────────────────────────────────┐
+│ Paramètre    │ Valeur                                       │
+├─────────────────────────────────────────────────────────────┤
+│ Nom          │ TimescaleDB Ocean Sentinel                   │
+│ Port         │ 6543                                         │
+│ Protocole    │ TCP                                          │
+│ Source       │ 0.0.0.0/0 (ou votre IP fixe pour sécurité)  │
+│ Action       │ AUTORISER                                    │
+└─────────────────────────────────────────────────────────────┘
+
+✅ VALIDATION
+Après ajout, testez depuis Windows :
+  telnet VOTRE_IP_VPS 6543
+  
+ou
+  
+  psql -h VOTRE_IP_VPS -p 6543 -U oceansentinel -d oceansentinelle
+
+🔒 SÉCURITÉ RENFORCÉE (Optionnel)
+Au lieu de 0.0.0.0/0, restreignez à votre IP :
+  Source : VOTRE_IP_FIXE/32
+
+⚠️  Sans cette règle, les connexions externes à TimescaleDB seront BLOQUÉES.
+
+═══════════════════════════════════════════════════════════════
