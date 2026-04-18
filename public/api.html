@@ -42,7 +42,7 @@
                 <p class="endpoint-description">Vérification de santé de l'API</p>
                 <div class="endpoint-example">
                     <strong>Exemple :</strong>
-                    <pre>curl http://76.13.43.3:8000/api/v1/health</pre>
+                    <pre>curl https://api.oceansentinelle.fr/api/v1/health</pre>
                     <button onclick="testEndpoint('/api/v1/health', 'health-result')" class="btn btn-small">Tester</button>
                     <div id="health-result" class="result-box"></div>
                 </div>
@@ -60,7 +60,7 @@
                         <li><code>station_id</code> : BARAG, VPS_PROD, etc.</li>
                     </ul>
                     <strong>Exemple :</strong>
-                    <pre>curl http://76.13.43.3:8000/api/v1/station/BARAG/latest</pre>
+                    <pre>curl https://api.oceansentinelle.fr/api/v1/station/BARAG/latest</pre>
                 </div>
             </div>
 
@@ -79,7 +79,7 @@
                         <li><code>limit</code> : Nombre max de résultats (1-1000)</li>
                     </ul>
                     <strong>Exemple :</strong>
-                    <pre>curl "http://76.13.43.3:8000/api/v1/station/BARAG/history?limit=10"</pre>
+                    <pre>curl "https://api.oceansentinelle.fr/api/v1/station/BARAG/history?limit=10"</pre>
                 </div>
             </div>
         </div>
@@ -87,7 +87,7 @@
         <div class="content-section">
             <h2>📚 Documentation Interactive</h2>
             <p>Explorez tous les endpoints avec Swagger UI :</p>
-            <a href="http://76.13.43.3:8000/docs" target="_blank" class="btn btn-primary">
+            <a href="https://api.oceansentinelle.fr/docs" target="_blank" class="btn btn-primary">
                 Ouvrir la Documentation Swagger →
             </a>
         </div>
@@ -162,7 +162,7 @@ curl "http://76.13.43.3:8000/api/v1/station/BARAG/history?limit=100" | jq</code>
     </footer>
 
     <script>
-        const API_BASE = 'http://76.13.43.3:8000';
+        const API_BASE = 'https://api.oceansentinelle.fr';
 
         // Charger le status au chargement de la page
         window.addEventListener('DOMContentLoaded', () => {
@@ -191,8 +191,14 @@ curl "http://76.13.43.3:8000/api/v1/station/BARAG/history?limit=100" | jq</code>
             } catch (error) {
                 document.getElementById('api-status-content').innerHTML = `
                     <div class="status-card status-error">
-                        <h3>❌ Impossible de contacter l'API</h3>
-                        <p>Erreur : ${error.message}</p>
+                        <div class="status-indicator"></div>
+                        <div class="status-details">
+                            <h3 style="color: #ffffff;">❌ Impossible de contacter l'API</h3>
+                            <p style="color: #f5f7fa;"><strong>Erreur :</strong> ${error.message}</p>
+                            <p style="color: #e8ecf1; font-size: 14px; margin-top: 10px;">
+                                Vérifiez que l'API est démarrée sur le serveur.
+                            </p>
+                        </div>
                     </div>
                 `;
             }
