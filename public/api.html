@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API & Alertes - Ocean Sentinel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">🌊 Ocean Sentinel</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="about.html">Le Projet</a></li>
+                <li><a href="api.html">API & Alertes</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>🔌 API & Alertes Professionnelles</h1>
+            <p class="page-subtitle">Accès programmatique aux données océanographiques</p>
+        </div>
+
+        <div class="api-status">
+            <h2>📊 Status API</h2>
+            <div id="api-status-content">
+                <div class="status-loading">Chargement du status...</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>🚀 Endpoints Disponibles</h2>
+            
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <code>/api/v1/health</code>
+                </div>
+                <p class="endpoint-description">Vérification de santé de l'API</p>
+                <div class="endpoint-example">
+                    <strong>Exemple :</strong>
+                    <pre>curl http://76.13.43.3:8000/api/v1/health</pre>
+                    <button onclick="testEndpoint('/api/v1/health', 'health-result')" class="btn btn-small">Tester</button>
+                    <div id="health-result" class="result-box"></div>
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <code>/api/v1/station/{station_id}/latest</code>
+                </div>
+                <p class="endpoint-description">Dernière mesure d'une station</p>
+                <div class="endpoint-example">
+                    <strong>Paramètres :</strong>
+                    <ul>
+                        <li><code>station_id</code> : BARAG, VPS_PROD, etc.</li>
+                    </ul>
+                    <strong>Exemple :</strong>
+                    <pre>curl http://76.13.43.3:8000/api/v1/station/BARAG/latest</pre>
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <code>/api/v1/station/{station_id}/history</code>
+                </div>
+                <p class="endpoint-description">Historique des mesures</p>
+                <div class="endpoint-example">
+                    <strong>Paramètres :</strong>
+                    <ul>
+                        <li><code>station_id</code> : Identifiant de la station</li>
+                        <li><code>start_date</code> : Date de début (ISO 8601)</li>
+                        <li><code>end_date</code> : Date de fin (ISO 8601)</li>
+                        <li><code>limit</code> : Nombre max de résultats (1-1000)</li>
+                    </ul>
+                    <strong>Exemple :</strong>
+                    <pre>curl "http://76.13.43.3:8000/api/v1/station/BARAG/history?limit=10"</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>📚 Documentation Interactive</h2>
+            <p>Explorez tous les endpoints avec Swagger UI :</p>
+            <a href="http://76.13.43.3:8000/docs" target="_blank" class="btn btn-primary">
+                Ouvrir la Documentation Swagger →
+            </a>
+        </div>
+
+        <div class="content-section">
+            <h2>🚨 Alertes en Temps Réel</h2>
+            <div id="alerts-content">
+                <div class="status-loading">Chargement des alertes...</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>💡 Exemples d'Utilisation</h2>
+            
+            <div class="code-example">
+                <h3>Python</h3>
+                <pre><code>import requests
+
+# Récupérer le status
+response = requests.get('http://76.13.43.3:8000/api/v1/health')
+data = response.json()
+print(f"Status: {data['status']}")
+
+# Dernière mesure
+response = requests.get('http://76.13.43.3:8000/api/v1/station/BARAG/latest')
+measurement = response.json()
+print(f"Température: {measurement['temperature_water']}°C")</code></pre>
+            </div>
+
+            <div class="code-example">
+                <h3>JavaScript</h3>
+                <pre><code>// Récupérer le status
+fetch('http://76.13.43.3:8000/api/v1/health')
+  .then(response => response.json())
+  .then(data => console.log('Status:', data.status));
+
+// Dernière mesure
+fetch('http://76.13.43.3:8000/api/v1/station/BARAG/latest')
+  .then(response => response.json())
+  .then(data => console.log('Température:', data.temperature_water + '°C'));</code></pre>
+            </div>
+
+            <div class="code-example">
+                <h3>cURL</h3>
+                <pre><code># Health check
+curl http://76.13.43.3:8000/api/v1/health
+
+# Dernière mesure avec formatage JSON
+curl http://76.13.43.3:8000/api/v1/station/BARAG/latest | jq
+
+# Historique 24h
+curl "http://76.13.43.3:8000/api/v1/station/BARAG/history?limit=100" | jq</code></pre>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>🔐 Authentification</h2>
+            <p>
+                <strong>Version actuelle :</strong> Accès public en lecture seule<br>
+                <strong>Prochainement :</strong> Authentification par clé API pour les professionnels
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p><strong>Ocean Sentinel V3.0</strong> - Surveillance Océanographique du Bassin d'Arcachon</p>
+            <p style="margin-top: 10px; font-size: 14px;">
+                Données : ERDDAP COAST-HF (Ifremer) • Hub'Eau (BRGM) • API : http://76.13.43.3:8000
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const API_BASE = 'http://76.13.43.3:8000';
+
+        // Charger le status au chargement de la page
+        window.addEventListener('DOMContentLoaded', () => {
+            loadAPIStatus();
+            loadAlerts();
+        });
+
+        async function loadAPIStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/health`);
+                const data = await response.json();
+                
+                const statusHtml = `
+                    <div class="status-card ${data.status === 'healthy' ? 'status-healthy' : 'status-error'}">
+                        <div class="status-indicator"></div>
+                        <div class="status-details">
+                            <h3>${data.status === 'healthy' ? '✅ API Opérationnelle' : '❌ API Indisponible'}</h3>
+                            <p><strong>Version :</strong> ${data.version}</p>
+                            <p><strong>Service :</strong> ${data.service}</p>
+                            <p><strong>Dernière vérification :</strong> ${new Date(data.timestamp).toLocaleString('fr-FR')}</p>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('api-status-content').innerHTML = statusHtml;
+            } catch (error) {
+                document.getElementById('api-status-content').innerHTML = `
+                    <div class="status-card status-error">
+                        <h3>❌ Impossible de contacter l'API</h3>
+                        <p>Erreur : ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadAlerts() {
+            const alertsHtml = `
+                <div class="alerts-info">
+                    <p>🔔 Système d'alertes en cours de développement</p>
+                    <p>Les alertes seront disponibles prochainement pour détecter :</p>
+                    <ul>
+                        <li>Acidification (pH < 7.8)</li>
+                        <li>Hypoxie (O₂ < 150 µmol/kg)</li>
+                        <li>Eutrophisation</li>
+                        <li>Anomalies thermiques</li>
+                    </ul>
+                </div>
+            `;
+            document.getElementById('alerts-content').innerHTML = alertsHtml;
+        }
+
+        async function testEndpoint(endpoint, resultId) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.innerHTML = '<div class="loading">Chargement...</div>';
+            
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`);
+                const data = await response.json();
+                resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                resultDiv.className = 'result-box result-success';
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Erreur : ${error.message}</div>`;
+                resultDiv.className = 'result-box result-error';
+            }
+        }
+    </script>
+</body>
+</html>

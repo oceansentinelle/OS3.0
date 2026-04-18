@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Projet - Ocean Sentinel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">🌊 Ocean Sentinel</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="about.html">Le Projet</a></li>
+                <li><a href="api.html">API & Alertes</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>🎯 Le Projet Ocean Sentinel</h1>
+            <p class="page-subtitle">Surveillance environnementale du Bassin d'Arcachon</p>
+        </div>
+
+        <div class="content-section">
+            <h2>📖 Contexte</h2>
+            <p>
+                Le Bassin d'Arcachon est un écosystème marin fragile soumis à de multiples pressions : 
+                urbanisation, tourisme, aquaculture, changement climatique. La surveillance continue 
+                de ses paramètres océanographiques est essentielle pour anticiper les crises écologiques.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>🎯 Objectifs</h2>
+            <ul class="objectives-list">
+                <li><strong>Centraliser</strong> les données océanographiques de sources multiples</li>
+                <li><strong>Détecter</strong> automatiquement les anomalies environnementales</li>
+                <li><strong>Alerter</strong> les professionnels en temps réel</li>
+                <li><strong>Fournir</strong> une API REST pour l'intégration dans d'autres systèmes</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>🔬 Sources de Données</h2>
+            <div class="sources-grid">
+                <div class="source-card">
+                    <h3>ERDDAP COAST-HF</h3>
+                    <p><strong>Fréquence :</strong> Horaire</p>
+                    <p><strong>Stations :</strong> Arcachon Eyrac, Cap Ferret</p>
+                    <p><strong>Paramètres :</strong> Température, salinité, oxygène, pH, turbidité, chlorophylle-a</p>
+                    <p><strong>Source :</strong> Ifremer</p>
+                </div>
+
+                <div class="source-card">
+                    <h3>Hub'Eau</h3>
+                    <p><strong>Fréquence :</strong> Toutes les 6 heures</p>
+                    <p><strong>Zone :</strong> Bassin d'Arcachon</p>
+                    <p><strong>Paramètres :</strong> Qualité de l'eau, indicateurs biologiques</p>
+                    <p><strong>Source :</strong> BRGM / Agences de l'Eau</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>⚙️ Architecture Technique</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <strong>Backend</strong>
+                    <p>Python 3.11, FastAPI, APScheduler</p>
+                </div>
+                <div class="tech-item">
+                    <strong>Base de Données</strong>
+                    <p>PostgreSQL 16 + TimescaleDB</p>
+                </div>
+                <div class="tech-item">
+                    <strong>Cache</strong>
+                    <p>Redis 7</p>
+                </div>
+                <div class="tech-item">
+                    <strong>Stockage</strong>
+                    <p>MinIO (S3-compatible)</p>
+                </div>
+                <div class="tech-item">
+                    <strong>Déploiement</strong>
+                    <p>Docker Compose, VPS Hostinger</p>
+                </div>
+                <div class="tech-item">
+                    <strong>Monitoring</strong>
+                    <p>Healthchecks, Logs structurés</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>🚨 Système d'Alertes</h2>
+            <p>Détection automatique des seuils critiques :</p>
+            <ul class="alerts-list">
+                <li><strong>Acidification :</strong> pH < 7.8 (critique) ou < 7.9 (warning)</li>
+                <li><strong>Hypoxie :</strong> O₂ < 150 µmol/kg (critique) ou < 175 µmol/kg (warning)</li>
+                <li><strong>Eutrophisation :</strong> Chlorophylle-a > seuils définis</li>
+                <li><strong>Anomalies thermiques :</strong> Écarts significatifs par rapport aux moyennes saisonnières</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>👥 Public Cible</h2>
+            <div class="audience-grid">
+                <div class="audience-card">
+                    <h3>🏛️ Collectivités</h3>
+                    <p>Mairies, SIBA, Agglomération</p>
+                </div>
+                <div class="audience-card">
+                    <h3>🔬 Chercheurs</h3>
+                    <p>Ifremer, Universités, Laboratoires</p>
+                </div>
+                <div class="audience-card">
+                    <h3>🦪 Professionnels</h3>
+                    <p>Ostréiculteurs, Pêcheurs</p>
+                </div>
+                <div class="audience-card">
+                    <h3>🌍 Associations</h3>
+                    <p>Protection environnement, Éducation</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2>Prêt à explorer les données ?</h2>
+            <a href="api.html" class="btn btn-primary">Accéder aux API →</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p><strong>Ocean Sentinel V3.0</strong> - Surveillance Océanographique du Bassin d'Arcachon</p>
+            <p style="margin-top: 10px; font-size: 14px;">
+                Données : ERDDAP COAST-HF (Ifremer) • Hub'Eau (BRGM) • API : http://76.13.43.3:8000
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Sentinel - Surveillance Océanographique Temps Réel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .hero {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .description {
+            font-size: 18px;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .feature-text {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .stats {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        footer {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px 0;
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+
+            .subtitle {
+                font-size: 18px;
+            }
+
+            .hero {
+                padding: 40px 20px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">🌊 Ocean Sentinel</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="about.html">Le Projet</a></li>
+                <li><a href="api.html">API & Alertes</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>🌊 Ocean Sentinel</h1>
+            <p class="subtitle">Surveillance Océanographique en Temps Réel</p>
+            <p class="description">
+                Plateforme de monitoring environnemental pour le Bassin d'Arcachon. 
+                Données océanographiques temps réel, alertes écologiques et API professionnelle.
+            </p>
+            <div class="cta-buttons">
+                <a href="about.html" class="btn btn-primary">Découvrir le Projet</a>
+                <a href="api.html" class="btn btn-secondary">Accéder aux API</a>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Données Temps Réel</h3>
+                <p class="feature-text">
+                    Température, salinité, oxygène dissous, pH, turbidité. 
+                    Mesures actualisées toutes les heures depuis les stations COAST-HF.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🚨</div>
+                <h3 class="feature-title">Alertes Écologiques</h3>
+                <p class="feature-text">
+                    Détection automatique des anomalies : acidification, hypoxie, 
+                    eutrophisation. Notifications pour les professionnels.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔌</div>
+                <h3 class="feature-title">API REST</h3>
+                <p class="feature-text">
+                    Accès programmatique aux données. Documentation Swagger, 
+                    endpoints JSON, intégration facile dans vos applications.
+                </p>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div>
+                <div class="stat-number">2</div>
+                <div class="stat-label">Sources Actives</div>
+            </div>
+            <div>
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Surveillance</div>
+            </div>
+            <div>
+                <div class="stat-number">8</div>
+                <div class="stat-label">Paramètres Mesurés</div>
+            </div>
+            <div>
+                <div class="stat-number">API</div>
+                <div class="stat-label">Accès Professionnel</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p><strong>Ocean Sentinel V3.0</strong> - Surveillance Océanographique du Bassin d'Arcachon</p>
+            <p style="margin-top: 10px; font-size: 14px;">
+                Données : ERDDAP COAST-HF (Ifremer) • Hub'Eau (BRGM) • API : http://76.13.43.3:8000
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
