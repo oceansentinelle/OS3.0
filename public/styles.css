@@ -63,11 +63,11 @@ nav {
 .logo {
     font-size: 24px;
     font-weight: bold;
-    background: linear-gradient(135deg, #4a9aba 0%, #6bc5e8 50%, #4a9aba 100%);
+    background: linear-gradient(135deg, #d0dae6 0%, #f5f7fa 50%, #d0dae6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    filter: drop-shadow(0 0 10px rgba(107, 197, 232, 0.3));
+    filter: drop-shadow(0 0 10px rgba(245, 247, 250, 0.3));
 }
 
 .nav-links {
@@ -78,7 +78,7 @@ nav {
 
 .nav-links a {
     text-decoration: none;
-    color: #b8d4e8;
+    color: #f5f7fa;
     font-weight: 500;
     transition: all 0.3s ease;
     position: relative;
@@ -91,13 +91,13 @@ nav {
     left: 0;
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, #4a9aba, #6bc5e8);
+    background: linear-gradient(90deg, #c5d0dd, #f5f7fa);
     transition: width 0.3s ease;
 }
 
 .nav-links a:hover {
-    color: #6bc5e8;
-    text-shadow: 0 0 10px rgba(107, 197, 232, 0.5);
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(245, 247, 250, 0.5);
 }
 
 .nav-links a:hover::after {
@@ -123,17 +123,17 @@ nav {
 
 .page-header h1 {
     font-size: 42px;
-    background: linear-gradient(135deg, #6bc5e8 0%, #4a9aba 50%, #3a7ca5 100%);
+    background: linear-gradient(135deg, #f5f7fa 0%, #d0dae6 50%, #b8c5d6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 15px;
-    filter: drop-shadow(0 0 20px rgba(74, 154, 186, 0.4));
+    filter: drop-shadow(0 0 20px rgba(208, 218, 230, 0.4));
 }
 
 .page-subtitle {
     font-size: 20px;
-    color: #b8d4e8;
+    color: #f5f7fa;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -154,7 +154,7 @@ nav {
 }
 
 .content-section h2 {
-    background: linear-gradient(135deg, #6bc5e8 0%, #4a9aba 100%);
+    background: linear-gradient(135deg, #f5f7fa 0%, #d0dae6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -163,14 +163,14 @@ nav {
 }
 
 .content-section p {
-    color: #a0c4d9;
+    color: #e8ecf1;
     font-size: 16px;
     margin-bottom: 15px;
 }
 
 .content-section ul {
     margin-left: 20px;
-    color: #a0c4d9;
+    color: #e8ecf1;
 }
 
 .content-section li {
@@ -221,16 +221,16 @@ nav {
 
 .btn-secondary {
     background: rgba(10, 25, 41, 0.5);
-    color: #6bc5e8;
-    border: 2px solid #4a9aba;
+    color: #ffffff;
+    border: 2px solid #d0dae6;
     box-shadow: 0 4px 15px rgba(74, 154, 186, 0.2);
     backdrop-filter: blur(10px);
 }
 
 .btn-secondary:hover {
     background: rgba(74, 154, 186, 0.2);
-    border-color: #6bc5e8;
-    box-shadow: 0 4px 20px rgba(107, 197, 232, 0.4);
+    border-color: #f5f7fa;
+    box-shadow: 0 4px 20px rgba(245, 247, 250, 0.4);
 }
 
 .btn-small {
@@ -255,7 +255,7 @@ nav {
     backdrop-filter: blur(10px);
     padding: 20px;
     border-radius: 10px;
-    border-left: 4px solid #4a9aba;
+    border-left: 4px solid #d0dae6;
     border: 1px solid rgba(74, 154, 186, 0.2);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
@@ -272,7 +272,7 @@ nav {
 .source-card h3,
 .audience-card h3,
 .tech-item strong {
-    background: linear-gradient(135deg, #6bc5e8 0%, #4a9aba 100%);
+    background: linear-gradient(135deg, #f5f7fa 0%, #d0dae6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -298,10 +298,10 @@ nav {
     content: "✓";
     position: absolute;
     left: 0;
-    color: #6bc5e8;
+    color: #ffffff;
     font-weight: bold;
     font-size: 20px;
-    text-shadow: 0 0 10px rgba(107, 197, 232, 0.5);
+    text-shadow: 0 0 10px rgba(245, 247, 250, 0.5);
 }
 
 .alerts-list li:before {
@@ -376,7 +376,7 @@ nav {
     padding: 25px;
     border-radius: 10px;
     margin-bottom: 20px;
-    border-left: 4px solid #4a9aba;
+    border-left: 4px solid #d0dae6;
     border: 1px solid rgba(74, 154, 186, 0.2);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
@@ -403,7 +403,7 @@ nav {
 
 .endpoint-header code {
     background: rgba(10, 25, 41, 0.8);
-    color: #6bc5e8;
+    color: #ffffff;
     padding: 8px 15px;
     border-radius: 5px;
     font-family: 'Courier New', monospace;
@@ -412,7 +412,7 @@ nav {
 }
 
 .endpoint-description {
-    color: #a0c4d9;
+    color: #e8ecf1;
     margin-bottom: 15px;
 }
 
@@ -466,7 +466,7 @@ nav {
 }
 
 .code-example h3 {
-    background: linear-gradient(135deg, #6bc5e8 0%, #4a9aba 100%);
+    background: linear-gradient(135deg, #f5f7fa 0%, #d0dae6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -517,7 +517,7 @@ nav {
 }
 
 .cta-section h2 {
-    background: linear-gradient(135deg, #6bc5e8 0%, #4a9aba 100%);
+    background: linear-gradient(135deg, #f5f7fa 0%, #d0dae6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -539,7 +539,7 @@ footer {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
-    color: #a0c4d9;
+    color: #e8ecf1;
 }
 
 /* Loading */
@@ -547,7 +547,7 @@ footer {
 .loading {
     text-align: center;
     padding: 20px;
-    color: #b8d4e8;
+    color: #f5f7fa;
 }
 
 /* Responsive */
