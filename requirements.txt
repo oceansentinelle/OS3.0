@@ -17,6 +17,7 @@ pydantic-settings==2.1.0
 
 # HTTP Client
 httpx==0.25.1
+requests==2.31.0
 
 # Cache & Queue
 redis==5.0.1
