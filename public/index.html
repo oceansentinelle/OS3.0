@@ -14,9 +14,31 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%);
+            color: #1a2332;
+            background: linear-gradient(135deg, #0a1929 0%, #1e3a5f 25%, #2d5f7e 50%, #3a7ca5 75%, #4a9aba 100%);
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(74, 154, 186, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(45, 95, 126, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(30, 58, 95, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
         }
 
         .container {
@@ -26,10 +48,12 @@
         }
 
         header {
-            background: rgba(255, 255, 255, 0.95);
+            background: linear-gradient(180deg, rgba(10, 25, 41, 0.95) 0%, rgba(30, 58, 95, 0.9) 100%);
+            backdrop-filter: blur(10px);
             padding: 20px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 40px rgba(74, 154, 186, 0.1);
             margin-bottom: 40px;
+            border-bottom: 1px solid rgba(74, 154, 186, 0.2);
         }
 
         nav {
@@ -44,7 +68,12 @@
         .logo {
             font-size: 24px;
             font-weight: bold;
-            color: #2F80ED;
+            background: linear-gradient(135deg, #4a9aba 0%, #6bc5e8 50%, #4a9aba 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(74, 154, 186, 0.5);
+            filter: drop-shadow(0 0 10px rgba(107, 197, 232, 0.3));
         }
 
         .nav-links {
@@ -55,41 +84,96 @@
 
         .nav-links a {
             text-decoration: none;
-            color: #333;
+            color: #b8d4e8;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #4a9aba, #6bc5e8);
+            transition: width 0.3s ease;
         }
 
         .nav-links a:hover {
-            color: #2F80ED;
+            color: #6bc5e8;
+            text-shadow: 0 0 10px rgba(107, 197, 232, 0.5);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         .hero {
-            background: white;
+            background: linear-gradient(135deg, rgba(10, 25, 41, 0.8) 0%, rgba(30, 58, 95, 0.7) 100%);
+            backdrop-filter: blur(20px);
             border-radius: 20px;
             padding: 60px;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                0 0 80px rgba(74, 154, 186, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
             margin-bottom: 40px;
+            border: 1px solid rgba(74, 154, 186, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(74, 154, 186, 0.1) 0%, transparent 70%);
+            animation: wave 15s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(5%, 5%) rotate(90deg); }
+            50% { transform: translate(-5%, 5%) rotate(180deg); }
+            75% { transform: translate(-5%, -5%) rotate(270deg); }
         }
 
         h1 {
             font-size: 48px;
-            color: #2F80ED;
+            background: linear-gradient(135deg, #6bc5e8 0%, #4a9aba 50%, #3a7ca5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 40px rgba(107, 197, 232, 0.3);
+            filter: drop-shadow(0 0 20px rgba(74, 154, 186, 0.4));
         }
 
         .subtitle {
             font-size: 24px;
-            color: #666;
+            color: #b8d4e8;
             margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .description {
             font-size: 18px;
-            color: #555;
+            color: #a0c4d9;
             max-width: 800px;
             margin: 0 auto 40px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
         }
 
         .cta-buttons {
@@ -115,14 +199,42 @@
         }
 
         .btn-primary {
-            background: #2F80ED;
+            background: linear-gradient(135deg, #4a9aba 0%, #3a7ca5 100%);
             color: white;
+            box-shadow: 0 4px 15px rgba(74, 154, 186, 0.4), 0 0 20px rgba(74, 154, 186, 0.2);
+            border: 1px solid rgba(107, 197, 232, 0.3);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
         }
 
         .btn-secondary {
-            background: white;
-            color: #2F80ED;
-            border: 2px solid #2F80ED;
+            background: rgba(10, 25, 41, 0.5);
+            color: #6bc5e8;
+            border: 2px solid #4a9aba;
+            box-shadow: 0 4px 15px rgba(74, 154, 186, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(74, 154, 186, 0.2);
+            border-color: #6bc5e8;
+            box-shadow: 0 4px 20px rgba(107, 197, 232, 0.4);
         }
 
         .features {
@@ -133,15 +245,25 @@
         }
 
         .feature-card {
-            background: white;
+            background: linear-gradient(135deg, rgba(10, 25, 41, 0.7) 0%, rgba(30, 58, 95, 0.6) 100%);
+            backdrop-filter: blur(15px);
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(74, 154, 186, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(74, 154, 186, 0.2);
+            transition: all 0.3s ease;
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.4),
+                0 0 60px rgba(74, 154, 186, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-color: rgba(107, 197, 232, 0.4);
         }
 
         .feature-icon {
@@ -151,50 +273,65 @@
 
         .feature-title {
             font-size: 24px;
-            color: #2F80ED;
+            background: linear-gradient(135deg, #6bc5e8 0%, #4a9aba 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 15px;
         }
 
         .feature-text {
-            color: #666;
+            color: #a0c4d9;
             font-size: 16px;
         }
 
         .stats {
-            background: white;
+            background: linear-gradient(135deg, rgba(10, 25, 41, 0.7) 0%, rgba(30, 58, 95, 0.6) 100%);
+            backdrop-filter: blur(15px);
             border-radius: 15px;
             padding: 40px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 30px;
             text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(74, 154, 186, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(74, 154, 186, 0.2);
         }
 
         .stat-number {
             font-size: 48px;
             font-weight: bold;
-            color: #2F80ED;
+            background: linear-gradient(135deg, #6bc5e8 0%, #4a9aba 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px rgba(107, 197, 232, 0.3));
         }
 
         .stat-label {
             font-size: 16px;
-            color: #666;
+            color: #b8d4e8;
             margin-top: 10px;
         }
 
         footer {
-            background: rgba(255, 255, 255, 0.95);
+            background: linear-gradient(180deg, rgba(10, 25, 41, 0.95) 0%, rgba(10, 25, 41, 1) 100%);
+            backdrop-filter: blur(10px);
             padding: 30px 0;
             margin-top: 60px;
             text-align: center;
+            border-top: 1px solid rgba(74, 154, 186, 0.2);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
-            color: #666;
+            color: #a0c4d9;
         }
 
         @media (max-width: 768px) {
