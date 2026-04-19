@@ -1,0 +1,233 @@
+# ============================================================================
+# WINDSURF RULES - AZTRM-D SECURITY CONSTRAINTS
+# Ocean Sentinel - Zero Trust Code Generation
+# ============================================================================
+# Ce fichier impose des contraintes strictes à l'agent IA Cascade pour
+# garantir la conformité DevSecOps avant tout commit (Shift-Left Security).
+# ============================================================================
+
+## RÈGLE 1 - ZERO TRUST SECRETS MANAGEMENT
+# Interdiction absolue de générer du code contenant des secrets en clair
+
+NEVER generate code containing:
+- API keys, tokens, or credentials in plain text
+- Database passwords or connection strings with embedded credentials
+- Private keys, certificates, or cryptographic material
+- OAuth client secrets or JWT signing keys
+- Stripe API keys (sk_live_, sk_test_, pk_live_, pk_test_)
+- AWS access keys (AKIA*, ASIA*)
+- Any value matching patterns: /[A-Za-z0-9]{32,}/, /sk_[a-z]+_[A-Za-z0-9]{24,}/
+
+ALWAYS use environment variables:
+- ${VARIABLE_NAME} or process.env.VARIABLE_NAME
+- Reference .env files but NEVER commit them
+- Use placeholder values like "your-api-key-here" in examples
+- Document required environment variables in README.md
+
+## RÈGLE 2 - TYPE SAFETY & LINTING
+# Code strictement typé et conforme aux standards du projet
+
+ALWAYS enforce:
+- Python: Type hints for all function signatures (PEP 484)
+- Python: Strict mypy validation (--strict mode)
+- JavaScript/TypeScript: Strict mode enabled
+- All code must pass linting (pylint, flake8, ESLint)
+- No use of 'any' type in TypeScript without explicit justification
+
+Example (Python):
+```python
+def process_data(station_id: str, value: float) -> dict[str, Any]:
+    """Process sensor data with strict typing."""
+    ...
+```
+
+## RÈGLE 3 - MANDATORY TESTING
+# Chaque fonction métier doit avoir son test associé
+
+ALWAYS generate tests when creating:
+- API endpoints → Integration tests with pytest
+- Business logic functions → Unit tests with 80%+ coverage
+- Database queries → Test fixtures with mock data
+- External API calls → Mocked responses
+
+Test file naming convention:
+- `test_{module_name}.py` for Python
+- `{module_name}.test.ts` for TypeScript
+
+## RÈGLE 4 - INPUT VALIDATION & SANITIZATION
+# Protection contre les injections (SQL, XSS, Command Injection)
+
+ALWAYS validate and sanitize:
+- User inputs before database queries (use parameterized queries)
+- URL parameters and query strings
+- File uploads (check MIME type, size, extension)
+- JSON payloads (validate against schema with Pydantic)
+
+NEVER use:
+- String concatenation for SQL queries
+- eval() or exec() on user input
+- os.system() with unsanitized input
+- innerHTML with user-generated content
+
+Example (FastAPI):
+```python
+from pydantic import BaseModel, Field, validator
+
+class StationQuery(BaseModel):
+    station_id: str = Field(..., regex=r'^[A-Z0-9_-]+$', max_length=50)
+    
+    @validator('station_id')
+    def validate_station_id(cls, v):
+        if not v.isalnum() and '-' not in v and '_' not in v:
+            raise ValueError('Invalid station ID format')
+        return v
+```
+
+## RÈGLE 5 - DEPENDENCY SECURITY
+# Gestion stricte des dépendances et vulnérabilités
+
+ALWAYS check:
+- Use exact versions in requirements.txt (==X.Y.Z, not >=)
+- Pin dependencies with hash verification (pip-tools)
+- Scan for known vulnerabilities (safety, snyk)
+- Update dependencies monthly (automated PR)
+
+NEVER use:
+- Deprecated packages or unmaintained libraries
+- Packages with known CVEs without mitigation plan
+- Wildcard version specifiers (*)
+
+## RÈGLE 6 - ERROR HANDLING & LOGGING
+# Gestion sécurisée des erreurs sans fuite d'information
+
+ALWAYS implement:
+- Generic error messages for users (avoid stack traces in production)
+- Detailed logging for debugging (with log levels)
+- Structured logging (JSON format for parsing)
+- Sensitive data redaction in logs (passwords, tokens)
+
+NEVER log:
+- User passwords or authentication tokens
+- Credit card numbers or PII
+- Full stack traces in production logs
+- Database connection strings
+
+Example:
+```python
+import logging
+from typing import Any
+
+logger = logging.getLogger(__name__)
+
+try:
+    result = process_payment(user_id, amount)
+except PaymentError as e:
+    logger.error("Payment failed", extra={
+        "user_id": user_id,
+        "amount": amount,
+        "error_code": e.code
+    })
+    raise HTTPException(status_code=400, detail="Payment processing failed")
+```
+
+## RÈGLE 7 - AUTHENTICATION & AUTHORIZATION
+# Sécurité des endpoints et contrôle d'accès
+
+ALWAYS enforce:
+- JWT validation on protected endpoints
+- Role-Based Access Control (RBAC) checks
+- Rate limiting on authentication endpoints
+- Password hashing with Argon2id (ANSSI 2026)
+- HTTPS-only cookies with Secure, HttpOnly, SameSite flags
+
+NEVER implement:
+- Custom cryptography (use proven libraries)
+- Session tokens in URL parameters
+- Weak password policies (<12 chars, no complexity)
+- Authentication without rate limiting
+
+## RÈGLE 8 - DATABASE SECURITY
+# Protection des données et requêtes sécurisées
+
+ALWAYS use:
+- Parameterized queries (SQLAlchemy ORM, psycopg2 with placeholders)
+- Least privilege database users (read-only where possible)
+- Connection pooling with timeouts
+- Encrypted connections (SSL/TLS for PostgreSQL)
+
+NEVER use:
+- Raw SQL with f-strings or string concatenation
+- Root/admin database credentials in application code
+- SELECT * (specify columns explicitly)
+- Unencrypted database connections
+
+## RÈGLE 9 - DOCKER & INFRASTRUCTURE
+# Sécurité des conteneurs et configuration réseau
+
+ALWAYS configure:
+- Non-root users in Dockerfiles (USER directive)
+- Minimal base images (alpine, distroless)
+- Port binding to 127.0.0.1 only (prevent UFW bypass)
+- Resource limits (CPU, memory) in docker-compose.yml
+- Health checks for all services
+
+NEVER expose:
+- Internal services on 0.0.0.0 (use 127.0.0.1)
+- Unnecessary ports to the internet
+- Debug/development endpoints in production
+- Docker socket to containers
+
+## RÈGLE 10 - CODE REVIEW CHECKLIST
+# Validation automatique avant commit
+
+Before generating code, verify:
+- [ ] No hardcoded secrets or credentials
+- [ ] All functions have type hints (Python) or types (TypeScript)
+- [ ] Input validation implemented for user-facing functions
+- [ ] Error handling with appropriate logging
+- [ ] Tests written for new functionality
+- [ ] Dependencies are pinned and scanned
+- [ ] Docker ports bound to localhost only
+- [ ] HTTPS enforced for external communications
+- [ ] RBAC checks on protected endpoints
+- [ ] SQL queries use parameterized statements
+
+## RÈGLE 11 - COMPLIANCE & LEGAL
+# Conformité RGPD, ANSSI, WCAG
+
+ALWAYS ensure:
+- Personal data processing has legal basis (RGPD Art. 6)
+- User consent collected before data collection
+- Data retention policies implemented (auto-delete after X days)
+- Accessibility WCAG 2.2 AA compliance for frontend
+- ANSSI 2026 password policy (12+ chars, complexity, no reuse)
+
+NEVER implement:
+- Data collection without explicit user consent
+- Permanent data storage without retention policy
+- Inaccessible UI elements (missing ARIA labels)
+- Weak password policies
+
+## RÈGLE 12 - EMERGENCY ROLLBACK
+# Capacité de rollback en cas de détection de faille
+
+ALWAYS maintain:
+- Tagged Docker images for each deployment
+- Database migration rollback scripts
+- Configuration backups before changes
+- Incident response documentation
+
+## ENFORCEMENT
+# Ces règles sont appliquées automatiquement par Cascade
+
+Violation de ces règles = Code refusé avant génération
+Cascade doit signaler toute tentative de contournement
+En cas de doute, privilégier la sécurité sur la fonctionnalité
+
+## AUDIT TRAIL
+# Traçabilité des décisions de sécurité
+
+Cascade doit documenter:
+- Pourquoi une approche sécurisée a été choisie
+- Quelles alternatives ont été rejetées et pourquoi
+- Références aux standards (OWASP, ANSSI, NIST)

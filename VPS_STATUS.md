@@ -17,6 +17,24 @@
 - **Status** : Timeout (normal, ICMP souvent bloqué)
 - **Impact** : Aucun, SSH fonctionne
 
+### ✅ Port HTTP (80)
+- **Status** : Ouvert et fonctionnel
+- **Test** : `curl -I http://76.13.43.3`
+- **Résultat** : `HTTP/1.1 200 OK` - Nginx 1.24.0
+- **Validation** : 18 avril 2026 23:20 UTC
+
+### ✅ Port HTTPS (443)
+- **Status** : Ouvert (certificat SSL à configurer)
+- **Test** : `curl -I https://76.13.43.3`
+- **Résultat** : Port accessible, erreur SSL normale
+- **Action requise** : Configurer Let's Encrypt
+
+### ✅ Nginx
+- **Version** : nginx/1.24.0 (Ubuntu)
+- **Status** : Actif (PID: 603591)
+- **Workers** : 3 processus
+- **Ports** : 80, 443 en écoute sur 0.0.0.0
+
 ## Prochaines Étapes
 
 ### Option A - Déploiement Automatique (Recommandé)

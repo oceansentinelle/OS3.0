@@ -1,0 +1,30 @@
+# Ocean Sentinel - Outils de Développement et Sécurité
+# ======================================================
+# Installation : pip install -r requirements-dev.txt
+
+# Linting & Formatage
+pylint==3.0.3
+black==23.12.1
+flake8==7.0.0
+isort==5.13.2
+
+# Type Checking
+mypy==1.8.0
+types-requests==2.31.0.20240106
+
+# Testing
+pytest==7.4.4
+pytest-cov==4.1.0
+pytest-asyncio==0.23.3
+pytest-mock==3.12.0
+
+# Security Scanning
+safety==3.0.1
+bandit==1.7.6
+detect-secrets==1.4.0
+
+# SAST
+semgrep==1.55.2
+
+# Dependency Management
+pip-tools==7.3.0

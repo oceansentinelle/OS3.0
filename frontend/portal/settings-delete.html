@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suppression de compte - Ocean Sentinel Portal</title>
+  <link rel="stylesheet" href="../assets/css/portal.css">
+</head>
+<body class="portal-page">
+
+  <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
+  <header role="banner" class="portal-header">
+    <div class="container">
+      <a href="/portal" class="logo">
+        <svg width="32" height="32" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="20" cy="20" r="18" fill="#004a99"/>
+          <path d="M20 10 L20 30 M10 20 L30 20" stroke="white" stroke-width="3"/>
+        </svg>
+        <span>Ocean Sentinel Portal</span>
+      </a>
+      <nav role="navigation" aria-label="Navigation principale" class="main-nav">
+        <a href="/portal/overview">Vue d'ensemble</a>
+        <a href="/portal/api">API</a>
+        <a href="/portal/alerts">Alertes</a>
+        <a href="/portal/data">Données</a>
+        <a href="/portal/settings" aria-current="page">Paramètres</a>
+      </nav>
+      <div class="user-menu">
+        <button class="user-button" aria-label="Menu utilisateur" aria-expanded="false">
+          <span class="user-avatar">U</span>
+          <span class="user-email">user@example.com</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="portal-layout">
+    
+    <aside class="portal-sidebar" role="navigation" aria-label="Navigation des paramètres">
+      <nav class="sidebar-nav">
+        <a href="/portal/settings/profile">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          Profil
+        </a>
+        <a href="/portal/settings/security">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+          </svg>
+          Sécurité
+        </a>
+        <a href="/portal/settings/billing">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+          </svg>
+          Facturation
+        </a>
+        <a href="/portal/settings/preferences">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+          </svg>
+          Préférences
+        </a>
+        <a href="/portal/settings/delete-account" aria-current="page" class="danger">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+          </svg>
+          Supprimer mon compte
+        </a>
+      </nav>
+    </aside>
+
+    <main id="main-content" class="portal-main">
+      
+      <div class="deletion-flow">
+        
+        <div id="step-1" class="step active">
+          <h1>Suppression de compte</h1>
+          
+          <div class="warning-box" role="alert">
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+            </svg>
+            <p><strong>Attention :</strong> Cette action est irréversible et entraînera la perte définitive de toutes vos données.</p>
+          </div>
+          
+          <p>Vous pouvez supprimer définitivement votre compte Ocean Sentinel à tout moment, conformément à votre droit à l'effacement (Art. 17 RGPD).</p>
+          
+          <h2>Que se passera-t-il ?</h2>
+          <ul class="info-list">
+            <li>✓ Suppression immédiate de votre compte</li>
+            <li>✓ Révocation de toutes vos clés API</li>
+            <li>✓ Suppression de toutes vos alertes configurées</li>
+            <li>✓ Effacement de vos données personnelles sous 30 jours</li>
+            <li>✓ Perte d'accès à l'historique de vos données</li>
+          </ul>
+          
+          <p class="legal-info">
+            <strong>Délai d'effacement :</strong> Vos données seront effacées sous 30 jours maximum, 
+            conformément aux obligations légales de traçabilité (RGPD). Les données de facturation 
+            seront conservées 10 ans (obligation comptable française).
+          </p>
+          
+          <button 
+            id="btn-step1" 
+            class="btn-danger btn-large" 
+            onclick="goToStep(2)"
+            aria-label="Supprimer mon compte - Étape 1 sur 3"
+          >
+            Supprimer mon compte
+          </button>
+          
+          <a href="/portal/settings" class="btn-ghost">Annuler</a>
+        </div>
+        
+        <div id="step-2" class="step">
+          <h1>Récapitulatif de suppression</h1>
+          
+          <div class="warning-box warning-critical" role="alert">
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+            <p><strong>⚠️ Attention :</strong> Cette action est irréversible.</p>
+          </div>
+          
+          <p>Vous êtes sur le point de supprimer votre compte associé à l'adresse :</p>
+          <p class="highlight-email"><strong id="user-email">user@example.com</strong></p>
+          
+          <h2>Conséquences de la suppression :</h2>
+          
+          <div class="consequence-grid">
+            <div class="consequence-card">
+              <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#c41e3a" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+              </svg>
+              <h3>Clés API</h3>
+              <p>Toutes vos clés API seront révoquées immédiatement. Vos applications ne pourront plus accéder à l'API.</p>
+            </div>
+            
+            <div class="consequence-card">
+              <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#c41e3a" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+              </svg>
+              <h3>Alertes</h3>
+              <p>Toutes vos alertes configurées seront supprimées. Vous ne recevrez plus aucune notification.</p>
+            </div>
+            
+            <div class="consequence-card">
+              <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#c41e3a" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+              </svg>
+              <h3>Données</h3>
+              <p>Perte définitive de l'accès à votre historique de données et statistiques d'usage.</p>
+            </div>
+            
+            <div class="consequence-card">
+              <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#c41e3a" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+              </svg>
+              <h3>Abonnement</h3>
+              <p>Si vous avez un abonnement payant, il sera annulé sans remboursement au prorata.</p>
+            </div>
+          </div>
+          
+          <div class="legal-info">
+            <p><strong>Délai d'effacement :</strong> 30 jours maximum (conformité RGPD)</p>
+            <p><strong>Données conservées :</strong> Facturation uniquement (10 ans - obligation légale)</p>
+            <p><strong>Récupération :</strong> Impossible après validation de l'étape 3</p>
+          </div>
+          
+          <div class="button-group">
+            <button 
+              class="btn-danger btn-large" 
+              onclick="goToStep(3)"
+              aria-label="Valider ces informations - Étape 2 sur 3"
+            >
+              J'ai compris, continuer
+            </button>
+            <button 
+              class="btn-ghost" 
+              onclick="cancelDeletion()"
+              aria-label="Annuler la suppression"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
+        
+        <div id="step-3" class="step">
+          <h1>Confirmation finale</h1>
+          
+          <div class="warning-box warning-critical" role="alert" aria-live="assertive">
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+            <p><strong>🚨 Dernière étape :</strong> Cette action est définitive et irréversible.</p>
+          </div>
+          
+          <p class="final-warning">
+            En cliquant sur le bouton ci-dessous, vous confirmez la suppression <strong>immédiate et irréversible</strong> 
+            de votre compte Ocean Sentinel et de toutes les données associées.
+          </p>
+          
+          <div class="final-checklist">
+            <h2>Vérification finale :</h2>
+            <label class="checkbox-wrapper">
+              <input type="checkbox" id="confirm-understand" required>
+              <span>Je comprends que cette action est irréversible</span>
+            </label>
+            <label class="checkbox-wrapper">
+              <input type="checkbox" id="confirm-data-loss" required>
+              <span>J'accepte la perte définitive de mes clés API et alertes</span>
+            </label>
+            <label class="checkbox-wrapper">
+              <input type="checkbox" id="confirm-no-refund" required>
+              <span>Je comprends qu'aucun remboursement ne sera effectué</span>
+            </label>
+          </div>
+          
+          <form action="/api/auth/delete-account" method="POST" id="deletion-form">
+            <input type="hidden" name="confirmation" value="true">
+            <input type="hidden" name="timestamp" id="deletion-timestamp">
+            
+            <button 
+              type="submit" 
+              class="btn-danger btn-large" 
+              id="final-delete-btn"
+              disabled
+              aria-label="Confirmer la suppression définitive - Étape 3 sur 3"
+            >
+              Confirmer la suppression définitive
+            </button>
+            
+            <button 
+              type="button" 
+              class="btn-ghost" 
+              onclick="cancelDeletion()"
+            >
+              Non, conserver mon compte
+            </button>
+          </form>
+          
+          <p class="legal-footer">
+            <strong>Vos droits RGPD :</strong> Cette suppression est effectuée dans le cadre de votre 
+            droit à l'effacement (Art. 17 RGPD). Pour toute question : dpo@oceansentinel.fr
+          </p>
+        </div>
+        
+      </div>
+      
+    </main>
+    
+  </div>
+
+  <script>
+    function goToStep(stepNumber) {
+      document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+      document.getElementById(`step-${stepNumber}`).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      announceToScreenReader(`Étape ${stepNumber} sur 3`);
+    }
+    
+    function cancelDeletion() {
+      if (confirm('Êtes-vous sûr de vouloir annuler la suppression de compte ?')) {
+        window.location.href = '/portal/settings';
+      }
+    }
+    
+    function announceToScreenReader(message) {
+      const announcement = document.createElement('div');
+      announcement.setAttribute('role', 'status');
+      announcement.setAttribute('aria-live', 'polite');
+      announcement.className = 'sr-only';
+      announcement.textContent = message;
+      document.body.appendChild(announcement);
+      setTimeout(() => document.body.removeChild(announcement), 1000);
+    }
+    
+    const checkboxes = document.querySelectorAll('.final-checklist input[type="checkbox"]');
+    const finalBtn = document.getElementById('final-delete-btn');
+    
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+        finalBtn.disabled = !allChecked;
+      });
+    });
+    
+    document.getElementById('deletion-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+      if (!allChecked) {
+        alert('Veuillez cocher toutes les cases de confirmation.');
+        return;
+      }
+      
+      const finalConfirm = confirm(
+        'DERNIÈRE CONFIRMATION\n\n' +
+        'Êtes-vous absolument certain de vouloir supprimer votre compte ?\n\n' +
+        'Cette action est IRRÉVERSIBLE.'
+      );
+      
+      if (!finalConfirm) return;
+      
+      document.getElementById('deletion-timestamp').value = new Date().toISOString();
+      
+      try {
+        const response = await fetch('/api/auth/delete-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            confirmation: true,
+            timestamp: new Date().toISOString()
+          })
+        });
+        
+        if (response.ok) {
+          alert('Votre compte a été supprimé. Vous allez être redirigé vers la page d\'accueil.');
+          window.location.href = '/';
+        } else {
+          const error = await response.json();
+          alert('Erreur lors de la suppression : ' + error.message);
+        }
+      } catch (error) {
+        alert('Erreur réseau : ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Créez votre compte Ocean Sentinel pour accéder aux API et alertes océanographiques">
+  <title>Inscription - Ocean Sentinel Portal</title>
+  <link rel="stylesheet" href="../assets/css/portal.css">
+</head>
+<body class="auth-page">
+
+  <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
+  <header role="banner" class="auth-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="20" cy="20" r="18" fill="#004a99"/>
+          <path d="M20 10 L20 30 M10 20 L30 20" stroke="white" stroke-width="3"/>
+        </svg>
+        <span>Ocean Sentinel</span>
+      </a>
+      <nav role="navigation" aria-label="Navigation principale">
+        <a href="/auth/login" class="nav-link">Déjà membre ? Se connecter</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="auth-main">
+    <div class="auth-container">
+      
+      <div class="auth-header-content">
+        <h1>Créer mon compte</h1>
+        <p class="subtitle">Accédez aux API et alertes océanographiques</p>
+      </div>
+
+      <form 
+        action="/api/auth/register" 
+        method="POST" 
+        class="auth-form" 
+        id="register-form"
+        novalidate
+      >
+        
+        <div class="form-group">
+          <label for="email" class="form-label">
+            Adresse email
+            <span class="required" aria-label="obligatoire">*</span>
+          </label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            class="form-input"
+            required 
+            aria-required="true"
+            aria-describedby="email-help email-error"
+            autocomplete="email"
+            placeholder="votre.email@exemple.fr"
+          >
+          <span id="email-help" class="help-text">
+            Utilisez une adresse email professionnelle de préférence
+          </span>
+          <span id="email-error" class="error-message" role="alert" aria-live="polite"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">
+            Mot de passe
+            <span class="required" aria-label="obligatoire">*</span>
+          </label>
+          <div class="password-wrapper">
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              class="form-input"
+              required 
+              aria-required="true"
+              aria-describedby="password-help password-strength password-error"
+              autocomplete="new-password"
+              minlength="12"
+            >
+            <button 
+              type="button" 
+              class="toggle-password" 
+              aria-label="Afficher le mot de passe"
+              aria-pressed="false"
+              onclick="togglePassword()"
+            >
+              <svg class="icon-eye" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+              </svg>
+            </button>
+          </div>
+          
+          <div id="password-help" class="help-text">
+            <strong>Critères de sécurité ANSSI 2026 :</strong>
+            <ul class="password-requirements" role="list">
+              <li id="req-length">Minimum 12 caractères</li>
+              <li id="req-uppercase">Au moins 1 majuscule (A-Z)</li>
+              <li id="req-lowercase">Au moins 1 minuscule (a-z)</li>
+              <li id="req-number">Au moins 1 chiffre (0-9)</li>
+              <li id="req-special">Au moins 1 caractère spécial (!@#$%^&*)</li>
+            </ul>
+          </div>
+          
+          <div id="password-strength" class="password-strength" aria-live="polite">
+            <div class="strength-bar">
+              <div class="strength-fill" data-strength="0"></div>
+            </div>
+            <span class="strength-text">Force : <strong>Aucune</strong></span>
+          </div>
+          
+          <span id="password-error" class="error-message" role="alert" aria-live="polite"></span>
+        </div>
+
+        <div class="form-group consent-group">
+          <div class="checkbox-wrapper">
+            <input 
+              type="checkbox" 
+              id="consent" 
+              name="consent" 
+              class="form-checkbox"
+              required
+              aria-required="true"
+              aria-describedby="consent-error"
+            >
+            <label for="consent" class="checkbox-label">
+              J'accepte les 
+              <a href="/legal/cgu" target="_blank" rel="noopener noreferrer" class="legal-link">
+                Conditions Générales d'Utilisation
+                <span class="sr-only">(s'ouvre dans un nouvel onglet)</span>
+              </a> 
+              et la 
+              <a href="/legal/privacy" target="_blank" rel="noopener noreferrer" class="legal-link">
+                Politique de confidentialité
+                <span class="sr-only">(s'ouvre dans un nouvel onglet)</span>
+              </a>
+            </label>
+          </div>
+          <span id="consent-error" class="error-message" role="alert" aria-live="polite"></span>
+        </div>
+
+        <button type="submit" class="btn-primary btn-block" id="submit-btn">
+          <span class="btn-text">Créer mon compte</span>
+          <span class="btn-loader" aria-hidden="true" style="display:none;">
+            <svg class="spinner" width="20" height="20" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10">
+                <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+          </span>
+        </button>
+
+        <div class="legal-notice" role="region" aria-label="Information sur la protection des données">
+          <h2 class="legal-title">
+            <svg class="icon-shield" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+            </svg>
+            Informations sur la protection de vos données personnelles (Art. 13 RGPD)
+          </h2>
+          
+          <div class="legal-content">
+            <p>
+              <strong>Responsable du traitement :</strong><br>
+              Ocean Sentinel SAS, RCS Bordeaux XXX XXX XXX, [Adresse complète].<br>
+              Contact : contact@oceansentinel.fr | DPO : dpo@oceansentinel.fr
+            </p>
+            
+            <p>
+              <strong>Finalité :</strong> Création et gestion de votre compte, génération de clés API, 
+              configuration d'alertes océanographiques, suivi de consommation API.
+            </p>
+            
+            <p>
+              <strong>Base légale :</strong> Consentement (Art. 6.1.a RGPD) et exécution du contrat (Art. 6.1.b).
+            </p>
+            
+            <p>
+              <strong>Données collectées :</strong> Email, mot de passe chiffré (bcrypt), adresse IP, 
+              statistiques d'usage API. Paiements gérés par Stripe (PCI-DSS).
+            </p>
+            
+            <p>
+              <strong>Destinataires :</strong> Usage interne uniquement. Sous-traitants : Hostinger (hébergement UE), 
+              Stripe (paiement, CCT approuvées).
+            </p>
+            
+            <p>
+              <strong>Conservation :</strong> Durée de vie du compte, puis 30 jours max après suppression. 
+              Logs sécurité : 12 mois (ANSSI). Facturation : 10 ans (obligation légale).
+            </p>
+            
+            <p>
+              <strong>Vos droits :</strong> Accès, rectification, effacement ("droit à l'oubli" via Paramètres > 
+              Supprimer mon compte en 3 clics), limitation, portabilité (JSON/CSV), retrait du consentement, 
+              opposition.
+            </p>
+            
+            <p>
+              <strong>Exercer vos droits :</strong> dpo@oceansentinel.fr (réponse sous 1 mois) ou 
+              <a href="/contact-dpo" class="legal-link">formulaire sécurisé</a>.
+            </p>
+            
+            <p>
+              <strong>Réclamation CNIL :</strong> 
+              <a href="https://www.cnil.fr/fr/plaintes" target="_blank" rel="noopener noreferrer" class="legal-link">
+                www.cnil.fr/fr/plaintes
+                <span class="sr-only">(s'ouvre dans un nouvel onglet)</span>
+              </a>
+            </p>
+            
+            <p>
+              <strong>Sécurité :</strong> SSL/TLS 1.3, bcrypt (facteur 12), 2FA disponible, audits réguliers. 
+              Notification sous 72h en cas de violation (Art. 34 RGPD).
+            </p>
+            
+            <p class="legal-footer">
+              <em>Dernière mise à jour : 19 avril 2026 - Version 2.0</em>
+            </p>
+          </div>
+        </div>
+
+        <div class="security-badge">
+          <svg class="icon-lock" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+          </svg>
+          Connexion sécurisée SSL/TLS 1.3 - Conforme ANSSI 2026
+        </div>
+
+      </form>
+
+      <p class="alt-action">
+        Vous avez déjà un compte ? 
+        <a href="/auth/login" class="link-primary">Se connecter</a>
+      </p>
+
+    </div>
+  </main>
+
+  <footer role="contentinfo" class="auth-footer">
+    <div class="container">
+      <nav role="navigation" aria-label="Navigation légale">
+        <ul class="footer-links">
+          <li><a href="/legal/mentions">Mentions Légales</a></li>
+          <li><a href="/legal/privacy">Politique de Confidentialité</a></li>
+          <li><a href="/legal/cgu">CGU</a></li>
+          <li><a href="/legal/accessibility">Accessibilité : conforme RGAA 5.0</a></li>
+          <li><a href="/contact-dpo">Contact DPO</a></li>
+        </ul>
+      </nav>
+      <p class="copyright">© 2026 Ocean Sentinel SAS - Tous droits réservés</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/auth.js"></script>
+</body>
+</html>

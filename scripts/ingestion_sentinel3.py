@@ -2,9 +2,10 @@
 """
 ================================================================================
 Ocean Sentinel V3.0 - Ingestion Copernicus Sentinel-3 (Proxy Satellitaire)
+Mission 11 - Connecteur OSINT avec Optimisation Mémoire Stricte
 ================================================================================
 
-Ingestion de données satellitaires Sentinel-3 SLSTR pour le Bassin d'Arcachon
+Ingestion NRT de données satellitaires Sentinel-3 SLSTR pour le Bassin d'Arcachon
 comme proxy des mesures in-situ BARAG.
 
 Source: Copernicus Marine Service (CMEMS)
@@ -12,7 +13,16 @@ Produit: SST_GLO_SST_L3S_NRT_OBSERVATIONS_010_010
 Résolution: 1 km
 Latence: T-24h (Near Real Time)
 
-Conformité: ABACODE 2.0 - Données marquées "inferred" dans quality_flag
+Conformité: 
+- ABACODE 2.0 - Données marquées "inferred" dans quality_flag
+- SACS-001 - Métadonnées strictes (source, statut, incertitude)
+- Limite RAM: 256 Mo (lazy loading avec xarray + chunking)
+
+Architecture:
+- Lazy loading NetCDF avec xarray (pas de chargement complet en mémoire)
+- Chunking spatial/temporel pour traitement par blocs
+- Upsert idempotent (ON CONFLICT DO UPDATE)
+- Monitoring mémoire en temps réel
 ================================================================================
 """
 
@@ -22,8 +32,10 @@ import logging
 import psycopg2
 from datetime import datetime, timedelta
 import requests
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Tuple
 import json
+import gc
+import tracemalloc
 
 # ============================================================================
 # Configuration

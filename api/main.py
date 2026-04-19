@@ -150,7 +150,18 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Ocean Sentinel API",
-    description="API REST pour accès aux données océanographiques COAST-HF",
+    description="""
+    API REST pour accès aux données océanographiques COAST-HF
+    
+    **🏠 [Retour à la page d'accueil](/)** | **📖 [Le Projet](/about.html)**
+    
+    ## Sources de données
+    - ERDDAP COAST-HF (Ifremer)
+    - Hub'Eau (BRGM)
+    
+    ## Stations disponibles
+    - BARAG (Bassin d'Arcachon)
+    """,
     version="3.0.0",
     lifespan=lifespan
 )
@@ -363,11 +374,12 @@ async def get_measurement_history(
 
 if __name__ == "__main__":
     import uvicorn
+    import os
     
     uvicorn.run(
         "main:app",
-        host="0.0.0.0",
-        port=8000,
+        host=os.getenv("APP_HOST", "127.0.0.1"),
+        port=int(os.getenv("APP_PORT", "8000")),
         log_level="info",
         access_log=True
     )

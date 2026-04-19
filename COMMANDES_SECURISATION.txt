@@ -1,0 +1,48 @@
+# ============================================
+# COMMANDES DE SÉCURISATION - COPIER-COLLER
+# Ocean Sentinel - ABACODE 2.0
+# ============================================
+
+# ÉTAPE 1: Créer le répertoire de sauvegarde
+mkdir -p /opt/oceansentinel/backups
+
+# ÉTAPE 2: Créer une sauvegarde horodatée
+cp /opt/oceansentinel/docker-compose.yml /opt/oceansentinel/backups/docker-compose.yml.backup-$(date +%Y%m%d-%H%M%S)
+
+# ÉTAPE 3: Sécuriser les ports (remplacer 0.0.0.0 par 127.0.0.1)
+sed -i 's/0\.0\.0\.0:/127.0.0.1:/g' /opt/oceansentinel/docker-compose.yml
+
+# ÉTAPE 4: Vérifier les modifications
+echo "=== Ports sécurisés ==="
+grep -n "127.0.0.1:" /opt/oceansentinel/docker-compose.yml | grep -E ":(5432|6379|8000|9000)"
+
+# ÉTAPE 5: Vérifier qu'il ne reste plus de 0.0.0.0
+echo ""
+echo "=== Vérification (devrait être vide) ==="
+grep -n "0.0.0.0:" /opt/oceansentinel/docker-compose.yml || echo "✅ Aucun port 0.0.0.0 trouvé"
+
+# ÉTAPE 6: Valider la syntaxe YAML
+echo ""
+echo "=== Validation YAML ==="
+docker compose -f /opt/oceansentinel/docker-compose.yml config > /dev/null && echo "✅ Syntaxe YAML valide" || echo "❌ Erreur de syntaxe"
+
+# ÉTAPE 7: Redémarrer les services
+echo ""
+echo "=== Redémarrage des services ==="
+cd /opt/oceansentinel
+docker compose down
+docker compose up -d
+
+# ÉTAPE 8: Vérifier que les ports sont bien sur localhost
+echo ""
+echo "=== Vérification des ports (tous doivent être sur 127.0.0.1) ==="
+netstat -tlnp | grep -E ':(5432|6379|8000|9000)'
+
+# ÉTAPE 9: Tester l'API
+echo ""
+echo "=== Test de l'API ==="
+curl http://127.0.0.1:8000/health
+
+# ============================================
+# FIN - SÉCURISATION TERMINÉE
+# ============================================
