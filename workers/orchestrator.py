@@ -37,6 +37,7 @@ from apscheduler.triggers.interval import IntervalTrigger
 
 # Imports connecteurs Phase 1
 from workers.connectors.erddap_ifremer import get_coast_hf_arcachon_connector, get_somlit_arcachon_connector
+from workers.connectors.euskoos_hfr import ArcachonHFRConnector
 from workers.connectors.hubeau import get_bassin_arcachon_connector
 from workers.connectors.seanoe_loader import SeanoeLoader
 from workers.connectors.siba_enki_loader import SibaEnkiLoader
@@ -148,6 +149,29 @@ def run_erddap_somlit():
         start_time.isoformat(),
         end_time.isoformat()
     )
+
+
+def run_hfr_currents():
+    """Job HFR Courants de surface (CALYPSO-LICA test)."""    
+    from workers.pipelines.ingest import insert_hfr_measurement
+    
+    connector = ArcachonHFRConnector()
+    
+    # Récupérer dernière mesure
+    measurement = connector.fetch_data()
+    
+    if measurement:
+        logger.info(
+            "hfr_currents.complete | timestamp=%s | u=%s | v=%s | qc=%s",
+            measurement.get('timestamp'),
+            measurement.get('u'),
+            measurement.get('v'),
+            measurement.get('qc')
+        )
+        # Stocker dans PostgreSQL
+        insert_hfr_measurement(measurement, source="EUHFR_NRTcurrent_HFR-CALYPSO-LICA_v3")
+    else:
+        logger.warning("hfr_currents.no_data")
 
 
 def run_hubeau():
@@ -280,11 +304,18 @@ def build_jobs() -> Iterable[JobSpec]:
     return [
         # Phase 1 - MVP
         JobSpec(
+            job_id="hfr_currents",
+            enabled=_bool_env("ENABLE_HFR_CURRENTS", True),
+            interval_minutes=_int_env("HFR_CURRENTS_INTERVAL_MINUTES", 60),
+            runner=_safe_run("hfr_currents", run_hfr_currents),
+            description="Ingestion HFR courants surface (hourly)",
+        ),
+        JobSpec(
             job_id="erddap_coast_hf",
-            enabled=_bool_env("ENABLE_ERDDAP_COAST_HF", True),
+            enabled=_bool_env("ENABLE_ERDDAP_COAST_HF", False),
             interval_minutes=_int_env("ERDDAP_COAST_HF_INTERVAL_MINUTES", 60),
             runner=_safe_run("erddap_coast_hf", run_erddap_coast_hf),
-            description="Ingestion ERDDAP COAST-HF Arcachon-Ferret (hourly)",
+            description="Ingestion ERDDAP COAST-HF Arcachon-Ferret (hourly) - DISABLED",
         ),
         JobSpec(
             job_id="erddap_somlit",
