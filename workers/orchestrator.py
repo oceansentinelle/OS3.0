@@ -174,6 +174,35 @@ def run_hfr_currents():
         logger.warning("hfr_currents.no_data")
 
 
+def run_arcachon_synthetic():
+    """Job Arcachon Synthétique (ABACODE 2.0 - Statut simulé)."""
+    from workers.connectors.arcachon_synthetic import ArcachonSyntheticConnector
+    from workers.pipelines.ingest import insert_hfr_measurement
+    
+    connector = ArcachonSyntheticConnector(config={
+        'center_lat': 44.6,
+        'center_lon': -1.2
+    })
+    
+    # Récupérer mesure synthétique
+    measurement = connector.fetch_data()
+    
+    if measurement:
+        logger.info(
+            "arcachon_synthetic.complete | timestamp=%s | u=%s | v=%s | temp=%s | sal=%s | status=%s",
+            measurement.get('timestamp'),
+            measurement.get('u'),
+            measurement.get('v'),
+            measurement.get('temperature'),
+            measurement.get('salinity'),
+            measurement.get('status')
+        )
+        # Stocker dans PostgreSQL avec métadonnées ABACODE
+        insert_hfr_measurement(measurement, source="OceanSentinel-SynthNode-Arcachon")
+    else:
+        logger.warning("arcachon_synthetic.no_data")
+
+
 def run_hubeau():
     """Job Hub'Eau Bassin d'Arcachon."""
     from datetime import timedelta
@@ -323,6 +352,13 @@ def build_jobs() -> Iterable[JobSpec]:
             interval_minutes=_int_env("ERDDAP_SOMLIT_INTERVAL_MINUTES", 360),  # 6h
             runner=_safe_run("erddap_somlit", run_erddap_somlit),
             description="Ingestion ERDDAP SOMLIT Arcachon (every 6h)",
+        ),
+        JobSpec(
+            job_id="arcachon_synthetic",
+            enabled=_bool_env("ENABLE_ARCACHON_SYNTHETIC", True),
+            interval_minutes=_int_env("ARCACHON_SYNTHETIC_INTERVAL_MINUTES", 60),  # 1h
+            runner=_safe_run("arcachon_synthetic", run_arcachon_synthetic),
+            description="Ingestion Arcachon Synthétique ABACODE 2.0 (hourly)",
         ),
         JobSpec(
             job_id="hubeau",
