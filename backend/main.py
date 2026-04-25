@@ -29,7 +29,7 @@ from psycopg2.pool import SimpleConnectionPool
 # from alerts import SACSAlertSystem  # TODO: Implémenter plus tard
 
 # Routes
-from api.routes import health as health_routes
+from backend.routes import health as health_routes
 
 # Configuration logging
 logging.basicConfig(
@@ -42,13 +42,19 @@ logger = logging.getLogger(__name__)
 # CONFIGURATION
 # ============================================================================
 
-DB_CONFIG = {
-    'host': os.getenv('DB_HOST', 'timescaledb'),
-    'port': int(os.getenv('DB_PORT', '5432')),
-    'database': os.getenv('DB_NAME', 'oceansentinelle'),
-    'user': os.getenv('DB_USER', 'oceansentinel'),
-    'password': os.getenv('DB_PASSWORD', ''),
-}
+# Mode test local (sans base de données)
+TEST_MODE = os.getenv('TEST_MODE', 'false').lower() == 'true'
+
+if not TEST_MODE:
+    DB_CONFIG = {
+        'host': os.getenv('DB_HOST', 'timescaledb'),
+        'port': int(os.getenv('DB_PORT', '5432')),
+        'database': os.getenv('DB_NAME', 'oceansentinelle'),
+        'user': os.getenv('DB_USER', 'oceansentinel'),
+        'password': os.getenv('DB_PASSWORD', ''),
+    }
+else:
+    DB_CONFIG = None
 
 # Pool de connexions (optimisé RAM)
 db_pool = None
@@ -118,24 +124,30 @@ async def lifespan(app: FastAPI):
     logger.info("="*80)
     logger.info("OCEAN SENTINEL V3.0 - API REST")
     logger.info("="*80)
-    logger.info(f"Connexion à {DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['database']}")
+    
+    if TEST_MODE:
+        logger.info("🧪 MODE TEST LOCAL - Sans base de données")
+    else:
+        logger.info(f"Connexion à {DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['database']}")
     
     try:
-        # Pool minimal pour économiser la RAM (2 connexions max)
-        db_pool = SimpleConnectionPool(
-            minconn=1,
-            maxconn=2,
-            **DB_CONFIG
-        )
-        logger.info("✅ Pool de connexions créé (1-2 connexions)")
-        
-        # Initialiser le système d'alertes SACS
-        # sacs_alert_system = SACSAlertSystem(db_pool)  # TODO: Implémenter plus tard
-        # logger.info("✅ Système d'alertes SACS initialisé")
+        if not TEST_MODE:
+            # Pool minimal pour économiser la RAM (2 connexions max)
+            db_pool = SimpleConnectionPool(
+                minconn=1,
+                maxconn=2,
+                **DB_CONFIG
+            )
+            logger.info("✅ Pool de connexions créé (1-2 connexions)")
+            
+            # Initialiser le système d'alertes SACS
+            # sacs_alert_system = SACSAlertSystem(db_pool)  # TODO: Implémenter plus tard
+            # logger.info("✅ Système d'alertes SACS initialisé")
         
     except Exception as e:
         logger.error(f"❌ Erreur création pool: {e}")
-        raise
+        if not TEST_MODE:
+            raise
     
     yield
     
@@ -200,6 +212,15 @@ async def root():
 @app.get("/health", response_model=HealthResponse, tags=["Health"])
 async def health_check():
     """Vérification de santé de l'API et de la base de données"""
+    if TEST_MODE:
+        # Mode test local - retourne statut OK sans base de données
+        return HealthResponse(
+            status="healthy",
+            database="test_mode",
+            timestamp=datetime.utcnow(),
+            total_records=0
+        )
+    
     try:
         conn = db_pool.getconn()
         try:
@@ -234,6 +255,25 @@ async def get_latest_measurement(station_id: str):
     Returns:
         SensorMeasurement: Dernière mesure disponible
     """
+    if TEST_MODE:
+        # Mode test local - retourne données mock
+        mock_data = {
+            "time": datetime.utcnow(),
+            "station_id": station_id,
+            "temperature_water": 15.5,
+            "salinity": 35.2,
+            "conductivity": 5.4,
+            "pressure_water": 10.1,
+            "depth": 2.0,
+            "dissolved_oxygen": 250.0,
+            "ph": 8.1,
+            "turbidity": 2.3,
+            "chlorophyll_a": 1.2,
+            "quality_flag": 1,
+            "data_source": "TEST_MODE"
+        }
+        return SensorMeasurement(**mock_data)
+    
     try:
         conn = db_pool.getconn()
         try:
@@ -358,6 +398,54 @@ async def get_measurement_history(
             db_pool.putconn(conn)
     except Exception as e:
         logger.error(f"Error fetching history: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/v1/stations", tags=["Stations"])
+async def list_stations():
+    """Liste des stations disponibles pour les tests Newman"""
+    if TEST_MODE:
+        stations = [
+            {
+                "id": "BARAG",
+                "name": "BARAG",
+                "location": "Bassin d'Arcachon",
+                "source": "COAST-HF Ifremer"
+            },
+            {
+                "id": "ARCACHON_EYRAC",
+                "name": "EYRAC",
+                "location": "Bassin d'Arcachon",
+                "source": "Hub'Eau BRGM"
+            }
+        ]
+        return {"count": len(stations), "stations": stations}
+    
+    # Mode production - requête base de données
+    try:
+        conn = db_pool.getconn()
+        try:
+            with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+                cursor.execute("""
+                    SELECT DISTINCT station_id, 
+                           'COAST-HF' as source
+                    FROM barag.sensor_data
+                    ORDER BY station_id;
+                """)
+                results = cursor.fetchall()
+                stations = [
+                    {
+                        "id": row['station_id'],
+                        "name": row['station_id'],
+                        "location": "Bassin d'Arcachon",
+                        "source": row['source']
+                    }
+                    for row in results
+                ]
+                return {"count": len(stations), "stations": stations}
+        finally:
+            db_pool.putconn(conn)
+    except Exception as e:
+        logger.error(f"Error fetching stations: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # @app.get("/api/v1/alerts/sacs", tags=["SACS Alerts"])
