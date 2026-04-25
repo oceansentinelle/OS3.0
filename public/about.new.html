@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Le Projet Ocean Sentinelle - Surveillance environnementale du Bassin d'Arcachon. Objectifs, sources de données, architecture technique et système d'alertes.">
+    <meta name="keywords" content="projet océanographique, Bassin d'Arcachon, surveillance environnementale, ERDDAP, Hub'Eau, TimescaleDB">
+    <meta name="author" content="Ocean Sentinelle">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    
+    <title>Le Projet - Ocean Sentinelle</title>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-ocean-900/95 backdrop-blur-md border-b border-ocean-700/50 sticky top-0 z-50 no-print">
+        <nav class="container mx-auto px-4 py-4 flex items-center justify-between max-w-7xl" aria-label="Navigation principale">
+            <div class="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                    <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                    <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                    <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                </svg>
+                <span class="text-xl font-bold text-white">Ocean Sentinelle</span>
+            </div>
+            
+            <ul class="flex gap-6 items-center">
+                <li><a href="index.html" class="nav-link">Accueil</a></li>
+                <li><a href="about.html" class="nav-link" aria-current="page">Le Projet</a></li>
+                <li><a href="api.html" class="nav-link">API & Alertes</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-7xl">
+        <!-- Page Header -->
+        <header class="page-header">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/>
+                    <circle cx="12" cy="12" r="6"/>
+                    <circle cx="12" cy="12" r="2"/>
+                </svg>
+                <h1 class="text-4xl md:text-5xl font-bold text-gradient">Le Projet Ocean Sentinelle</h1>
+            </div>
+            <p class="page-subtitle">Surveillance environnementale du Bassin d'Arcachon</p>
+        </header>
+
+        <!-- Context Section -->
+        <section class="content-section">
+            <div class="card">
+                <div class="flex items-center gap-3 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                    </svg>
+                    <h2 class="text-2xl font-semibold text-white">Contexte</h2>
+                </div>
+                <p class="text-gray-300 leading-relaxed">
+                    Le Bassin d'Arcachon est un écosystème marin fragile soumis à de multiples pressions : 
+                    urbanisation, tourisme, aquaculture, changement climatique. La surveillance continue 
+                    de ses paramètres océanographiques est essentielle pour anticiper les crises écologiques.
+                </p>
+            </div>
+        </section>
+
+        <!-- Objectives Section -->
+        <section class="content-section">
+            <div class="card">
+                <div class="flex items-center gap-3 mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                    <h2 class="text-2xl font-semibold text-white">Objectifs</h2>
+                </div>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 flex-shrink-0 mt-0.5" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <div>
+                            <strong class="text-white">Centraliser</strong>
+                            <span class="text-gray-300"> les données océanographiques de sources multiples</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 flex-shrink-0 mt-0.5" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <div>
+                            <strong class="text-white">Détecter</strong>
+                            <span class="text-gray-300"> automatiquement les anomalies environnementales</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 flex-shrink-0 mt-0.5" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <div>
+                            <strong class="text-white">Alerter</strong>
+                            <span class="text-gray-300"> les professionnels en temps réel</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400 flex-shrink-0 mt-0.5" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <div>
+                            <strong class="text-white">Fournir</strong>
+                            <span class="text-gray-300"> une API REST pour l'intégration dans d'autres systèmes</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Data Sources Section -->
+        <section class="content-section">
+            <div class="flex items-center gap-3 mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                    <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/>
+                </svg>
+                <h2 class="text-2xl font-semibold text-white">Sources de Données</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- ERDDAP COAST-HF -->
+                <article class="card">
+                    <h3 class="text-xl font-semibold text-white mb-4">ERDDAP COAST-HF</h3>
+                    <dl class="space-y-2 text-sm">
+                        <div class="flex gap-2">
+                            <dt class="text-gray-400 font-medium min-w-[100px]">Fréquence:</dt>
+                            <dd class="text-gray-200">Horaire</dd>
+                        </div>
+                        <div class="flex gap-2">
+                            <dt class="text-gray-400 font-medium min-w-[100px]">Stations:</dt>
+                            <dd class="text-gray-200">Arcachon Eyrac, Cap Ferret</dd>
+                        </div>
+                        <div class="flex gap-2">
+                            <dt class="text-gray-400 font-medium min-w-[100px]">Paramètres:</dt>
+                            <dd class="text-gray-200">Température, salinité, oxygène, pH, turbidité, chlorophylle-a</dd>
+                        </div>
+                        <div class="flex gap-2">
+                            <dt class="text-gray-400 font-medium min-w-[100px]">Source:</dt>
+                            <dd class="text-gray-200">Ifremer</dd>
+                        </div>
+                    </dl>
+                </article>
+
+                <!-- Hub'Eau -->
+                <article class="card">
+                    <h3 class="text-xl font-semibold text-white mb-4">Hub'Eau</h3>
+                    <dl class="space-y-2 text-sm">
+                        <div class="flex gap-2">
+                            <dt class="text-gray-400 font-medium min-w-[100px]">Fréquence:</dt>
+                            <dd class="text-gray-200">Toutes les 6 heures</dd>
+                        </div>
+                        <div class="flex gap-2">
+                            <dt class="text-gray-400 font-medium min-w-[100px]">Zone:</dt>
+                            <dd class="text-gray-200">Bassin d'Arcachon</dd>
+                        </div>
+                        <div class="flex gap-2">
+                            <dt class="text-gray-400 font-medium min-w-[100px]">Paramètres:</dt>
+                            <dd class="text-gray-200">Qualité de l'eau, indicateurs biologiques</dd>
+                        </div>
+                        <div class="flex gap-2">
+                            <dt class="text-gray-400 font-medium min-w-[100px]">Source:</dt>
+                            <dd class="text-gray-200">BRGM / Agences de l'Eau</dd>
+                        </div>
+                    </dl>
+                </article>
+            </div>
+        </section>
+
+        <!-- Technical Architecture Section -->
+        <section class="content-section">
+            <div class="card">
+                <div class="flex items-center gap-3 mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                        <path d="M7 7h10"/>
+                        <path d="M7 12h10"/>
+                        <path d="M7 17h10"/>
+                    </svg>
+                    <h2 class="text-2xl font-semibold text-white">Architecture Technique</h2>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="bg-ocean-800/30 rounded-lg p-4 border border-ocean-700/30">
+                        <div class="text-sm text-gray-400 mb-1">Backend</div>
+                        <div class="text-white font-medium">Python 3.11, FastAPI, APScheduler</div>
+                    </div>
+                    <div class="bg-ocean-800/30 rounded-lg p-4 border border-ocean-700/30">
+                        <div class="text-sm text-gray-400 mb-1">Base de Données</div>
+                        <div class="text-white font-medium">PostgreSQL 16 + TimescaleDB</div>
+                    </div>
+                    <div class="bg-ocean-800/30 rounded-lg p-4 border border-ocean-700/30">
+                        <div class="text-sm text-gray-400 mb-1">Cache</div>
+                        <div class="text-white font-medium">Redis 7</div>
+                    </div>
+                    <div class="bg-ocean-800/30 rounded-lg p-4 border border-ocean-700/30">
+                        <div class="text-sm text-gray-400 mb-1">Stockage</div>
+                        <div class="text-white font-medium">MinIO (S3-compatible)</div>
+                    </div>
+                    <div class="bg-ocean-800/30 rounded-lg p-4 border border-ocean-700/30">
+                        <div class="text-sm text-gray-400 mb-1">Déploiement</div>
+                        <div class="text-white font-medium">Docker Compose, VPS Hostinger</div>
+                    </div>
+                    <div class="bg-ocean-800/30 rounded-lg p-4 border border-ocean-700/30">
+                        <div class="text-sm text-gray-400 mb-1">Monitoring</div>
+                        <div class="text-white font-medium">Healthchecks, Logs structurés</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alert System Section -->
+        <section class="content-section">
+            <div class="card">
+                <div class="flex items-center gap-3 mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400" aria-hidden="true">
+                        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" x2="12" y1="9" y2="13"/>
+                        <line x1="12" x2="12.01" y1="17" y2="17"/>
+                    </svg>
+                    <h2 class="text-2xl font-semibold text-white">Système d'Alertes</h2>
+                </div>
+                <p class="text-gray-300 mb-4">Détection automatique des seuils critiques :</p>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-3">
+                        <span class="text-red-400 font-bold">•</span>
+                        <div>
+                            <strong class="text-white">Acidification:</strong>
+                            <span class="text-gray-300"> pH < 7.8 (critique) ou < 7.9 (warning)</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-orange-400 font-bold">•</span>
+                        <div>
+                            <strong class="text-white">Hypoxie:</strong>
+                            <span class="text-gray-300"> O₂ < 150 µmol/kg (critique) ou < 175 µmol/kg (warning)</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-yellow-400 font-bold">•</span>
+                        <div>
+                            <strong class="text-white">Eutrophisation:</strong>
+                            <span class="text-gray-300"> Chlorophylle-a > seuils définis</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-blue-400 font-bold">•</span>
+                        <div>
+                            <strong class="text-white">Anomalies thermiques:</strong>
+                            <span class="text-gray-300"> Écarts significatifs par rapport aux moyennes saisonnières</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Target Audience Section -->
+        <section class="content-section">
+            <div class="flex items-center gap-3 mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <h2 class="text-2xl font-semibold text-white">Public Cible</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="card text-center">
+                    <div class="text-4xl mb-3">🏛️</div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Collectivités</h3>
+                    <p class="text-sm text-gray-300">Mairies, SIBA, Agglomération</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-4xl mb-3">🔬</div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Chercheurs</h3>
+                    <p class="text-sm text-gray-300">Ifremer, Universités, Laboratoires</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-4xl mb-3">🦪</div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Professionnels</h3>
+                    <p class="text-sm text-gray-300">Ostréiculteurs, Pêcheurs</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-4xl mb-3">🌍</div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Associations</h3>
+                    <p class="text-sm text-gray-300">Protection environnement, Éducation</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="text-center">
+            <div class="card max-w-2xl mx-auto">
+                <h2 class="text-2xl font-semibold text-white mb-6">Prêt à explorer les données ?</h2>
+                <a href="api.html" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2" aria-hidden="true">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                    Accéder aux API
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-ocean-950 border-t border-ocean-800 py-8 mt-16 no-print">
+        <div class="container mx-auto px-4 text-center max-w-7xl">
+            <p class="text-gray-200 font-semibold mb-2">
+                Ocean Sentinelle V3.1 - Surveillance Océanographique du Bassin d'Arcachon
+            </p>
+            <p class="text-sm text-gray-400">
+                Données : ERDDAP COAST-HF (Ifremer) • Hub'Eau (BRGM) • 
+                API : <a href="https://api.oceansentinelle.fr" class="text-ocean-400 hover:text-ocean-300 focus-visible-ring">api.oceansentinelle.fr</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

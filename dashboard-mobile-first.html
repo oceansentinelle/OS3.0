@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#001a2e">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <title>Dashboard SACS - Ocean Sentinelle</title>
+    <style>
+        /* === RESET & BASE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            /* Colors */
+            --bg-primary: #001a2e;
+            --bg-card: #002642;
+            --bg-alert-critical: #1a0000;
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --text-critical: #ff6666;
+            --text-success: #10b981;
+            --border-default: #334155;
+            --border-critical: #ff0000;
+            --border-success: #10b981;
+            
+            /* Spacing */
+            --touch-min: 48px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            
+            /* Safe areas */
+            --safe-top: env(safe-area-inset-top);
+            --safe-bottom: env(safe-area-inset-bottom);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding-bottom: calc(var(--safe-bottom) + 60px);
+        }
+
+        /* === HEADER === */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(0, 26, 46, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-default);
+            padding: var(--spacing-md);
+            padding-top: calc(var(--safe-top) + var(--spacing-md));
+        }
+
+        .header__content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header__logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .header__logo-img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .header__logo-text {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .header__menu-btn {
+            width: var(--touch-min);
+            height: var(--touch-min);
+            background: transparent;
+            border: 2px solid var(--border-default);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header__menu-btn:active {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0.95);
+        }
+
+        /* === ALERT BANNER === */
+        .alert-sacs {
+            position: sticky;
+            top: calc(60px + var(--safe-top));
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--bg-alert-critical);
+            border: 3px solid var(--border-critical);
+            border-radius: 8px;
+            margin: var(--spacing-md);
+            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
+            animation: pulse-alert 2s infinite;
+        }
+
+        @keyframes pulse-alert {
+            0%, 100% { border-color: #ff0000; }
+            50% { border-color: #ff6666; }
+        }
+
+        .alert-sacs__icon {
+            font-size: 32px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .alert-sacs__content {
+            flex: 1;
+        }
+
+        .alert-sacs__title {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .alert-sacs__value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-critical);
+            font-variant-numeric: tabular-nums;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .alert-sacs__action {
+            font-size: 14px;
+            color: #ffcccc;
+        }
+
+        .alert-sacs__dismiss {
+            width: var(--touch-min);
+            height: var(--touch-min);
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .alert-sacs__dismiss:active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(0.95);
+        }
+
+        .alert-sacs--hidden {
+            display: none;
+        }
+
+        /* === MAIN CONTENT === */
+        .main {
+            padding: var(--spacing-md);
+        }
+
+        .section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section__title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* === METRIC CARD === */
+        .metric-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-default);
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .metric-card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .metric-card__label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+        }
+
+        .metric-card__value {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .metric-card__value--critical {
+            color: var(--text-critical);
+        }
+
+        .metric-card__value--normal {
+            color: var(--text-success);
+        }
+
+        .metric-card__unit {
+            font-size: 24px;
+            color: var(--text-secondary);
+            margin-left: var(--spacing-xs);
+        }
+
+        .metric-card__threshold {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .metric-card__threshold--critical {
+            color: var(--text-critical);
+            font-weight: 600;
+        }
+
+        .metric-card__meta {
+            border-top: 1px solid var(--border-default);
+            padding-top: var(--spacing-md);
+        }
+
+        .metric-card__meta-toggle {
+            width: 100%;
+            min-height: var(--touch-min);
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) 0;
+        }
+
+        .metric-card__meta-toggle:active {
+            color: var(--text-primary);
+        }
+
+        .metric-card__meta-content {
+            display: none;
+            padding-top: var(--spacing-sm);
+        }
+
+        .metric-card__meta-content--visible {
+            display: block;
+        }
+
+        .metric-card__meta-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-xs) 0;
+            font-size: 12px;
+        }
+
+        .metric-card__meta-label {
+            color: var(--text-secondary);
+        }
+
+        .metric-card__meta-value {
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        /* === DATA BADGE === */
+        .data-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 2px solid;
+        }
+
+        .data-badge__icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .data-badge--measured {
+            background: #065f46;
+            color: #ffffff;
+            border-color: #10b981;
+        }
+
+        .data-badge--inferred {
+            background: #7c2d12;
+            color: #ffffff;
+            border-color: #f59e0b;
+        }
+
+        .data-badge--simulated {
+            background: #1f2937;
+            color: #ffffff;
+            border-color: #9ca3af;
+        }
+
+        /* === BOTTOM NAV === */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 30;
+            background: rgba(0, 26, 46, 0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-default);
+            padding-bottom: var(--safe-bottom);
+        }
+
+        .bottom-nav__list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+        }
+
+        .bottom-nav__item {
+            flex: 1;
+        }
+
+        .bottom-nav__link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 11px;
+            gap: var(--spacing-xs);
+        }
+
+        .bottom-nav__link:active {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .bottom-nav__link--active {
+            color: var(--text-primary);
+        }
+
+        .bottom-nav__icon {
+            font-size: 24px;
+        }
+
+        /* === LOADING STATE === */
+        .skeleton {
+            background: linear-gradient(90deg, #334155 0%, #475569 50%, #334155 100%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton--text {
+            height: 16px;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .skeleton--value {
+            height: 48px;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* === RESPONSIVE === */
+        @media (min-width: 768px) {
+            .main {
+                max-width: 768px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header__content">
+            <a href="index.html" class="header__logo">
+                <img src="/assets/images/logo.svg" alt="" class="header__logo-img">
+                <span class="header__logo-text">Ocean Sentinelle</span>
+            </a>
+            <button class="header__menu-btn" aria-label="Menu" onclick="alert('Menu à implémenter')">
+                ☰
+            </button>
+        </div>
+    </header>
+
+    <!-- Alert Banner -->
+    <div id="alertBanner" class="alert-sacs alert-sacs--hidden" role="alert" aria-live="assertive">
+        <div class="alert-sacs__icon" aria-hidden="true">⚠️</div>
+        <div class="alert-sacs__content">
+            <div class="alert-sacs__title" id="alertTitle">ACIDIFICATION</div>
+            <div class="alert-sacs__value" id="alertValue">pH 7.65 < 7.80</div>
+            <div class="alert-sacs__action" id="alertAction">Risque coquilles</div>
+        </div>
+        <button class="alert-sacs__dismiss" aria-label="Masquer l'alerte" onclick="dismissAlert()">
+            ×
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Metrics Section -->
+        <section class="section">
+            <h2 class="section__title">Métriques Temps Réel - BARAG</h2>
+            <div id="metricsContainer">
+                <!-- Metrics will be injected here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <ul class="bottom-nav__list">
+            <li class="bottom-nav__item">
+                <a href="index.html" class="bottom-nav__link">
+                    <span class="bottom-nav__icon">🏠</span>
+                    <span>Accueil</span>
+                </a>
+            </li>
+            <li class="bottom-nav__item">
+                <a href="dashboard.html" class="bottom-nav__link bottom-nav__link--active">
+                    <span class="bottom-nav__icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="bottom-nav__item">
+                <a href="api.html" class="bottom-nav__link">
+                    <span class="bottom-nav__icon">🔔</span>
+                    <span>Alertes</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <script>
+        // Mock data
+        const mockData = [
+            {
+                parameter: 'Température',
+                value: 18.5,
+                unit: '°C',
+                status: 'mesuré',
+                source: 'COAST-HF Ifremer',
+                timestamp: '2026-04-22T21:00:00Z',
+                method: 'Sonde Smatch CTD',
+                uncertainty: '±0.1°C',
+                threshold: 25,
+                operator: '>',
+                criticalMessage: 'Mortalité estivale'
+            },
+            {
+                parameter: 'pH',
+                value: 7.65,
+                unit: '',
+                status: 'inféré',
+                source: 'Sentinel-3 OLCI',
+                timestamp: '2026-04-22T20:45:00Z',
+                method: 'Proxy satellitaire',
+                uncertainty: '±0.15',
+                threshold: 7.80,
+                operator: '<',
+                criticalMessage: 'Risque coquilles'
+            },
+            {
+                parameter: 'Oxygène',
+                value: 6.8,
+                unit: 'mg/L',
+                status: 'mesuré',
+                source: 'COAST-HF Ifremer',
+                timestamp: '2026-04-22T21:00:00Z',
+                method: 'Sonde optique',
+                uncertainty: '±0.2 mg/L',
+                threshold: 4.0,
+                operator: '<',
+                criticalMessage: 'Hypoxie'
+            },
+            {
+                parameter: 'Salinité',
+                value: 32.8,
+                unit: 'PSU',
+                status: 'mesuré',
+                source: 'COAST-HF Ifremer',
+                timestamp: '2026-04-22T21:00:00Z',
+                method: 'Conductivité CTD',
+                uncertainty: '±0.5 PSU',
+                threshold: 15,
+                operator: '<',
+                criticalMessage: 'Choc osmotique'
+            }
+        ];
+
+        // Badge icons
+        const badgeIcons = {
+            'mesuré': '<svg class="data-badge__icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="#10b981"/></svg>',
+            'inféré': '<svg class="data-badge__icon" viewBox="0 0 16 16"><path d="M8 2 A6 6 0 0 1 8 14 Z" fill="#f59e0b"/></svg>',
+            'simulé': '<svg class="data-badge__icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="#9ca3af" stroke-width="2"/></svg>'
+        };
+
+        const badgeLabels = {
+            'mesuré': 'MESURÉ',
+            'inféré': 'INFÉRÉ',
+            'simulé': 'SIMULÉ'
+        };
+
+        const badgeClasses = {
+            'mesuré': 'data-badge--measured',
+            'inféré': 'data-badge--inferred',
+            'simulé': 'data-badge--simulated'
+        };
+
+        // Check thresholds and show alert
+        function checkThresholds(data) {
+            const criticalItems = data.filter(item => {
+                if (item.operator === '<') return item.value < item.threshold;
+                if (item.operator === '>') return item.value > item.threshold;
+                return false;
+            });
+
+            if (criticalItems.length > 0) {
+                const first = criticalItems[0];
+                document.getElementById('alertTitle').textContent = first.parameter.toUpperCase();
+                document.getElementById('alertValue').textContent = `${first.parameter} ${first.value}${first.unit} ${first.operator} ${first.threshold}${first.unit}`;
+                document.getElementById('alertAction').textContent = first.criticalMessage;
+                document.getElementById('alertBanner').classList.remove('alert-sacs--hidden');
+            }
+        }
+
+        // Render metrics
+        function renderMetrics(data) {
+            const container = document.getElementById('metricsContainer');
+            
+            data.forEach((item, index) => {
+                const isCritical = (item.operator === '<' && item.value < item.threshold) || 
+                                   (item.operator === '>' && item.value > item.threshold);
+                
+                const card = document.createElement('div');
+                card.className = 'metric-card';
+                card.innerHTML = `
+                    <div class="metric-card__header">
+                        <div class="metric-card__label">${item.parameter}</div>
+                        <div class="data-badge ${badgeClasses[item.status]}">
+                            ${badgeIcons[item.status]}
+                            <span>${badgeLabels[item.status]}</span>
+                        </div>
+                    </div>
+                    <div class="metric-card__value ${isCritical ? 'metric-card__value--critical' : 'metric-card__value--normal'}">
+                        ${item.value}<span class="metric-card__unit">${item.unit}</span>
+                    </div>
+                    <div class="metric-card__threshold ${isCritical ? 'metric-card__threshold--critical' : ''}">
+                        Seuil : ${item.operator} ${item.threshold}${item.unit}
+                        ${isCritical ? ` • ${item.criticalMessage}` : ''}
+                    </div>
+                    <div class="metric-card__meta">
+                        <button class="metric-card__meta-toggle" onclick="toggleMeta(${index})" aria-expanded="false" id="metaToggle${index}">
+                            <span>Détails techniques</span>
+                            <span id="metaIcon${index}">▼</span>
+                        </button>
+                        <div class="metric-card__meta-content" id="metaContent${index}">
+                            <div class="metric-card__meta-row">
+                                <span class="metric-card__meta-label">Source</span>
+                                <span class="metric-card__meta-value">${item.source}</span>
+                            </div>
+                            <div class="metric-card__meta-row">
+                                <span class="metric-card__meta-label">Méthode</span>
+                                <span class="metric-card__meta-value">${item.method}</span>
+                            </div>
+                            <div class="metric-card__meta-row">
+                                <span class="metric-card__meta-label">Incertitude</span>
+                                <span class="metric-card__meta-value">${item.uncertainty}</span>
+                            </div>
+                            <div class="metric-card__meta-row">
+                                <span class="metric-card__meta-label">Horodatage</span>
+                                <span class="metric-card__meta-value">${new Date(item.timestamp).toLocaleString('fr-FR', {hour: '2-digit', minute: '2-digit'})}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Toggle metadata
+        function toggleMeta(index) {
+            const content = document.getElementById(`metaContent${index}`);
+            const toggle = document.getElementById(`metaToggle${index}`);
+            const icon = document.getElementById(`metaIcon${index}`);
+            
+            const isVisible = content.classList.contains('metric-card__meta-content--visible');
+            content.classList.toggle('metric-card__meta-content--visible');
+            toggle.setAttribute('aria-expanded', !isVisible);
+            icon.textContent = isVisible ? '▼' : '▲';
+        }
+
+        // Dismiss alert
+        function dismissAlert() {
+            document.getElementById('alertBanner').classList.add('alert-sacs--hidden');
+        }
+
+        // Initialize
+        checkThresholds(mockData);
+        renderMetrics(mockData);
+    </script>
+</body>
+</html>

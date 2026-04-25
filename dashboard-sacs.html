@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <title>Dashboard SACS - Ocean Sentinelle</title>
+    <style>
+        .badge-mesure { background: #10b981; color: #ffffff; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .badge-infere { background: #f59e0b; color: #ffffff; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .badge-simule { background: #6b7280; color: #ffffff; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .alert-critical { background: linear-gradient(90deg, #dc2626 0%, #991b1b 100%); border-left: 4px solid #fca5a5; padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 2rem; }
+        .value-critical { color: #fca5a5; }
+        .value-warning { color: #fbbf24; }
+        .value-normal { color: #6ee7b7; }
+    </style>
+</head>
+<body>
+    <header class="bg-ocean-900/95 backdrop-blur-md border-b border-ocean-700/50 sticky top-0 z-50">
+        <nav class="container mx-auto px-4 py-4 flex items-center justify-between max-w-7xl">
+            <div class="flex items-center gap-3">
+                <img src="/assets/images/logo.svg" width="40" height="40" alt="Ocean Sentinelle">
+                <span class="text-xl font-bold text-white">Ocean Sentinelle</span>
+            </div>
+            <ul class="flex gap-6 items-center">
+                <li><a href="index.html" class="text-gray-200 hover:text-white transition">Accueil</a></li>
+                <li><a href="about.html" class="text-gray-200 hover:text-white transition">Le Projet</a></li>
+                <li><a href="podcast.html" class="text-gray-200 hover:text-white transition">Podcast</a></li>
+                <li><a href="dashboard.html" class="text-white font-semibold">Dashboard</a></li>
+                <li><a href="api.html" class="text-gray-200 hover:text-white transition">API & Alertes</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 py-12 max-w-7xl">
+        <section class="mb-12">
+            <div class="flex items-baseline gap-4 mb-4">
+                <h1 class="text-4xl font-bold text-white">Dashboard SACS</h1>
+                <span class="badge-live">LIVE</span>
+            </div>
+            <p class="text-xl text-gray-300">
+                Superviseur Multi-Agent System - Surveillance Océanographique Temps Réel
+            </p>
+        </section>
+
+        <div id="alertBanner" class="alert-critical" style="display: none;">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">🔴</span>
+                <div>
+                    <strong class="text-white text-lg">CRITICAL - Seuil SACS dépassé</strong>
+                    <p id="alertMessage" class="text-gray-200 mt-1"></p>
+                </div>
+            </div>
+        </div>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-white mb-6">Métriques Temps Réel - Station BARAG</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="metricsGrid"></div>
+        </section>
+
+        <section class="mb-12">
+            <div class="card bg-ocean-900/60 border-ocean-500/50">
+                <h2 class="text-2xl font-bold text-white mb-6">Concepts Clés du Dashboard SACS</h2>
+                
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-ocean-300 mb-4">1. Le Superviseur SACS et l'Architecture Multi-Agents</h3>
+                    <p class="text-gray-300 leading-relaxed mb-4">
+                        L'interface de surveillance est pilotée par le <strong class="text-white">SACS (Superviseur Multi-Agent System)</strong>, qui orchestre une architecture fonctionnelle stricte divisée entre six agents IA hautement spécialisés. Cette division garantit une fiabilité totale du système :
+                    </p>
+                    <ul class="space-y-2 text-gray-300 ml-6">
+                        <li class="flex items-start gap-2">
+                            <span class="text-ocean-400 mt-1">•</span>
+                            <span><strong class="text-white">Agent Data Engineer</strong> : Ingestion des données massives (ETL) et optimisation de TimescaleDB.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-ocean-400 mt-1">•</span>
+                            <span><strong class="text-white">Agent Scientifique</strong> : Validation des calculs biogéochimiques selon les normes UNESCO (équation TEOS-10).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-ocean-400 mt-1">•</span>
+                            <span><strong class="text-white">Agent IA</strong> : Entraînement de modèles ML (LSTM, Random Forest) pour détecter les anomalies environnementales.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-ocean-400 mt-1">•</span>
+                            <span><strong class="text-white">Agent Frontend</strong> : Génération autonome de l'interface utilisateur en architecture "DB-First".</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-ocean-300 mb-4">2. L'Acquisition des Données (In-situ & Jumeau Numérique)</h3>
+                    <p class="text-gray-300 leading-relaxed mb-4">
+                        Ocean Sentinel surveille continuellement l'interface entre la lagune du bassin d'Arcachon et l'océan Atlantique. Le système puise sa "vérité terrain" dans les données de la <strong class="text-white">bouée BARAG</strong> (réseau COAST-HF, code EXIN0001), située dans le chenal du Cap Ferret, qui fournit des mesures à très haute fréquence (toutes les 10 minutes).
+                    </p>
+                    <p class="text-gray-300 leading-relaxed">
+                        Pour pallier d'éventuelles interruptions d'API ou des manques de capteurs, le système déploie une stratégie <strong class="text-ocean-400">OSINT (Intelligence de Source Ouverte)</strong> en créant un "Jumeau Numérique" hybride. Il exploite la constellation satellitaire <strong class="text-ocean-400">Copernicus Sentinel-3</strong> pour relever la température de surface de l'océan (SST) et en déduire d'autres paramètres cruciaux.
+                    </p>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-ocean-300 mb-4">3. Les Indicateurs et la Vigilance Écologique</h3>
+                    <p class="text-gray-300 leading-relaxed mb-4">
+                        Le Dashboard SACS offre un suivi de paramètres hydrologiques vitaux pour évaluer la santé des huîtres et génère des alertes visuelles (bannières 🔴 CRITICAL) si la qualité de l'eau franchit des seuils de vigilance stricts :
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-ocean-950/50 p-4 rounded border border-ocean-700">
+                            <h4 class="text-white font-semibold mb-2">Risque de mortalité estivale</h4>
+                            <p class="text-sm text-gray-300">Température de l'eau <strong class="text-ocean-400">&gt; 25°C</strong></p>
+                        </div>
+                        <div class="bg-ocean-950/50 p-4 rounded border border-ocean-700">
+                            <h4 class="text-white font-semibold mb-2">Choc osmotique</h4>
+                            <p class="text-sm text-gray-300">Salinité <strong class="text-ocean-400">&lt; 15 PSU</strong></p>
+                        </div>
+                        <div class="bg-ocean-950/50 p-4 rounded border border-ocean-700">
+                            <h4 class="text-white font-semibold mb-2">Acidification des océans</h4>
+                            <p class="text-sm text-gray-300">pH <strong class="text-ocean-400">&lt; 7.80</strong></p>
+                        </div>
+                        <div class="bg-ocean-950/50 p-4 rounded border border-ocean-700">
+                            <h4 class="text-white font-semibold mb-2">Hypoxie métabolique</h4>
+                            <p class="text-sm text-gray-300">Oxygène dissous <strong class="text-ocean-400">&lt; 4.00 mg/L</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold text-ocean-300 mb-4">4. Transparence Absolue : La "Règle de Vérité"</h3>
+                    <p class="text-gray-300 leading-relaxed mb-4">
+                        Sur le Dashboard d'oceansentinelle.fr, la confiance dans la donnée est le critère numéro un pour les conchyliculteurs. Chaque information est donc soumise à la <strong class="text-white">Règle de Vérité SACS</strong>, imposant l'affichage visible de la fiabilité de l'information via un système de métadonnées et de badges de couleur :
+                    </p>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3">
+                            <span class="badge-mesure">MESURE IN-SITU</span>
+                            <p class="text-sm text-gray-300">Donnée directe et validée issue des capteurs physiques de l'eau (ex: sonde Smatch de la bouée BARAG).</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="badge-infere">INFÉRÉ - PROXY SATELLITAIRE</span>
+                            <p class="text-sm text-gray-300">Donnée estimée par des relations de proxy ou issue de l'observation spatiale (ex: calculs dérivés du satellite Sentinel-3).</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="badge-simule">SIMULÉ - REPLAY ARCHIVE</span>
+                            <p class="text-sm text-gray-300">Sortie issue de modèles numériques ou de séries de données historiques réinjectées dans le système.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-ocean-950 border-t border-ocean-800 py-8 mt-16">
+        <div class="container mx-auto px-4 text-center max-w-7xl">
+            <p class="text-gray-200 font-semibold mb-2">Ocean Sentinelle V3.1 - Dashboard SACS</p>
+            <p class="text-sm text-gray-400">Superviseur Multi-Agent System • Bassin d'Arcachon</p>
+        </div>
+    </footer>
+
+    <script>
+        const mockData = [
+            {
+                station: 'BARAG',
+                parameter: 'Température',
+                value: 18.5,
+                unit: '°C',
+                status: 'mesuré',
+                source: 'COAST-HF Ifremer (EXIN0001)',
+                timestamp: '2026-04-22T21:00:00Z',
+                method: 'Sonde Smatch CTD',
+                uncertainty: '±0.1°C',
+                threshold: 25,
+                operator: '>'
+            },
+            {
+                station: 'BARAG',
+                parameter: 'pH',
+                value: 7.65,
+                unit: '',
+                status: 'inféré',
+                source: 'Sentinel-3 OLCI + Proxy',
+                timestamp: '2026-04-22T20:45:00Z',
+                method: 'Correction atmosphérique C2RCC',
+                uncertainty: '±0.15',
+                threshold: 7.80,
+                operator: '<'
+            },
+            {
+                station: 'BARAG',
+                parameter: 'Oxygène dissous',
+                value: 6.8,
+                unit: 'mg/L',
+                status: 'mesuré',
+                source: 'COAST-HF Ifremer',
+                timestamp: '2026-04-22T21:00:00Z',
+                method: 'Sonde optique',
+                uncertainty: '±0.2 mg/L',
+                threshold: 4.0,
+                operator: '<'
+            },
+            {
+                station: 'BARAG',
+                parameter: 'Salinité',
+                value: 32.8,
+                unit: 'PSU',
+                status: 'mesuré',
+                source: 'COAST-HF Ifremer',
+                timestamp: '2026-04-22T21:00:00Z',
+                method: 'Conductivité CTD',
+                uncertainty: '±0.5 PSU',
+                threshold: 15,
+                operator: '<'
+            }
+        ];
+
+        function getBadgeClass(status) {
+            const badges = {
+                'mesuré': 'badge-mesure',
+                'inféré': 'badge-infere',
+                'simulé': 'badge-simule'
+            };
+            return badges[status] || 'badge-simule';
+        }
+
+        function getBadgeText(status) {
+            const texts = {
+                'mesuré': 'MESURE IN-SITU',
+                'inféré': 'INFÉRÉ - PROXY SATELLITAIRE',
+                'simulé': 'SIMULÉ - REPLAY ARCHIVE'
+            };
+            return texts[status] || 'INCONNU';
+        }
+
+        function checkThresholds(data) {
+            const alerts = [];
+            
+            data.forEach(item => {
+                let isCritical = false;
+                if (item.operator === '<' && item.value < item.threshold) {
+                    isCritical = true;
+                } else if (item.operator === '>' && item.value > item.threshold) {
+                    isCritical = true;
+                }
+                
+                if (isCritical) {
+                    alerts.push(`${item.parameter}: ${item.value}${item.unit} (seuil: ${item.operator} ${item.threshold}${item.unit})`);
+                }
+            });
+
+            if (alerts.length > 0) {
+                const banner = document.getElementById('alertBanner');
+                const message = document.getElementById('alertMessage');
+                banner.style.display = 'block';
+                message.textContent = alerts.join(' | ');
+            }
+        }
+
+        function getValueClass(item) {
+            let isCritical = false;
+            if (item.operator === '<' && item.value < item.threshold) {
+                isCritical = true;
+            } else if (item.operator === '>' && item.value > item.threshold) {
+                isCritical = true;
+            }
+            return isCritical ? 'value-critical' : 'value-normal';
+        }
+
+        function renderMetrics(data) {
+            const grid = document.getElementById('metricsGrid');
+            
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card hover:border-ocean-500/50 transition';
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-3">
+                        <div class="text-sm text-gray-400 uppercase">${item.parameter}</div>
+                        <span class="${getBadgeClass(item.status)}">${getBadgeText(item.status)}</span>
+                    </div>
+                    <div class="text-3xl font-bold ${getValueClass(item)} mb-2">
+                        ${item.value}<span class="text-lg text-gray-400 ml-1">${item.unit}</span>
+                    </div>
+                    <div class="space-y-1 text-xs text-gray-400 pt-3 border-t border-ocean-700">
+                        <div class="flex justify-between">
+                            <span>Source</span>
+                            <span class="text-gray-300">${item.source}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Méthode</span>
+                            <span class="text-gray-300">${item.method}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Incertitude</span>
+                            <span class="text-gray-300">${item.uncertainty}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Timestamp</span>
+                            <span class="text-gray-300">${new Date(item.timestamp).toLocaleString('fr-FR')}</span>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        checkThresholds(mockData);
+        renderMetrics(mockData);
+    </script>
+</body>
+</html>

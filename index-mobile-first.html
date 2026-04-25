@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#001a2e">
+    <meta name="description" content="Ocean Sentinelle - Surveillance océanographique temps réel du Bassin d'Arcachon. Données SACS, alertes environnementales, API REST.">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <title>Ocean Sentinelle - Surveillance Océanographique</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #001a2e;
+            --bg-secondary: #002642;
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --color-info: #38bdf8;
+            --color-success: #10b981;
+            --border-default: #334155;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --radius-lg: 12px;
+            --safe-top: env(safe-area-inset-top);
+            --safe-bottom: env(safe-area-inset-bottom);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            padding-bottom: calc(var(--safe-bottom) + 60px);
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: rgba(0, 26, 46, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-default);
+            padding: var(--space-md);
+            padding-top: calc(var(--safe-top) + var(--space-md));
+        }
+
+        .header__content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header__logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .header__logo-img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .header__logo-text {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-lg) var(--space-md);
+        }
+
+        .hero {
+            text-align: center;
+            padding: var(--space-xl) 0;
+            margin-bottom: var(--space-xl);
+        }
+
+        .hero__title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            line-height: 1.2;
+        }
+
+        .hero__subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xl);
+        }
+
+        .hero__cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            background: var(--color-info);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media (min-width: 640px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+        }
+
+        .card__icon {
+            font-size: 48px;
+            margin-bottom: var(--space-md);
+        }
+
+        .card__title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .card__text {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 30;
+            background: rgba(0, 26, 46, 0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-default);
+            padding-bottom: var(--safe-bottom);
+        }
+
+        .bottom-nav__list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+        }
+
+        .bottom-nav__link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 11px;
+            gap: 4px;
+        }
+
+        .bottom-nav__link--active {
+            color: var(--text-primary);
+        }
+
+        .bottom-nav__icon {
+            font-size: 24px;
+        }
+
+        @media (min-width: 768px) {
+            .hero__title {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header__content">
+            <a href="index.html" class="header__logo">
+                <img src="/assets/images/logo.svg" alt="" class="header__logo-img">
+                <span class="header__logo-text">Ocean Sentinel</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="hero">
+            <h1 class="hero__title">Surveillance Océanographique Temps Réel</h1>
+            <p class="hero__subtitle">
+                Données environnementales du Bassin d'Arcachon<br>
+                Système SACS • Alertes critiques • API REST
+            </p>
+            <a href="dashboard.html" class="hero__cta">
+                <span>📊</span>
+                <span>Accéder au Dashboard</span>
+            </a>
+        </section>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card__icon">📊</div>
+                <h2 class="card__title">Dashboard SACS</h2>
+                <p class="card__text">
+                    Visualisez en temps réel les paramètres océanographiques des stations BARAG et EYRAC.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card__icon">🔔</div>
+                <h2 class="card__title">Alertes Environnementales</h2>
+                <p class="card__text">
+                    Recevez des notifications critiques sur l'hypoxie, l'acidification et la température.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card__icon">⚡</div>
+                <h2 class="card__title">API REST</h2>
+                <p class="card__text">
+                    Accédez aux données via notre API professionnelle pour vos applications.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card__icon">🌊</div>
+                <h2 class="card__title">Règle de Vérité</h2>
+                <p class="card__text">
+                    Chaque donnée est accompagnée de son badge de traçabilité : MESURÉ, INFÉRÉ ou SIMULÉ.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card__icon">📖</div>
+                <h2 class="card__title">Le Projet</h2>
+                <p class="card__text">
+                    Découvrez l'architecture SACS et les sources de données (COAST-HF, Sentinel-3, Hub'Eau).
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card__icon">🎙️</div>
+                <h2 class="card__title">Podcast</h2>
+                <p class="card__text">
+                    Écoutez nos épisodes sur l'OSINT océanographique et la règle ABACODE.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <ul class="bottom-nav__list">
+            <li>
+                <a href="index.html" class="bottom-nav__link bottom-nav__link--active">
+                    <span class="bottom-nav__icon">🏠</span>
+                    <span>Accueil</span>
+                </a>
+            </li>
+            <li>
+                <a href="dashboard.html" class="bottom-nav__link">
+                    <span class="bottom-nav__icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="about.html" class="bottom-nav__link">
+                    <span class="bottom-nav__icon">📖</span>
+                    <span>Projet</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</body>
+</html>

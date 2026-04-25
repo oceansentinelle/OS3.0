@@ -1,0 +1,148 @@
+<!-- HEADER UNIFIÉ OCEAN SENTINEL V3.2 -->
+<style>
+    /* HEADER */
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: rgba(0, 26, 46, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 2px solid #38bdf8;
+        padding-top: calc(env(safe-area-inset-top, 0px) + 16px);
+    }
+
+    .header__inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 16px;
+    }
+
+    .header__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 12px;
+    }
+
+    .header__logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: #f1f5f9;
+    }
+
+    .header__logo-text {
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    /* NAVIGATION TABS */
+    .header__nav {
+        display: none;
+    }
+
+    @media (min-width: 768px) {
+        .header__nav {
+            display: block;
+        }
+    }
+
+    .nav-tabs {
+        display: flex;
+        gap: 8px;
+        list-style: none;
+        border-bottom: 1px solid #334155;
+        margin: 0 -16px;
+        padding: 0 16px;
+    }
+
+    .nav-tabs__link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        text-decoration: none;
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 600;
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s;
+        white-space: nowrap;
+    }
+
+    .nav-tabs__link:hover {
+        color: #38bdf8;
+        border-bottom-color: #38bdf8;
+    }
+
+    .nav-tabs__link--active {
+        color: #f1f5f9;
+        border-bottom-color: #38bdf8;
+        background: rgba(56, 189, 248, 0.05);
+    }
+
+    .nav-tabs__icon {
+        font-size: 18px;
+    }
+</style>
+
+<header class="header">
+    <div class="header__inner">
+        <div class="header__top">
+            <a href="index.html" class="header__logo">
+                <img src="/assets/images/logo.svg" alt="" width="32" height="32">
+                <span class="header__logo-text">Ocean Sentinel</span>
+            </a>
+        </div>
+        
+        <!-- Navigation Desktop -->
+        <nav class="header__nav">
+            <ul class="nav-tabs">
+                <li>
+                    <a href="index.html" class="nav-tabs__link" data-page="index">
+                        <span class="nav-tabs__icon">🏠</span>
+                        <span>Accueil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="dashboard.html" class="nav-tabs__link" data-page="dashboard">
+                        <span class="nav-tabs__icon">📊</span>
+                        <span>Données en direct</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="about.html" class="nav-tabs__link" data-page="about">
+                        <span class="nav-tabs__icon">📖</span>
+                        <span>Le Projet</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="api.html" class="nav-tabs__link" data-page="api">
+                        <span class="nav-tabs__icon">⚡</span>
+                        <span>API REST</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="podcast.html" class="nav-tabs__link" data-page="podcast">
+                        <span class="nav-tabs__icon">🎙️</span>
+                        <span>Podcast</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<script>
+// Activer l'onglet correspondant à la page actuelle
+(function() {
+    const currentPage = window.location.pathname.split('/').pop().replace('.html', '') || 'index';
+    const links = document.querySelectorAll('.nav-tabs__link');
+    links.forEach(link => {
+        if (link.dataset.page === currentPage) {
+            link.classList.add('nav-tabs__link--active');
+        }
+    });
+})();
+</script>

@@ -1,0 +1,19 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#14532d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#166534;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#grad5)"/>
+  <ellipse cx="400" cy="300" rx="150" ry="80" fill="#22c55e" opacity="0.3"/>
+  <text x="400" y="280" font-family="Arial, sans-serif" font-size="28" fill="#22c55e" text-anchor="middle" font-weight="bold">
+    Herbiers de Zostères
+  </text>
+  <text x="400" y="320" font-family="Arial, sans-serif" font-size="20" fill="#f0f4f8" text-anchor="middle">
+    Restauration à Salines
+  </text>
+  <text x="400" y="360" font-family="Arial, sans-serif" font-size="18" fill="#86efac" text-anchor="middle" font-weight="bold">
+    77% de survie - 1000 m²
+  </text>
+</svg>

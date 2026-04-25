@@ -1,0 +1,222 @@
+{
+  "dashboard": {
+    "title": "Ocean Sentinel API - Golden Signals",
+    "tags": ["ocean-sentinel", "api", "sre"],
+    "timezone": "UTC",
+    "schemaVersion": 16,
+    "version": 1,
+    "refresh": "30s",
+    "panels": [
+      {
+        "id": 1,
+        "title": "🚦 Circuit Breaker State",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "circuit_breaker_state{api=\"ocean_sentinel\"}",
+            "legendFormat": "State"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              {"value": 0, "text": "CLOSED", "color": "green"},
+              {"value": 1, "text": "OPEN", "color": "red"},
+              {"value": 2, "text": "HALF_OPEN", "color": "yellow"}
+            ],
+            "thresholds": {
+              "steps": [
+                {"value": 0, "color": "green"},
+                {"value": 1, "color": "red"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "📊 Request Rate (RPS)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{job=\"ocean-sentinel-api\"}[5m])) by (endpoint)",
+            "legendFormat": "{{endpoint}}"
+          }
+        ],
+        "yaxes": [
+          {"format": "reqps", "label": "Requests/sec"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "id": 3,
+        "title": "⏱️ Latency (P50, P95, P99)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, rate(http_request_duration_seconds_bucket{job=\"ocean-sentinel-api\"}[5m]))",
+            "legendFormat": "P50"
+          },
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=\"ocean-sentinel-api\"}[5m]))",
+            "legendFormat": "P95"
+          },
+          {
+            "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket{job=\"ocean-sentinel-api\"}[5m]))",
+            "legendFormat": "P99"
+          }
+        ],
+        "yaxes": [
+          {"format": "s", "label": "Latency"},
+          {"format": "short"}
+        ],
+        "alert": {
+          "conditions": [
+            {
+              "evaluator": {"params": [3], "type": "gt"},
+              "query": {"params": ["C", "5m", "now"]},
+              "type": "query"
+            }
+          ],
+          "name": "High Latency P99"
+        }
+      },
+      {
+        "id": 4,
+        "title": "❌ Error Rate (4xx vs 5xx)",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{job=\"ocean-sentinel-api\", status=~\"4..\"}[5m]))",
+            "legendFormat": "4xx Client Errors"
+          },
+          {
+            "expr": "sum(rate(http_requests_total{job=\"ocean-sentinel-api\", status=~\"5..\"}[5m]))",
+            "legendFormat": "5xx Server Errors"
+          }
+        ],
+        "yaxes": [
+          {"format": "reqps", "label": "Errors/sec"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "id": 5,
+        "title": "🔄 Retry Rate",
+        "type": "graph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_retried_total{job=\"ocean-sentinel-api\"}[5m]))",
+            "legendFormat": "Retries"
+          },
+          {
+            "expr": "sum(rate(http_requests_total{job=\"ocean-sentinel-api\"}[5m])) * 0.10",
+            "legendFormat": "Retry Budget (10%)"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "💾 Cache Hit Rate",
+        "type": "gauge",
+        "gridPos": {"h": 6, "w": 6, "x": 0, "y": 20},
+        "targets": [
+          {
+            "expr": "sum(rate(cache_hits_total{job=\"ocean-sentinel-api\"}[5m])) / sum(rate(cache_requests_total{job=\"ocean-sentinel-api\"}[5m]))",
+            "legendFormat": "Hit Rate"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percentunit",
+            "thresholds": {
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 0.5, "color": "yellow"},
+                {"value": 0.8, "color": "green"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "📈 SLA Availability (30d)",
+        "type": "stat",
+        "gridPos": {"h": 6, "w": 6, "x": 6, "y": 20},
+        "targets": [
+          {
+            "expr": "sla:availability:30d",
+            "legendFormat": "Uptime"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percentunit",
+            "thresholds": {
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 0.995, "color": "green"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "⏰ Error Budget Remaining",
+        "type": "gauge",
+        "gridPos": {"h": 6, "w": 6, "x": 12, "y": 20},
+        "targets": [
+          {
+            "expr": "sla:error_budget_remaining:30d",
+            "legendFormat": "Budget"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percentunit",
+            "thresholds": {
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 0.25, "color": "yellow"},
+                {"value": 0.50, "color": "green"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 9,
+        "title": "🌐 External API Health",
+        "type": "table",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 26},
+        "targets": [
+          {
+            "expr": "probe_success{job=\"blackbox\"}",
+            "format": "table",
+            "instant": true
+          }
+        ],
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {},
+              "indexByName": {},
+              "renameByName": {
+                "instance": "Endpoint",
+                "Value": "Status"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

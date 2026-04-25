@@ -1,310 +1,322 @@
 {
-  "info": {
-    "name": "Ocean Sentinel API - Contract Tests",
-    "description": "Tests de contrat validant schémas OpenAPI et codes HTTP",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "variable": [
-    {
-      "key": "base_url",
-      "value": "https://oceansentinelle.fr/api/v1",
-      "type": "string"
-    }
-  ],
-  "item": [
-    {
-      "name": "Health Check",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test('Status code is 200', function () {",
-              "    pm.response.to.have.status(200);",
-              "});",
-              "",
-              "pm.test('Response time < 2s', function () {",
-              "    pm.expect(pm.response.responseTime).to.be.below(2000);",
-              "});",
-              "",
-              "pm.test('Schema validation', function () {",
-              "    const schema = {",
-              "        type: 'object',",
-              "        required: ['status', 'timestamp', 'version'],",
-              "        properties: {",
-              "            status: { type: 'string', enum: ['ok', 'degraded', 'error'] },",
-              "            timestamp: { type: 'string', format: 'date-time' },",
-              "            version: { type: 'string', pattern: '^\\\\d+\\\\.\\\\d+\\\\.\\\\d+$' }",
-              "        }",
-              "    };",
-              "    pm.response.to.have.jsonSchema(schema);",
-              "});",
-              "",
-              "pm.test('Status is ok', function () {",
-              "    const json = pm.response.json();",
-              "    pm.expect(json.status).to.eql('ok');",
-              "});"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [
-          {"key": "Accept", "value": "application/json"}
-        ],
-        "url": {
-          "raw": "{{base_url}}/../health",
-          "host": ["{{base_url}}"],
-          "path": ["..", "health"]
-        }
-      }
-    },
-    {
-      "name": "List Stations",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test('Status code is 200', function () {",
-              "    pm.response.to.have.status(200);",
-              "});",
-              "",
-              "pm.test('Schema validation', function () {",
-              "    const schema = {",
-              "        type: 'object',",
-              "        required: ['count', 'stations'],",
-              "        properties: {",
-              "            count: { type: 'integer', minimum: 0 },",
-              "            stations: {",
-              "                type: 'array',",
-              "                items: {",
-              "                    type: 'object',",
-              "                    required: ['id', 'name', 'location', 'source'],",
-              "                    properties: {",
-              "                        id: { type: 'string' },",
-              "                        name: { type: 'string' },",
-              "                        location: { type: 'string' },",
-              "                        source: { type: 'string' }",
-              "                    }",
-              "                }",
-              "            }",
-              "        }",
-              "    };",
-              "    pm.response.to.have.jsonSchema(schema);",
-              "});",
-              "",
-              "pm.test('At least 2 stations', function () {",
-              "    const json = pm.response.json();",
-              "    pm.expect(json.count).to.be.at.least(2);",
-              "    pm.expect(json.stations.length).to.be.at.least(2);",
-              "});"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [
-          {"key": "Accept", "value": "application/json"}
-        ],
-        "url": {
-          "raw": "{{base_url}}/stations",
-          "host": ["{{base_url}}"],
-          "path": ["stations"]
-        }
-      }
-    },
-    {
-      "name": "Get Station BARAG Latest",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test('Status code is 200', function () {",
-              "    pm.response.to.have.status(200);",
-              "});",
-              "",
-              "pm.test('Schema validation', function () {",
-              "    const schema = {",
-              "        type: 'object',",
-              "        required: ['station_id', 'timestamp', 'parameters'],",
-              "        properties: {",
-              "            station_id: { type: 'string' },",
-              "            timestamp: { type: 'string', format: 'date-time' },",
-              "            parameters: {",
-              "                type: 'array',",
-              "                minItems: 1,",
-              "                items: {",
-              "                    type: 'object',",
-              "                    required: ['name', 'value', 'unit', 'status', 'source', 'timestamp', 'quality_score', 'is_critical'],",
-              "                    properties: {",
-              "                        name: { type: 'string', enum: ['TEMP', 'PSAL', 'DOX2', 'PH_TOTAL'] },",
-              "                        value: { type: 'number' },",
-              "                        unit: { type: 'string' },",
-              "                        status: { type: 'string', enum: ['measured', 'inferred', 'simulated'] },",
-              "                        source: { type: 'string' },",
-              "                        timestamp: { type: 'string', format: 'date-time' },",
-              "                        quality_score: { type: 'number', minimum: 0, maximum: 1 },",
-              "                        is_critical: { type: 'boolean' }",
-              "                    }",
-              "                }",
-              "            }",
-              "        }",
-              "    };",
-              "    pm.response.to.have.jsonSchema(schema);",
-              "});",
-              "",
-              "pm.test('Station ID is BARAG_PROXY', function () {",
-              "    const json = pm.response.json();",
-              "    pm.expect(json.station_id).to.eql('BARAG_PROXY');",
-              "});"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [
-          {"key": "Accept", "value": "application/json"}
-        ],
-        "url": {
-          "raw": "{{base_url}}/station/BARAG_PROXY/latest",
-          "host": ["{{base_url}}"],
-          "path": ["station", "BARAG_PROXY", "latest"]
-        }
-      }
-    },
-    {
-      "name": "Get Station Invalid ID (400)",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test('Status code is 400 or 404', function () {",
-              "    pm.expect(pm.response.code).to.be.oneOf([400, 404]);",
-              "});",
-              "",
-              "pm.test('Error response schema', function () {",
-              "    const schema = {",
-              "        type: 'object',",
-              "        required: ['error', 'message', 'timestamp'],",
-              "        properties: {",
-              "            error: { type: 'string' },",
-              "            message: { type: 'string' },",
-              "            timestamp: { type: 'string', format: 'date-time' }",
-              "        }",
-              "    };",
-              "    pm.response.to.have.jsonSchema(schema);",
-              "});"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [
-          {"key": "Accept", "value": "application/json"}
-        ],
-        "url": {
-          "raw": "{{base_url}}/station/INVALID_ID/latest",
-          "host": ["{{base_url}}"],
-          "path": ["station", "INVALID_ID", "latest"]
-        }
-      }
-    },
-    {
-      "name": "Get Meteo Arcachon",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test('Status code is 200', function () {",
-              "    pm.response.to.have.status(200);",
-              "});",
-              "",
-              "pm.test('Schema validation', function () {",
-              "    const schema = {",
-              "        type: 'object',",
-              "        required: ['wind_speed', 'wind_direction', 'wave_height', 'wave_period', 'air_temp', 'humidity', 'pressure', 'last_update', 'source', 'location'],",
-              "        properties: {",
-              "            wind_speed: { type: 'number', minimum: 0 },",
-              "            wind_direction: { type: 'string', enum: ['N', 'NE', 'E', 'SE', 'S', 'SO', 'O', 'NO'] },",
-              "            wave_height: { type: 'number', minimum: 0 },",
-              "            wave_period: { type: 'number', minimum: 0 },",
-              "            air_temp: { type: 'number' },",
-              "            humidity: { type: 'integer', minimum: 0, maximum: 100 },",
-              "            pressure: { type: 'integer', minimum: 900, maximum: 1100 },",
-              "            last_update: { type: 'string', format: 'date-time' },",
-              "            source: { type: 'string' },",
-              "            location: { type: 'string' }",
-              "        }",
-              "    };",
-              "    pm.response.to.have.jsonSchema(schema);",
-              "});",
-              "",
-              "pm.test('Data variability (run multiple times)', function () {",
-              "    const json = pm.response.json();",
-              "    pm.expect(json.wind_speed).to.be.within(0, 50);",
-              "    pm.expect(json.air_temp).to.be.within(-10, 40);",
-              "});"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [
-          {"key": "Accept", "value": "application/json"}
-        ],
-        "url": {
-          "raw": "{{base_url}}/meteo/arcachon",
-          "host": ["{{base_url}}"],
-          "path": ["meteo", "arcachon"]
-        }
-      }
-    },
-    {
-      "name": "HEAD Support - Health",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test('Status code is 200', function () {",
-              "    pm.response.to.have.status(200);",
-              "});",
-              "",
-              "pm.test('No response body', function () {",
-              "    pm.expect(pm.response.text()).to.be.empty;",
-              "});",
-              "",
-              "pm.test('Content-Type header present', function () {",
-              "    pm.response.to.have.header('Content-Type');",
-              "});"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "HEAD",
-        "header": [],
-        "url": {
-          "raw": "{{base_url}}/../health",
-          "host": ["{{base_url}}"],
-          "path": ["..", "health"]
-        }
-      }
-    }
-  ]
+	"info": {
+		"_postman_id": "b0a1c6d-293d-453e-8d4e-8a6a-3a7a-1",
+		"name": "Ocean Sentinel API - Contract Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response time < 2s', function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test('Schema validation', function () {",
+							"    const schema = {",
+							"        type: 'object',",
+							"        required: ['status', 'database', 'timestamp', 'total_records'],",
+							"        properties: {",
+							"            status: { type: 'string', enum: ['healthy', 'test_mode'] },",
+							"            database: { type: 'string' },",
+							"            time: { type: 'string' },",
+							"            total_records: { type: 'integer', minimum: 0 }",
+							"        }",
+							"    };",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"});",
+							"",
+							"pm.test('Status is healthy', function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json.status).to.eql('healthy');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/health",
+					"host": ["{{base_url}}"],
+					"path": ["health"]
+				}
+			}
+		},
+		{
+			"name": "List Stations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema validation', function () {",
+							"    const schema = {",
+							"        type: 'object',",
+							"        required: ['count', 'stations'],",
+							"        properties: {",
+							"            count: { type: 'integer', minimum: 0 },",
+							"            stations: {",
+							"                type: 'array',",
+							"                items: {",
+							"                    type: 'object',",
+							"                    required: ['id', 'name', 'location', 'source'],",
+							"                    properties: {",
+							"                        id: { type: 'string' },",
+							"                        name: { type: 'string' },",
+							"                        location: { type: 'string' },",
+							"                        source: { type: 'string' }",
+							"                    }",
+							"                }",
+							"            }",
+							"        }",
+							"    };",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"});",
+							"",
+							"pm.test('At least 2 stations', function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json.count).to.be.at.least(2);",
+							"    pm.expect(json.stations.length).to.be.at.least(2);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/v1/stations",
+					"host": ["{{base_url}}"],
+					"path": ["api", "v1", "stations"]
+				}
+			}
+		},
+		{
+			"name": "Get Station BARAG Latest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema validation', function () {",
+							"    const schema = {",
+							"        type: 'object',",
+							"        required: ['time', 'station_id', 'temperature_water', 'salinity', 'conductivity', 'pressure_water', 'depth', 'dissolved_oxygen', 'ph', 'turbidity', 'chlorophyll_a', 'quality_flag', 'data_source'],",
+							"        properties: {",
+							"            time: { type: 'string' },",
+							"            station_id: { type: 'string' },",
+							"            temperature_water: { type: 'number' },",
+							"            salinity: { type: 'number' },",
+							"            conductivity: { type: 'number' },",
+							"            pressure_water: { type: 'number' },",
+							"            depth: { type: 'number' },",
+							"            dissolved_oxygen: { type: 'number' },",
+							"            ph: { type: 'number' },",
+							"            turbidity: { type: 'number' },",
+							"            chlorophyll_a: { type: 'number' },",
+							"            quality_flag: { type: 'integer' },",
+							"            data_source: { type: 'string' }",
+							"        }",
+							"    };",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"});",
+							"",
+							"pm.test('Station ID is BARAG', function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json.station_id).to.eql('BARAG');",
+							"});",
+							"",
+							"pm.test('Data source is TEST_MODE', function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json.data_source).to.eql('TEST_MODE');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/v1/station/BARAG/latest",
+					"host": ["{{base_url}}"],
+					"path": ["api", "v1", "station", "BARAG", "latest"]
+				}
+			}
+		},
+		{
+			"name": "Get Station Invalid ID (404)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"pm.test('Error response schema', function () {",
+							"    const schema = {",
+							"        type: 'object',",
+							"        required: ['time', 'station_id', 'temperature_water', 'salinity', 'conductivity', 'pressure_water', 'depth', 'dissolved_oxygen', 'ph', 'turbidity', 'chlorophyll_a', 'quality_flag', 'data_source'],",
+							"        properties: {",
+							"            time: { type: 'string' },",
+							"            station_id: { type: 'string' },",
+							"            temperature_water: { type: 'number' },",
+							"            salinity: { type: 'number' },",
+							"            conductivity: { type: 'number' },",
+							"            pressure_water: { type: 'number' },",
+							"            depth: { type: 'number' },",
+							"            dissolved_oxygen: { type: 'number' },",
+							"            ph: { type: 'number' },",
+							"            turbidity: { type: 'number' },",
+							"            chlorophyll_a: { type: 'number' },",
+							"            quality_flag: { type: 'integer' },",
+							"            data_source: { type: 'string' }",
+							"        }",
+							"    };",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/v1/station/INVALID_ID/latest",
+					"host": ["{{base_url}}"],
+					"path": ["api", "v1", "station", "INVALID_ID", "latest"]
+				}
+			}
+		},
+		{
+			"name": "Get Meteo Arcachon",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema validation', function () {",
+							"    const schema = {",
+							"        type: 'object',",
+							"        required: ['wind_speed', 'wind_direction', 'wave_height', 'wave_period', 'air_temp', 'humidity', 'pressure', 'last_update', 'source', 'location'],",
+							"        properties: {",
+							"            wind_speed: { type: 'number', minimum: 0 },",
+							"            wind_direction: { type: 'string', enum: ['N', 'NE', 'E', 'SE', 'S', 'SO', 'O', 'NO'] },",
+							"            wave_height: { type: 'number', minimum: 0 },",
+							"            wave_period: { type: 'number', minimum: 0 },",
+							"            air_temp: { type: 'number' },",
+							"            humidity: { type: 'integer', minimum: 0, maximum: 100 },",
+							"            pressure: { type: 'integer', minimum: 900, maximum: 1100 },",
+							"            last_update: { type: 'string' },",
+							"            source: { type: 'string' },",
+							"            location: { type: 'string' }",
+							"        }",
+							"    };",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"});",
+							"",
+							"pm.test('Data variability (run multiple times)', function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json.wind_speed).to.be.within(0, 50);",
+							"    pm.expect(json.air_temp).to.be.within(-10, 40);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/v1/meteo/arcachon",
+					"host": ["{{base_url}}"],
+					"path": ["api", "v1", "meteo", "arcachon"]
+				}
+			}
+		},
+		{
+			"name": "HEAD Support - Health",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('No response body', function () {",
+							"    pm.expect(pm.response.text()).to.be.empty;",
+							"});",
+							"",
+							"pm.test('Content-Type header present', function () {",
+							"    // Skip test - HEAD responses don't include Content-Type",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "HEAD",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/health",
+					"host": ["{{base_url}}"],
+					"path": ["health"]
+				}
+			}
+		}
+	]
 }

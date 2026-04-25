@@ -1,0 +1,376 @@
+openapi: 3.0.3
+info:
+  title: Ocean Sentinel API
+  description: |
+    API REST pour données océanographiques temps réel - Bassin d'Arcachon
+    
+    **Stratégie de versionnement**: URI-based (/v1)
+    **Idempotence**: Toutes opérations GET (lecture seule)
+    **Résilience**: Circuit breaker recommandé côté client
+  version: 1.0.0
+  contact:
+    name: Ocean Sentinel Support
+    url: https://oceansentinelle.fr
+    email: support@oceansentinelle.fr
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://oceansentinelle.fr/api/v1
+    description: Production
+  - url: http://127.0.0.1:8000/api/v1
+    description: Development
+
+tags:
+  - name: System
+    description: Health checks et monitoring
+  - name: Stations
+    description: Données océanographiques des stations
+  - name: Meteo
+    description: Conditions météorologiques marines
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Vérifier l'état de santé de l'API et de ses dépendances
+      operationId: healthCheck
+      tags: [System]
+      responses:
+        '200':
+          description: API opérationnelle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                status: ok
+                timestamp: "2026-04-25T15:40:00Z"
+                version: "1.0.0"
+                services:
+                  coast_hf: ok
+                  hub_eau: ok
+        '503':
+          description: Service indisponible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /stations:
+    get:
+      summary: Liste des stations océanographiques
+      description: Récupère toutes les stations de mesure disponibles
+      operationId: listStations
+      tags: [Stations]
+      responses:
+        '200':
+          description: Liste des stations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /station/{station_id}/latest:
+    get:
+      summary: Dernières mesures d'une station
+      description: Récupère les paramètres océanographiques les plus récents
+      operationId: getStationLatest
+      tags: [Stations]
+      parameters:
+        - name: station_id
+          in: path
+          required: true
+          description: Identifiant unique de la station
+          schema:
+            type: string
+            enum: [BARAG_PROXY, ARCACHON_EYRAC]
+          example: BARAG_PROXY
+      responses:
+        '200':
+          description: Données de la station
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationData'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /meteo/arcachon:
+    get:
+      summary: Météo marine Bassin d'Arcachon
+      description: |
+        Conditions météorologiques marines actuelles.
+        **Note**: Données variables à chaque appel (simulées).
+      operationId: getMeteoArcachon
+      tags: [Meteo]
+      responses:
+        '200':
+          description: Conditions météo marines
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeteoData'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status, timestamp, version]
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded, error]
+          description: État global de l'API
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp ISO 8601
+        version:
+          type: string
+          pattern: '^\d+\.\d+\.\d+$'
+          example: "1.0.0"
+        services:
+          type: object
+          additionalProperties:
+            type: string
+            enum: [ok, degraded, error]
+
+    Station:
+      type: object
+      required: [id, name, location, source]
+      properties:
+        id:
+          type: string
+          description: Identifiant unique
+          example: BARAG_PROXY
+        name:
+          type: string
+          description: Nom court
+          example: BARAG
+        location:
+          type: string
+          description: Localisation géographique
+          example: Bassin d'Arcachon
+        source:
+          type: string
+          description: Source des données
+          example: COAST-HF Ifremer
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+
+    Coordinates:
+      type: object
+      required: [lat, lon]
+      properties:
+        lat:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+          example: 44.666
+        lon:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+          example: -1.166
+
+    StationsResponse:
+      type: object
+      required: [count, stations]
+      properties:
+        count:
+          type: integer
+          minimum: 0
+          description: Nombre total de stations
+        stations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Station'
+
+    Parameter:
+      type: object
+      required: [name, value, unit, status, source, timestamp, quality_score, is_critical]
+      properties:
+        name:
+          type: string
+          enum: [TEMP, PSAL, DOX2, PH_TOTAL]
+          description: Code du paramètre océanographique
+        value:
+          type: number
+          format: double
+          description: Valeur mesurée/simulée
+        unit:
+          type: string
+          description: Unité de mesure
+          example: "°C"
+        status:
+          type: string
+          enum: [measured, inferred, simulated]
+          description: |
+            Niveau de fiabilité SACS:
+            - measured: Capteur direct (100%)
+            - inferred: Proxy satellitaire (70-90%)
+            - simulated: Modèle numérique (50-70%)
+        source:
+          type: string
+          description: Source de la donnée
+          example: "COAST-HF Ifremer"
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp de la mesure (ISO 8601)
+        quality_score:
+          type: number
+          format: double
+          minimum: 0.0
+          maximum: 1.0
+          description: Score de qualité (0.0 = mauvais, 1.0 = excellent)
+        is_critical:
+          type: boolean
+          description: |
+            Alerte SACS déclenchée si:
+            - DOX2 < 150 µmol/kg (HYPOXIE)
+            - PH_TOTAL < 7.80 (ACIDIFICATION)
+            - TEMP > 25°C (TEMPÉRATURE)
+
+    StationData:
+      type: object
+      required: [station_id, timestamp, parameters]
+      properties:
+        station_id:
+          type: string
+          example: BARAG_PROXY
+        timestamp:
+          type: string
+          format: date-time
+        parameters:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Parameter'
+
+    MeteoData:
+      type: object
+      required: [wind_speed, wind_direction, wave_height, wave_period, air_temp, humidity, pressure, last_update, source, location]
+      properties:
+        wind_speed:
+          type: number
+          format: double
+          minimum: 0
+          description: Vitesse du vent (km/h)
+          example: 14.2
+        wind_direction:
+          type: string
+          enum: [N, NE, E, SE, S, SO, O, NO]
+          description: Direction du vent
+        wave_height:
+          type: number
+          format: double
+          minimum: 0
+          description: Hauteur de houle (mètres)
+          example: 1.8
+        wave_period:
+          type: number
+          format: double
+          minimum: 0
+          description: Période de houle (secondes)
+          example: 6.3
+        air_temp:
+          type: number
+          format: double
+          description: Température de l'air (°C)
+          example: 18.3
+        humidity:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Humidité relative (%)
+          example: 75
+        pressure:
+          type: integer
+          minimum: 900
+          maximum: 1100
+          description: Pression atmosphérique (hPa)
+          example: 1012
+        last_update:
+          type: string
+          format: date-time
+          description: Timestamp de dernière mise à jour
+        source:
+          type: string
+          description: Source des données météo
+          example: "Données simulées"
+        location:
+          type: string
+          description: Localisation
+          example: "Bassin d'Arcachon"
+
+    ErrorResponse:
+      type: object
+      required: [error, message, timestamp]
+      properties:
+        error:
+          type: string
+          description: Code d'erreur
+          example: "STATION_NOT_FOUND"
+        message:
+          type: string
+          description: Message d'erreur lisible
+          example: "La station INVALID_ID n'existe pas"
+        timestamp:
+          type: string
+          format: date-time
+        trace_id:
+          type: string
+          format: uuid
+          description: Correlation ID pour traçabilité
+
+  responses:
+    BadRequest:
+      description: Requête invalide
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "INVALID_STATION_ID"
+            message: "Le station_id doit être BARAG_PROXY ou ARCACHON_EYRAC"
+            timestamp: "2026-04-25T15:40:00Z"
+
+    NotFound:
+      description: Ressource introuvable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "STATION_NOT_FOUND"
+            message: "La station demandée n'existe pas"
+            timestamp: "2026-04-25T15:40:00Z"
+
+    InternalServerError:
+      description: Erreur serveur interne
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "INTERNAL_SERVER_ERROR"
+            message: "Une erreur interne s'est produite"
+            timestamp: "2026-04-25T15:40:00Z"
+            trace_id: "550e8400-e29b-41d4-a716-446655440000"
+
+  securitySchemes: {}
+
+security: []

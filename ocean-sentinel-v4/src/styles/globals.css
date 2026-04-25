@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Ocean Sentinel Dark Theme - High Contrast Mobile-First */
+    --background: 210 100% 3%;        /* #000814 - Ultra-sombre */
+    --foreground: 0 0% 100%;          /* #ffffff - Blanc pur */
+    
+    --card: 210 100% 12%;             /* #001d3d - Cartes sombres */
+    --card-foreground: 0 0% 98%;      /* Texte blanc */
+    
+    --popover: 210 100% 12%;
+    --popover-foreground: 0 0% 98%;
+    
+    --primary: 190 95% 42%;           /* #06b6d4 - Cyan océanique */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 210 50% 20%;
+    --secondary-foreground: 0 0% 98%;
+    
+    --muted: 215 20% 25%;
+    --muted-foreground: 215 20% 70%;  /* Contraste amélioré */
+    
+    --accent: 190 95% 42%;            /* Cyan */
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 72% 51%;         /* #dc2626 - Rouge vif */
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 215 25% 30%;            /* Bordures plus visibles */
+    --input: 215 25% 30%;
+    --ring: 190 95% 42%;              /* Focus cyan */
+    
+    --radius: 0.75rem;
+    
+    /* SACS Truth Badges - Design Tokens */
+    --truth-measured: 160 84% 39%;    /* #10b981 - Vert MESURÉ */
+    --truth-measured-dark: 160 84% 25%;
+    --truth-measured-contrast: 0 0% 100%;
+    
+    --truth-inferred: 38 92% 50%;     /* #f59e0b - Orange INFÉRÉ */
+    --truth-inferred-dark: 32 95% 44%;
+    --truth-inferred-contrast: 0 0% 0%;
+    
+    --truth-simulated: 220 9% 46%;    /* #6b7280 - Gris SIMULÉ */
+    --truth-simulated-dark: 220 9% 36%;
+    --truth-simulated-contrast: 0 0% 100%;
+    
+    /* Critical Alerts - Maximum Visibility */
+    --critical: 0 72% 51%;            /* #dc2626 */
+    --critical-dark: 0 70% 35%;       /* #991b1b */
+    --critical-bg: 0 84% 15%;         /* #450a0a */
+    --critical-text: 0 93% 94%;       /* #fecaca */
+    --critical-border: 0 72% 51%;
+    --critical-glow: 0 86% 97%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  /* Root font-size augmentée pour lisibilité mobile optimale */
+  html {
+    font-size: 18px;
+  }
+  
+  body {
+    @apply bg-background text-foreground text-base;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+  }
+  
+  /* Ajustements typographiques pour badges SACS (préservation proportions) */
+  .truth-badge {
+    @apply text-xs font-semibold px-3 py-1.5;
+    letter-spacing: 0.02em;
+  }
+  
+  /* Ajustements pour alertes critiques (visibilité maximale) */
+  .critical-alert {
+    @apply text-sm font-bold px-4 py-2.5;
+    letter-spacing: 0.01em;
+  }
+  
+  /* Optimisation des titres pour hiérarchie visuelle */
+  h1 {
+    @apply text-4xl font-bold;
+    letter-spacing: -0.02em;
+  }
+  
+  h2 {
+    @apply text-3xl font-bold;
+    letter-spacing: -0.015em;
+  }
+  
+  h3 {
+    @apply text-2xl font-semibold;
+    letter-spacing: -0.01em;
+  }
+  
+  /* Safe areas for mobile */
+  @supports (padding: env(safe-area-inset-top)) {
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+}
+
+@layer utilities {
+  /* Custom utilities for Ocean Sentinel */
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Responsive padding pour MetricCard (éviter débordement mobile) */
+  .metric-card {
+    @apply p-4;
+  }
+  
+  @media (max-width: 640px) {
+    .metric-card {
+      @apply p-3;
+    }
+  }
+  
+  /* Responsive gap pour grille métriques */
+  .grid-metrics {
+    @apply gap-4;
+  }
+  
+  @media (max-width: 640px) {
+    .grid-metrics {
+      @apply gap-3;
+    }
+  }
+  
+  /* Responsive padding pour NewsCard */
+  .news-card-content {
+    @apply p-6;
+  }
+  
+  @media (max-width: 640px) {
+    .news-card-content {
+      @apply p-4;
+    }
+  }
+  
+  /* Optimisation images mobile - Force max dimensions */
+  @media (max-width: 640px) {
+    img {
+      max-width: 100%;
+      height: auto;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+  }
+}

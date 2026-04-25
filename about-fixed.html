@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#001a2e">
+    <meta name="description" content="Ocean Sentinelle - Plateforme de surveillance océanographique du Bassin d'Arcachon. Données temps réel, alertes écologiques, API REST professionnelle.">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <title>Le Projet - Ocean Sentinelle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #001a2e;
+            --bg-card: #002642;
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --border-default: #334155;
+            --ocean-400: #38bdf8;
+            --safe-top: env(safe-area-inset-top);
+            --safe-bottom: env(safe-area-inset-bottom);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            -webkit-font-smoothing: antialiased;
+            padding-bottom: calc(var(--safe-bottom) + 60px);
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(0, 26, 46, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-default);
+            padding: 16px;
+            padding-top: calc(var(--safe-top) + 16px);
+        }
+
+        .header__content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header__logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .header__logo-img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .header__logo-text {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .header__menu-btn {
+            width: 48px;
+            height: 48px;
+            background: transparent;
+            border: 2px solid var(--border-default);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            margin-top: 32px;
+            color: var(--ocean-400);
+        }
+
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            margin-top: 24px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+
+        ul {
+            margin-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 30;
+            background: rgba(0, 26, 46, 0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-default);
+            padding-bottom: var(--safe-bottom);
+        }
+
+        .bottom-nav__list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+            margin: 0;
+        }
+
+        .bottom-nav__link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 11px;
+            gap: 4px;
+        }
+
+        .bottom-nav__link--active {
+            color: var(--text-primary);
+        }
+
+        .bottom-nav__icon {
+            font-size: 24px;
+        }
+
+        @media (min-width: 768px) {
+            h1 { font-size: 40px; }
+            h2 { font-size: 28px; }
+            .main { padding: 48px 24px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header__content">
+            <a href="index.html" class="header__logo">
+                <img src="/assets/images/logo.svg" alt="" class="header__logo-img">
+                <span class="header__logo-text">Ocean Sentinelle</span>
+            </a>
+            <button class="header__menu-btn" aria-label="Menu">☰</button>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="section">
+            <h1>Le Projet Ocean Sentinelle</h1>
+            <p class="text-xl">
+                Plateforme de surveillance océanographique temps réel du Bassin d'Arcachon
+            </p>
+        </section>
+
+        <section class="section">
+            <h2>Contexte</h2>
+            <p>
+                Face à l'urgence climatique et environnementale, les Aires Marines et estuaires linéaires ont un permis de bonne santé de l'Océan. Le Bassin d'Arcachon a subi une perte dramatique de <strong>74% de ses herbiers d'huîtres</strong> en presque 5 ans d'élevage pour aider le milieu à créer encore de la biodiversité et qui peut accueillir 370 entreprises ostréicoles et près de 4 000 emplois de production annuelle sur le Bassin d'Arcachon. À l'horizon, il est urgent d'agir.
+            </p>
+        </section>
+
+        <section class="section">
+            <h2>Objectifs</h2>
+            <div class="card">
+                <h3>🎯 Produire un renseignement opérationnel anticipatif</h3>
+                <p>
+                    Pour les élus, marins, pêcheurs et l'ensemble des professionnels de la mer, avec l'intelligence artificielle et l'écologie.
+                </p>
+            </div>
+            <div class="card">
+                <h3>🔍 Restaurer la confiance envers la science</h3>
+                <p>
+                    Par une transparence absolue de l'information (3 niveaux SACS/OSINT).
+                </p>
+            </div>
+            <div class="card">
+                <h3>🌊 Fournir aux professionnels de la mer</h3>
+                <p>
+                    Des outils pour passer de l'annonce environnementale à l'action concrète.
+                </p>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Sources de Données</h2>
+            
+            <h3>Bouée BARAG (COAST-HF)</h3>
+            <p>
+                Mesures in-situ à haute fréquence (10 min) : température, salinité, pH, oxygène dissous.
+            </p>
+
+            <h3>Sentinel-3 (Copernicus)</h3>
+            <p>
+                Imagerie satellitaire optique pour proxy SST et paramètres dérivés.
+            </p>
+
+            <h3>Hub'Eau (BRGM)</h3>
+            <p>
+                Données piézométriques et qualité des eaux souterraines.
+            </p>
+
+            <h3>MARS3D (Ifremer)</h3>
+            <p>
+                Modèle hydrodynamique et scénarios climatiques.
+            </p>
+        </section>
+
+        <section class="section">
+            <h2>Architecture Technique</h2>
+            
+            <h3>SACS (Superviseur Multi-Agent System)</h3>
+            <p>Architecture fonctionnelle divisée entre six agents IA hautement spécialisés :</p>
+            <ul>
+                <li><strong>Agent Data Engineer</strong> : Ingestion ETL et optimisation TimescaleDB</li>
+                <li><strong>Agent Scientifique</strong> : Validation biogéochimique (TEOS-10)</li>
+                <li><strong>Agent IA</strong> : Modèles ML (LSTM, Random Forest)</li>
+                <li><strong>Agent Frontend</strong> : Génération autonome UI</li>
+                <li><strong>Agent Orchestrateur</strong> : Coordination workflow</li>
+                <li><strong>Agent Alerte</strong> : Notifications temps réel</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Seuils d'Alerte SACS</h2>
+            <div class="card">
+                <ul>
+                    <li><strong>Température</strong> : > 25°C (mortalité estivale)</li>
+                    <li><strong>Salinité</strong> : < 15 PSU (choc osmotique)</li>
+                    <li><strong>pH</strong> : < 7.80 (acidification, risque coquilles)</li>
+                    <li><strong>Oxygène dissous</strong> : < 4.00 mg/L (hypoxie)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Règle de Vérité</h2>
+            <p>Chaque donnée affichée est accompagnée d'un badge de traçabilité :</p>
+            <div class="card">
+                <p><strong style="color: #10b981;">● MESURÉ</strong> : Donnée directe capteur (fiabilité 100%)</p>
+                <p><strong style="color: #f59e0b;">◐ INFÉRÉ</strong> : Proxy satellitaire (fiabilité 70-90%)</p>
+                <p><strong style="color: #9ca3af;">○ SIMULÉ</strong> : Modèle numérique (fiabilité 50-70%)</p>
+            </div>
+        </section>
+    </main>
+
+    <nav class="bottom-nav">
+        <ul class="bottom-nav__list">
+            <li>
+                <a href="index.html" class="bottom-nav__link">
+                    <span class="bottom-nav__icon">🏠</span>
+                    <span>Accueil</span>
+                </a>
+            </li>
+            <li>
+                <a href="about.html" class="bottom-nav__link bottom-nav__link--active">
+                    <span class="bottom-nav__icon">📖</span>
+                    <span>Projet</span>
+                </a>
+            </li>
+            <li>
+                <a href="dashboard.html" class="bottom-nav__link">
+                    <span class="bottom-nav__icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</body>
+</html>

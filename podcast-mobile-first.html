@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#001a2e">
+    <meta name="description" content="Podcast Ocean Sentinel - Bulletins de vigilance océanographique. Écoutez les alertes SACS et analyses environnementales en mer.">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <title>Podcast - Ocean Sentinel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #001a2e;
+            --bg-secondary: #002642;
+            --bg-player: #003459;
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --color-info: #38bdf8;
+            --color-success: #10b981;
+            --border-default: #334155;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
+            --safe-top: env(safe-area-inset-top);
+            --safe-bottom: env(safe-area-inset-bottom);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            padding-bottom: calc(var(--safe-bottom) + 140px);
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: rgba(0, 26, 46, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-default);
+            padding: var(--space-md);
+            padding-top: calc(var(--safe-top) + var(--space-md));
+        }
+
+        .header__content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header__logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .header__logo-img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .header__logo-text {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--space-lg) var(--space-md);
+        }
+
+        .section {
+            margin-bottom: var(--space-xl);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-info);
+            margin-bottom: var(--space-md);
+            margin-top: var(--space-xl);
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+        }
+
+        .episode-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .episode {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .episode:hover {
+            border-color: var(--color-info);
+        }
+
+        .episode--playing {
+            border-color: var(--color-success);
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #003459 100%);
+        }
+
+        .episode__header {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .episode__play-btn {
+            width: 48px;
+            height: 48px;
+            background: var(--color-info);
+            border: none;
+            border-radius: var(--radius-full);
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .episode__play-btn:active {
+            transform: scale(0.95);
+        }
+
+        .episode--playing .episode__play-btn {
+            background: var(--color-success);
+            animation: pulse-play 2s infinite;
+        }
+
+        @keyframes pulse-play {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .episode__content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .episode__title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+        }
+
+        .episode__meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .episode__description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .episode__badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff6666;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #ff6666;
+        }
+
+        /* PLAYER FIXE */
+        .player {
+            position: fixed;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            z-index: 25;
+            background: var(--bg-player);
+            border-top: 2px solid var(--border-default);
+            padding: var(--space-md);
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .player__content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .player__info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .player__artwork {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--color-info) 0%, var(--color-success) 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .player__title {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .player__title-text {
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player__subtitle {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .player__progress {
+            margin-bottom: var(--space-md);
+        }
+
+        .player__progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .player__progress-fill {
+            height: 100%;
+            background: var(--color-info);
+            border-radius: var(--radius-full);
+            transition: width 0.1s;
+        }
+
+        .player__time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+        }
+
+        .player__controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-lg);
+        }
+
+        .player__btn {
+            width: 48px;
+            height: 48px;
+            background: transparent;
+            border: 2px solid var(--border-default);
+            border-radius: var(--radius-full);
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .player__btn:hover {
+            border-color: var(--color-info);
+        }
+
+        .player__btn:active {
+            transform: scale(0.95);
+        }
+
+        .player__btn--play {
+            width: 56px;
+            height: 56px;
+            background: var(--color-info);
+            border: none;
+            font-size: 24px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 30;
+            background: rgba(0, 26, 46, 0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-default);
+            padding-bottom: var(--safe-bottom);
+        }
+
+        .bottom-nav__list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+        }
+
+        .bottom-nav__link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 11px;
+            gap: 4px;
+        }
+
+        .bottom-nav__link--active {
+            color: var(--text-primary);
+        }
+
+        .bottom-nav__icon {
+            font-size: 24px;
+        }
+
+        @media (min-width: 768px) {
+            h1 { font-size: 40px; }
+            h2 { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header__content">
+            <a href="index.html" class="header__logo">
+                <img src="/assets/images/logo.svg" alt="" class="header__logo-img">
+                <span class="header__logo-text">Ocean Sentinel</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="section">
+            <h1>🎙️ Podcast Ocean Sentinel</h1>
+            <p>
+                Écoutez les bulletins de vigilance océanographique générés par NotebookLM. 
+                Analyses environnementales, alertes SACS et conseils pour les professionnels de la mer.
+            </p>
+        </section>
+
+        <section class="section">
+            <h2>Épisodes Récents</h2>
+            <div class="episode-list">
+                <!-- Épisode 1 -->
+                <div class="episode" onclick="playEpisode(1)">
+                    <div class="episode__header">
+                        <button class="episode__play-btn" aria-label="Lecture">▶</button>
+                        <div class="episode__content">
+                            <h3 class="episode__title">Alerte Hypoxie - Bassin d'Arcachon</h3>
+                            <div class="episode__meta">
+                                <span>📅 22 avril 2026</span>
+                                <span>⏱️ 5:32</span>
+                                <span class="episode__badge">🔴 CRITIQUE</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="episode__description">
+                        Analyse de l'alerte hypoxie détectée sur la station BARAG. Oxygène dissous à 135 µmol/kg, 
+                        en-dessous du seuil critique de 150 µmol/kg. Risque de mortalité pour les huîtres. 
+                        Recommandations pour les ostréiculteurs.
+                    </p>
+                </div>
+
+                <!-- Épisode 2 -->
+                <div class="episode" onclick="playEpisode(2)">
+                    <div class="episode__header">
+                        <button class="episode__play-btn" aria-label="Lecture">▶</button>
+                        <div class="episode__content">
+                            <h3 class="episode__title">Acidification Océanique - pH 7.65</h3>
+                            <div class="episode__meta">
+                                <span>📅 22 avril 2026</span>
+                                <span>⏱️ 4:18</span>
+                                <span class="episode__badge">🔴 CRITIQUE</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="episode__description">
+                        Bulletin sur l'acidification détectée par Sentinel-3. pH à 7.65, sous le seuil de 7.80. 
+                        Impact sur la calcification des coquilles. Données inférées par satellite OLCI.
+                    </p>
+                </div>
+
+                <!-- Épisode 3 -->
+                <div class="episode" onclick="playEpisode(3)">
+                    <div class="episode__header">
+                        <button class="episode__play-btn" aria-label="Lecture">▶</button>
+                        <div class="episode__content">
+                            <h3 class="episode__title">Comprendre la Règle de Vérité SACS</h3>
+                            <div class="episode__meta">
+                                <span>📅 20 avril 2026</span>
+                                <span>⏱️ 8:45</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="episode__description">
+                        Explication détaillée des trois niveaux de fiabilité des données : MESURÉ (capteur direct), 
+                        INFÉRÉ (proxy satellitaire), SIMULÉ (modèle numérique). Comment interpréter les badges.
+                    </p>
+                </div>
+
+                <!-- Épisode 4 -->
+                <div class="episode" onclick="playEpisode(4)">
+                    <div class="episode__header">
+                        <button class="episode__play-btn" aria-label="Lecture">▶</button>
+                        <div class="episode__content">
+                            <h3 class="episode__title">OSINT Océanographique - Sources Ouvertes</h3>
+                            <div class="episode__meta">
+                                <span>📅 18 avril 2026</span>
+                                <span>⏱️ 12:20</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="episode__description">
+                        Introduction à l'Open Source Intelligence appliquée à l'océanographie. 
+                        Exploitation des données COAST-HF, Copernicus, Hub'Eau. Méthodologie ABACODE.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>À Propos du Podcast</h2>
+            <p>
+                Les épisodes sont générés automatiquement par NotebookLM à partir des données SACS et des analyses 
+                environnementales. Chaque bulletin est conçu pour être écouté en mer, avec des informations 
+                claires et actionnables pour les professionnels de la conchyliculture.
+            </p>
+            <p style="font-size: 14px; color: var(--text-tertiary);">
+                🎧 Disponible en podcast RSS • 🔔 Notifications push pour alertes critiques
+            </p>
+        </section>
+    </main>
+
+    <!-- PLAYER AUDIO FIXE -->
+    <div class="player" id="player" style="display: none;">
+        <div class="player__content">
+            <div class="player__info">
+                <div class="player__artwork">🎙️</div>
+                <div class="player__title">
+                    <div class="player__title-text" id="playerTitle">Aucun épisode</div>
+                    <div class="player__subtitle" id="playerSubtitle">Ocean Sentinel</div>
+                </div>
+            </div>
+
+            <div class="player__progress">
+                <div class="player__progress-bar" onclick="seekAudio(event)">
+                    <div class="player__progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div class="player__time">
+                    <span id="currentTime">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+            </div>
+
+            <div class="player__controls">
+                <button class="player__btn" onclick="skipBackward()" aria-label="Reculer 15s">
+                    ⏪
+                </button>
+                <button class="player__btn player__btn--play" id="playPauseBtn" onclick="togglePlay()" aria-label="Lecture/Pause">
+                    ▶
+                </button>
+                <button class="player__btn" onclick="skipForward()" aria-label="Avancer 15s">
+                    ⏩
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <ul class="bottom-nav__list">
+            <li>
+                <a href="index.html" class="bottom-nav__link">
+                    <span class="bottom-nav__icon">🏠</span>
+                    <span>Accueil</span>
+                </a>
+            </li>
+            <li>
+                <a href="dashboard.html" class="bottom-nav__link">
+                    <span class="bottom-nav__icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="podcast.html" class="bottom-nav__link bottom-nav__link--active">
+                    <span class="bottom-nav__icon">🎙️</span>
+                    <span>Podcast</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <script>
+        let currentEpisode = null;
+        let isPlaying = false;
+        let currentTime = 0;
+        let duration = 332; // 5:32 en secondes (exemple)
+
+        const episodes = {
+            1: { title: 'Alerte Hypoxie - Bassin d\'Arcachon', duration: 332 },
+            2: { title: 'Acidification Océanique - pH 7.65', duration: 258 },
+            3: { title: 'Comprendre la Règle de Vérité SACS', duration: 525 },
+            4: { title: 'OSINT Océanographique - Sources Ouvertes', duration: 740 }
+        };
+
+        function playEpisode(episodeId) {
+            // Retirer classe playing de tous les épisodes
+            document.querySelectorAll('.episode').forEach(ep => {
+                ep.classList.remove('episode--playing');
+            });
+
+            // Ajouter classe playing à l'épisode sélectionné
+            event.currentTarget.classList.add('episode--playing');
+
+            // Afficher le player
+            document.getElementById('player').style.display = 'block';
+
+            // Mettre à jour les infos
+            const episode = episodes[episodeId];
+            document.getElementById('playerTitle').textContent = episode.title;
+            currentEpisode = episodeId;
+            duration = episode.duration;
+            currentTime = 0;
+
+            // Démarrer la lecture
+            isPlaying = true;
+            document.getElementById('playPauseBtn').textContent = '⏸';
+            startPlayback();
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            document.getElementById('playPauseBtn').textContent = isPlaying ? '⏸' : '▶';
+            if (isPlaying) {
+                startPlayback();
+            }
+        }
+
+        function startPlayback() {
+            if (!isPlaying) return;
+
+            const interval = setInterval(() => {
+                if (!isPlaying) {
+                    clearInterval(interval);
+                    return;
+                }
+
+                currentTime++;
+                if (currentTime >= duration) {
+                    currentTime = duration;
+                    isPlaying = false;
+                    document.getElementById('playPauseBtn').textContent = '▶';
+                    clearInterval(interval);
+                }
+
+                updateProgress();
+            }, 1000);
+        }
+
+        function updateProgress() {
+            const progress = (currentTime / duration) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('currentTime').textContent = formatTime(currentTime);
+            document.getElementById('duration').textContent = formatTime(duration);
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function seekAudio(event) {
+            const bar = event.currentTarget;
+            const clickX = event.offsetX;
+            const width = bar.offsetWidth;
+            const percent = clickX / width;
+            currentTime = Math.floor(duration * percent);
+            updateProgress();
+        }
+
+        function skipBackward() {
+            currentTime = Math.max(0, currentTime - 15);
+            updateProgress();
+        }
+
+        function skipForward() {
+            currentTime = Math.min(duration, currentTime + 15);
+            updateProgress();
+        }
+    </script>
+</body>
+</html>

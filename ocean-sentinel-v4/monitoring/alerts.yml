@@ -1,0 +1,162 @@
+# Alertes Prometheus - Ocean Sentinel API
+# Basé sur Golden Signals et SLA 99.5%
+
+groups:
+  - name: ocean_sentinel_api_alerts
+    interval: 30s
+    rules:
+      # === LATENCY (P99 > 3s) ===
+      - alert: HighLatencyP99
+        expr: |
+          histogram_quantile(0.99, 
+            rate(http_request_duration_seconds_bucket{job="ocean-sentinel-api"}[5m])
+          ) > 3
+        for: 2m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "Latence P99 élevée (> 3s)"
+          description: "La latence P99 est de {{ $value }}s sur {{ $labels.endpoint }}"
+          runbook_url: "https://docs.oceansentinelle.fr/runbooks/high-latency"
+
+      # === ERROR RATE (5xx > 5%) ===
+      - alert: HighErrorRate5xx
+        expr: |
+          (
+            sum(rate(http_requests_total{job="ocean-sentinel-api", status=~"5.."}[5m]))
+            /
+            sum(rate(http_requests_total{job="ocean-sentinel-api"}[5m]))
+          ) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+          component: api
+        annotations:
+          summary: "Taux d'erreurs 5xx élevé (> 5%)"
+          description: "{{ $value | humanizePercentage }} des requêtes échouent avec 5xx"
+          runbook_url: "https://docs.oceansentinelle.fr/runbooks/OCEAN-SENTINEL-API-DEGRADATION"
+
+      # === CIRCUIT BREAKER OPEN ===
+      - alert: CircuitBreakerOpen
+        expr: circuit_breaker_state{api="ocean_sentinel"} == 1
+        for: 1m
+        labels:
+          severity: critical
+          component: circuit_breaker
+        annotations:
+          summary: "Circuit Breaker OUVERT"
+          description: "Le Circuit Breaker pour {{ $labels.api }} est en état OPEN (fail fast activé)"
+          runbook_url: "https://docs.oceansentinelle.fr/runbooks/OCEAN-SENTINEL-API-DEGRADATION"
+
+      # === API EXTERNE DOWN ===
+      - alert: ExternalAPIDown
+        expr: probe_success{job="blackbox"} == 0
+        for: 3m
+        labels:
+          severity: critical
+          component: external_api
+        annotations:
+          summary: "API externe indisponible"
+          description: "L'endpoint {{ $labels.instance }} ne répond pas (probe failed)"
+          runbook_url: "https://docs.oceansentinelle.fr/runbooks/OCEAN-SENTINEL-API-DEGRADATION"
+
+      # === RETRY BUDGET EXHAUSTED ===
+      - alert: RetryBudgetExhausted
+        expr: |
+          (
+            sum(rate(http_requests_retried_total{job="ocean-sentinel-api"}[5m]))
+            /
+            sum(rate(http_requests_total{job="ocean-sentinel-api"}[5m]))
+          ) > 0.10
+        for: 5m
+        labels:
+          severity: warning
+          component: retry
+        annotations:
+          summary: "Retry Budget épuisé (> 10%)"
+          description: "{{ $value | humanizePercentage }} des requêtes sont retries"
+          runbook_url: "https://docs.oceansentinelle.fr/runbooks/retry-budget"
+
+      # === CACHE HIT RATE LOW ===
+      - alert: LowCacheHitRate
+        expr: |
+          (
+            sum(rate(cache_hits_total{job="ocean-sentinel-api"}[5m]))
+            /
+            sum(rate(cache_requests_total{job="ocean-sentinel-api"}[5m]))
+          ) < 0.50
+        for: 10m
+        labels:
+          severity: info
+          component: cache
+        annotations:
+          summary: "Taux de cache hit faible (< 50%)"
+          description: "Cache hit rate: {{ $value | humanizePercentage }}"
+
+      # === DISK SPACE LOW ===
+      - alert: DiskSpaceLow
+        expr: |
+          (
+            node_filesystem_avail_bytes{mountpoint="/"}
+            /
+            node_filesystem_size_bytes{mountpoint="/"}
+          ) < 0.10
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "Espace disque faible (< 10%)"
+          description: "Seulement {{ $value | humanizePercentage }} d'espace disponible sur /"
+
+      # === MEMORY PRESSURE ===
+      - alert: HighMemoryUsage
+        expr: |
+          (
+            1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)
+          ) > 0.90
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "Utilisation mémoire élevée (> 90%)"
+          description: "{{ $value | humanizePercentage }} de la mémoire utilisée"
+
+      # === SSL CERTIFICATE EXPIRY ===
+      - alert: SSLCertificateExpiringSoon
+        expr: |
+          probe_ssl_earliest_cert_expiry{job="blackbox"} - time() < 86400 * 30
+        for: 1h
+        labels:
+          severity: warning
+          component: ssl
+        annotations:
+          summary: "Certificat SSL expire bientôt"
+          description: "Le certificat pour {{ $labels.instance }} expire dans {{ $value | humanizeDuration }}"
+
+  # === SLA Monitoring ===
+  - name: sla_monitoring
+    interval: 1m
+    rules:
+      # Availability SLA (99.5% = 3.6h downtime/mois)
+      - record: sla:availability:30d
+        expr: |
+          avg_over_time(up{job="ocean-sentinel-api"}[30d])
+
+      # Error Budget (0.5% = 216 minutes/mois)
+      - record: sla:error_budget_remaining:30d
+        expr: |
+          1 - (
+            sum(rate(http_requests_total{job="ocean-sentinel-api", status=~"5.."}[30d]))
+            /
+            sum(rate(http_requests_total{job="ocean-sentinel-api"}[30d]))
+          )
+
+      # Latency SLO (95% requêtes < 1s)
+      - record: sla:latency_slo:5m
+        expr: |
+          histogram_quantile(0.95,
+            rate(http_request_duration_seconds_bucket{job="ocean-sentinel-api"}[5m])
+          )

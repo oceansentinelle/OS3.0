@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#001a2e">
+    <meta name="description" content="API REST Ocean Sentinel - Accédez aux données océanographiques en temps réel. Documentation, endpoints, webhooks alertes SACS.">
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <title>API & Alertes - Ocean Sentinel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #001a2e;
+            --bg-secondary: #002642;
+            --bg-code: #0c1621;
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --color-info: #38bdf8;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-critical: #ff0000;
+            --border-default: #334155;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --safe-top: env(safe-area-inset-top);
+            --safe-bottom: env(safe-area-inset-bottom);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            padding-bottom: calc(var(--safe-bottom) + 60px);
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: rgba(0, 26, 46, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-default);
+            padding: var(--space-md);
+            padding-top: calc(var(--safe-top) + var(--space-md));
+        }
+
+        .header__content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header__logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .header__logo-img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .header__logo-text {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-lg) var(--space-md);
+        }
+
+        .section {
+            margin-bottom: var(--space-xl);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-info);
+            margin-bottom: var(--space-md);
+            margin-top: var(--space-xl);
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 2px solid;
+        }
+
+        .badge--get {
+            background: #065f46;
+            color: #ffffff;
+            border-color: #10b981;
+        }
+
+        .badge--post {
+            background: #7c2d12;
+            color: #ffffff;
+            border-color: #f59e0b;
+        }
+
+        .endpoint {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+        }
+
+        .endpoint__header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .endpoint__path {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: var(--color-info);
+            font-weight: 600;
+        }
+
+        .endpoint__description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: var(--space-md);
+        }
+
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            overflow-x: auto;
+            margin-bottom: var(--space-md);
+        }
+
+        .code-block pre {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        .alert-demo {
+            background: linear-gradient(135deg, #1a0000 0%, #330000 100%);
+            border: 3px solid var(--color-critical);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            animation: pulse-alert 2s infinite;
+        }
+
+        @keyframes pulse-alert {
+            0%, 100% { border-color: var(--color-critical); }
+            50% { border-color: #ff6666; }
+        }
+
+        .alert-demo__title {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .alert-demo__value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6666;
+            margin-bottom: var(--space-sm);
+        }
+
+        .alert-demo__meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+            font-size: 14px;
+        }
+
+        .data-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 2px solid;
+        }
+
+        .data-badge--measured {
+            background: #065f46;
+            color: #ffffff;
+            border-color: #10b981;
+        }
+
+        .data-badge--inferred {
+            background: #7c2d12;
+            color: #ffffff;
+            border-color: #f59e0b;
+        }
+
+        .data-badge--simulated {
+            background: #1f2937;
+            color: #ffffff;
+            border-color: #9ca3af;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media (min-width: 640px) {
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .feature-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+        }
+
+        .feature-card__icon {
+            font-size: 32px;
+            margin-bottom: var(--space-md);
+        }
+
+        .feature-card__title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+        }
+
+        .feature-card__text {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 30;
+            background: rgba(0, 26, 46, 0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-default);
+            padding-bottom: var(--safe-bottom);
+        }
+
+        .bottom-nav__list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+        }
+
+        .bottom-nav__link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 11px;
+            gap: 4px;
+        }
+
+        .bottom-nav__link--active {
+            color: var(--text-primary);
+        }
+
+        .bottom-nav__icon {
+            font-size: 24px;
+        }
+
+        @media (min-width: 768px) {
+            h1 { font-size: 40px; }
+            h2 { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header__content">
+            <a href="index.html" class="header__logo">
+                <img src="/assets/images/logo.svg" alt="" class="header__logo-img">
+                <span class="header__logo-text">Ocean Sentinel</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="section">
+            <h1>API REST & Alertes SACS</h1>
+            <p>
+                Accédez aux données océanographiques en temps réel via notre API REST professionnelle. 
+                Recevez des webhooks pour les alertes critiques d'hypoxie et d'acidification.
+            </p>
+        </section>
+
+        <!-- Exemple Alerte -->
+        <section class="section">
+            <h2>Exemple d'Alerte Critique</h2>
+            <div class="alert-demo" role="alert">
+                <div class="alert-demo__title">
+                    <span>⚠️</span>
+                    <span>HYPOXIE DÉTECTÉE</span>
+                </div>
+                <div class="alert-demo__value">
+                    Oxygène 135 µmol/kg &lt; 150 µmol/kg
+                </div>
+                <div class="alert-demo__meta">
+                    <span class="data-badge data-badge--measured">● MESURÉ</span>
+                    <span style="color: var(--text-secondary);">Station BARAG</span>
+                    <span style="color: #ffcccc;">• Risque mortalité huîtres</span>
+                </div>
+            </div>
+            <p style="font-size: 14px; color: var(--text-tertiary);">
+                Cette alerte est envoyée automatiquement via webhook lorsque le seuil critique est franchi.
+            </p>
+        </section>
+
+        <!-- Fonctionnalités -->
+        <section class="section">
+            <h2>Fonctionnalités API</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-card__icon">📊</div>
+                    <h3 class="feature-card__title">Données Temps Réel</h3>
+                    <p class="feature-card__text">
+                        Accédez aux mesures des stations BARAG et EYRAC avec une latence < 10 minutes.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card__icon">🔔</div>
+                    <h3 class="feature-card__title">Webhooks Alertes</h3>
+                    <p class="feature-card__text">
+                        Recevez des notifications HTTP POST lors du déclenchement d'alertes SACS.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card__icon">🔐</div>
+                    <h3 class="feature-card__title">Authentification JWT</h3>
+                    <p class="feature-card__text">
+                        Sécurisez vos requêtes avec des tokens JWT à durée limitée.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-card__icon">📈</div>
+                    <h3 class="feature-card__title">Historique 30 Jours</h3>
+                    <p class="feature-card__text">
+                        Interrogez les données historiques avec filtres temporels et par station.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Endpoints -->
+        <section class="section">
+            <h2>Endpoints Principaux</h2>
+
+            <div class="endpoint">
+                <div class="endpoint__header">
+                    <span class="badge badge--get">GET</span>
+                    <span class="endpoint__path">/api/v1/station/{station_id}/latest</span>
+                </div>
+                <p class="endpoint__description">
+                    Récupère les dernières mesures d'une station avec badges de vérité.
+                </p>
+                <div class="code-block">
+                    <pre>{
+  "station_id": "BARAG_PROXY",
+  "timestamp": "2026-04-22T23:10:00Z",
+  "parameters": [
+    {
+      "name": "TEMP",
+      "value": 18.5,
+      "unit": "°C",
+      "status": "measured",
+      "quality_flag": 1
+    },
+    {
+      "name": "DOX2",
+      "value": 135,
+      "unit": "µmol/kg",
+      "status": "measured",
+      "is_critical": true
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint__header">
+                    <span class="badge badge--get">GET</span>
+                    <span class="endpoint__path">/api/v1/alerts/sacs</span>
+                </div>
+                <p class="endpoint__description">
+                    Liste toutes les alertes SACS actives avec leur niveau de criticité.
+                </p>
+                <div class="code-block">
+                    <pre>{
+  "alerts": [
+    {
+      "id": "alert_hypoxie_001",
+      "type": "HYPOXIE",
+      "severity": "critical",
+      "parameter": "DOX2",
+      "value": 135,
+      "threshold": 150,
+      "station": "BARAG_PROXY",
+      "status": "measured",
+      "timestamp": "2026-04-22T23:08:00Z",
+      "message": "Risque mortalité huîtres"
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint__header">
+                    <span class="badge badge--post">POST</span>
+                    <span class="endpoint__path">/api/v1/webhooks/register</span>
+                </div>
+                <p class="endpoint__description">
+                    Enregistre un webhook pour recevoir les alertes en temps réel.
+                </p>
+                <div class="code-block">
+                    <pre>{
+  "url": "https://votre-serveur.com/webhook",
+  "events": ["alert.critical", "alert.warning"],
+  "secret": "votre_secret_webhook"
+}</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Règle de Vérité -->
+        <section class="section">
+            <h2>Règle de Vérité SACS</h2>
+            <p>
+                Chaque donnée retournée par l'API inclut un champ <code style="background: var(--bg-code); padding: 2px 6px; border-radius: 4px; font-family: monospace;">status</code> 
+                indiquant sa provenance :
+            </p>
+            <div style="display: flex; flex-direction: column; gap: var(--space-md); margin-top: var(--space-md);">
+                <div style="display: flex; align-items: center; gap: var(--space-md);">
+                    <span class="data-badge data-badge--measured">● MESURÉ</span>
+                    <span style="color: var(--text-secondary); font-size: 14px;">
+                        Donnée directe capteur (fiabilité 100%)
+                    </span>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-md);">
+                    <span class="data-badge data-badge--inferred">◐ INFÉRÉ</span>
+                    <span style="color: var(--text-secondary); font-size: 14px;">
+                        Proxy satellitaire Sentinel-3 (fiabilité 70-90%)
+                    </span>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-md);">
+                    <span class="data-badge data-badge--simulated">○ SIMULÉ</span>
+                    <span style="color: var(--text-secondary); font-size: 14px;">
+                        Modèle MARS3D Ifremer (fiabilité 50-70%)
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rate Limits -->
+        <section class="section">
+            <h2>Limites & Quotas</h2>
+            <div class="endpoint">
+                <h3>Plan Gratuit</h3>
+                <ul style="color: var(--text-secondary); margin-left: 20px;">
+                    <li>100 requêtes / heure</li>
+                    <li>1 webhook actif</li>
+                    <li>Données temps réel uniquement</li>
+                </ul>
+            </div>
+            <div class="endpoint">
+                <h3>Plan Professionnel</h3>
+                <ul style="color: var(--text-secondary); margin-left: 20px;">
+                    <li>10 000 requêtes / heure</li>
+                    <li>10 webhooks actifs</li>
+                    <li>Historique 30 jours</li>
+                    <li>Support prioritaire</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <nav class="bottom-nav">
+        <ul class="bottom-nav__list">
+            <li>
+                <a href="index.html" class="bottom-nav__link">
+                    <span class="bottom-nav__icon">🏠</span>
+                    <span>Accueil</span>
+                </a>
+            </li>
+            <li>
+                <a href="dashboard.html" class="bottom-nav__link">
+                    <span class="bottom-nav__icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="api.html" class="bottom-nav__link bottom-nav__link--active">
+                    <span class="bottom-nav__icon">⚡</span>
+                    <span>API</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</body>
+</html>

@@ -12,7 +12,9 @@ export function cn(...inputs: ClassValue[]) {
  * Format confidence percentage
  */
 export function formatConfidence(value: number): string {
-  return `${Math.round(value)}%`
+  // Si valeur entre 0 et 1, convertir en pourcentage
+  const percentage = value <= 1 ? value * 100 : value
+  return `${Math.round(percentage)}%`
 }
 
 /**

@@ -9,5 +9,8 @@ pydantic==2.5.3
 # Database
 psycopg2-binary==2.9.9
 
+# HTTP Client
+httpx==0.25.2
+
 # Utilities
 python-dotenv==1.0.0

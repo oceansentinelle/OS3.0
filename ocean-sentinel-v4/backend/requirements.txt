@@ -1,0 +1,23 @@
+# Ocean Sentinel Backend - Dépendances Python
+# FastAPI + ASGI server
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+
+# HTTP client async
+httpx==0.26.0
+
+# Validation données (versions avec wheels pré-compilés)
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Variables environnement
+python-dotenv==1.0.0
+
+# Cache Redis (optionnel)
+redis==5.0.0
+
+# CORS
+python-multipart==0.0.6
+
+# Logs
+python-json-logger==2.0.7

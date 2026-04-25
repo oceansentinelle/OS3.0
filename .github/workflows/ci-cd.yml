@@ -1,0 +1,171 @@
+name: CI/CD Pipeline - Ocean Sentinel API
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: oceansentinelle-api
+
+jobs:
+  test-contract:
+    name: Contract Tests (Newman)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Start API in TEST_MODE
+        run: |
+          cd backend
+          python start_test_mode.py &
+          sleep 5
+          curl -f http://127.0.0.1:8000/health
+
+      - name: Wait for API ready
+        run: |
+          echo "Waiting for API to be ready..."
+          timeout 30s bash -c 'until curl -f http://127.0.0.1:8000/health; do sleep 1; done'
+
+      - name: Run Newman Contract Tests
+        run: |
+          newman run tests/contract/ocean_sentinel_api.postman_collection.json \
+            --env-var base_url=http://127.0.0.1:8000 \
+            --color on \
+            --reporters cli \
+            --bail
+
+      - name: Upload Test Results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-results
+          path: newman/
+
+  security-scan:
+    name: Security Scan (SAST)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install bandit safety semgrep
+
+      - name: Run Bandit Security Scan
+        run: |
+          bandit -r backend/ -f json -o bandit-report.json
+
+      - name: Run Safety Dependency Check
+        run: |
+          safety check --json --output safety-report.json
+
+      - name: Run Semgrep SAST
+        run: |
+          semgrep --config=auto --json --output=semgrep-report.json backend/
+
+      - name: Upload Security Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            bandit-report.json
+            safety-report.json
+            semgrep-report.json
+
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    needs: [test-contract, security-scan]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          labels: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            # Stop existing API
+            docker stop oceansentinelle-api || true
+            docker rm oceansentinelle-api || true
+            
+            # Pull and start new image
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            docker run -d \
+              --name oceansentinelle-api \
+              --restart unless-stopped \
+              -p 8000:8000 \
+              -e TEST_MODE=false \
+              -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+              -e REDIS_URL=${{ secrets.REDIS_URL }} \
+              -e PROMETHEUS_URL=${{ secrets.PROMETHEUS_URL }} \
+              -e SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }} \
+              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            
+            # Cleanup old images
+            docker image prune -f
+
+      - name: Health Check Deployment
+        run: |
+          sleep 10
+          curl -f ${{ secrets.VPS_URL }}/health || exit 1
+
+  docker-scan:
+    name: Container Security Scan
+    runs-on: ubuntu-latest
+    needs: [build-and-deploy]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Run Trivy vulnerability scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy Results
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'

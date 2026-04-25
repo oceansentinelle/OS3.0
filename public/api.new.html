@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="API & Alertes Ocean Sentinelle - Accès programmatique aux données océanographiques du Bassin d'Arcachon. Documentation REST API, endpoints, exemples.">
+    <meta name="keywords" content="API océanographique, REST API, données temps réel, Swagger, endpoints JSON, Bassin d'Arcachon">
+    <meta name="author" content="Ocean Sentinelle">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    
+    <title>API & Alertes - Ocean Sentinelle</title>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-ocean-900/95 backdrop-blur-md border-b border-ocean-700/50 sticky top-0 z-50 no-print">
+        <nav class="container mx-auto px-4 py-4 flex items-center justify-between max-w-7xl" aria-label="Navigation principale">
+            <div class="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                    <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                    <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                    <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                </svg>
+                <span class="text-xl font-bold text-white">Ocean Sentinelle</span>
+            </div>
+            
+            <ul class="flex gap-6 items-center">
+                <li><a href="index.html" class="nav-link">Accueil</a></li>
+                <li><a href="about.html" class="nav-link">Le Projet</a></li>
+                <li><a href="api.html" class="nav-link" aria-current="page">API & Alertes</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-7xl">
+        <!-- Page Header -->
+        <header class="page-header">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400" aria-hidden="true">
+                    <polyline points="16 18 22 12 16 6"/>
+                    <polyline points="8 6 2 12 8 18"/>
+                </svg>
+                <h1 class="text-4xl md:text-5xl font-bold text-gradient">API & Alertes Professionnelles</h1>
+            </div>
+            <p class="page-subtitle">Accès programmatique aux données océanographiques</p>
+        </header>
+
+        <!-- API Status Section -->
+        <section class="content-section">
+            <div class="card">
+                <div class="flex items-center gap-3 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                    <h2 class="text-2xl font-semibold text-white">Status API</h2>
+                </div>
+                <div id="api-status-content" class="text-gray-300">
+                    <div class="flex items-center gap-2">
+                        <div class="animate-spin h-5 w-5 border-2 border-ocean-400 border-t-transparent rounded-full"></div>
+                        <span>Chargement du status...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Endpoints Section -->
+        <section class="content-section">
+            <div class="flex items-center gap-3 mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                    <path d="M12 2v20M2 12h20"/>
+                </svg>
+                <h2 class="text-2xl font-semibold text-white">Endpoints Disponibles</h2>
+            </div>
+
+            <!-- Endpoint: Health Check -->
+            <article class="card mb-6">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="px-3 py-1 bg-green-600 text-white text-sm font-bold rounded">GET</span>
+                    <code class="text-ocean-300 font-mono text-lg">/api/v1/health</code>
+                </div>
+                <p class="text-gray-300 mb-4">Vérification de santé de l'API</p>
+                <div class="bg-ocean-950/50 rounded-lg p-4 border border-ocean-800">
+                    <p class="text-sm text-gray-400 mb-2">Exemple :</p>
+                    <pre class="text-sm text-gray-200 overflow-x-auto">curl https://api.oceansentinelle.fr/api/v1/health</pre>
+                    <button onclick="testEndpoint('/api/v1/health', 'health-result')" class="btn btn-secondary mt-3 text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2" aria-hidden="true">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        Tester
+                    </button>
+                    <div id="health-result" class="mt-3"></div>
+                </div>
+            </article>
+
+            <!-- Endpoint: Latest Measurement -->
+            <article class="card mb-6">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="px-3 py-1 bg-green-600 text-white text-sm font-bold rounded">GET</span>
+                    <code class="text-ocean-300 font-mono text-lg">/api/v1/station/{station_id}/latest</code>
+                </div>
+                <p class="text-gray-300 mb-4">Dernière mesure d'une station</p>
+                <div class="bg-ocean-950/50 rounded-lg p-4 border border-ocean-800">
+                    <p class="text-sm text-gray-400 mb-2">Paramètres :</p>
+                    <ul class="list-disc list-inside text-gray-300 text-sm mb-3">
+                        <li><code class="text-ocean-300">station_id</code> : BARAG, VPS_PROD, etc.</li>
+                    </ul>
+                    <p class="text-sm text-gray-400 mb-2">Exemple :</p>
+                    <pre class="text-sm text-gray-200 overflow-x-auto">curl https://api.oceansentinelle.fr/api/v1/station/BARAG/latest</pre>
+                </div>
+            </article>
+
+            <!-- Endpoint: History -->
+            <article class="card mb-6">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="px-3 py-1 bg-green-600 text-white text-sm font-bold rounded">GET</span>
+                    <code class="text-ocean-300 font-mono text-lg">/api/v1/station/{station_id}/history</code>
+                </div>
+                <p class="text-gray-300 mb-4">Historique des mesures</p>
+                <div class="bg-ocean-950/50 rounded-lg p-4 border border-ocean-800">
+                    <p class="text-sm text-gray-400 mb-2">Paramètres :</p>
+                    <ul class="list-disc list-inside text-gray-300 text-sm mb-3">
+                        <li><code class="text-ocean-300">station_id</code> : Identifiant de la station</li>
+                        <li><code class="text-ocean-300">start_date</code> : Date de début (ISO 8601)</li>
+                        <li><code class="text-ocean-300">end_date</code> : Date de fin (ISO 8601)</li>
+                        <li><code class="text-ocean-300">limit</code> : Nombre max de résultats (1-1000)</li>
+                    </ul>
+                    <p class="text-sm text-gray-400 mb-2">Exemple :</p>
+                    <pre class="text-sm text-gray-200 overflow-x-auto">curl "https://api.oceansentinelle.fr/api/v1/station/BARAG/history?limit=10"</pre>
+                </div>
+            </article>
+        </section>
+
+        <!-- Swagger Documentation Section -->
+        <section class="content-section">
+            <div class="card text-center">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                    </svg>
+                    <h2 class="text-2xl font-semibold text-white">Documentation Interactive</h2>
+                </div>
+                <p class="text-gray-300 mb-6">Explorez tous les endpoints avec Swagger UI :</p>
+                <a href="https://api.oceansentinelle.fr/docs" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2" aria-hidden="true">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                        <polyline points="15 3 21 3 21 9"/>
+                        <line x1="10" x2="21" y1="14" y2="3"/>
+                    </svg>
+                    Ouvrir la Documentation Swagger
+                </a>
+            </div>
+        </section>
+
+        <!-- Real-time Alerts Section -->
+        <section class="content-section">
+            <div class="card">
+                <div class="flex items-center gap-3 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400" aria-hidden="true">
+                        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" x2="12" y1="9" y2="13"/>
+                        <line x1="12" x2="12.01" y1="17" y2="17"/>
+                    </svg>
+                    <h2 class="text-2xl font-semibold text-white">Alertes en Temps Réel</h2>
+                </div>
+                <div id="alerts-content" class="text-gray-300">
+                    <div class="flex items-center gap-2">
+                        <div class="animate-spin h-5 w-5 border-2 border-ocean-400 border-t-transparent rounded-full"></div>
+                        <span>Chargement des alertes...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-ocean-950 border-t border-ocean-800 py-8 mt-16 no-print">
+        <div class="container mx-auto px-4 text-center max-w-7xl">
+            <p class="text-gray-200 font-semibold mb-2">
+                Ocean Sentinelle V3.1 - Surveillance Océanographique du Bassin d'Arcachon
+            </p>
+            <p class="text-sm text-gray-400">
+                Données : ERDDAP COAST-HF (Ifremer) • Hub'Eau (BRGM) • 
+                API : <a href="https://api.oceansentinelle.fr" class="text-ocean-400 hover:text-ocean-300 focus-visible-ring">api.oceansentinelle.fr</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        const API_BASE = 'https://api.oceansentinelle.fr';
+
+        // Charger le status au chargement de la page
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadAPIStatus();
+            await loadAlerts();
+        });
+
+        // Charger le status de l'API
+        async function loadAPIStatus() {
+            const container = document.getElementById('api-status-content');
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/health`);
+                const data = await response.json();
+                
+                container.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="h-3 w-3 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-white font-semibold">API Opérationnelle</span>
+                    </div>
+                    <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div>
+                            <div class="text-gray-400">Status</div>
+                            <div class="text-green-400 font-semibold">${data.status || 'OK'}</div>
+                        </div>
+                        <div>
+                            <div class="text-gray-400">Version</div>
+                            <div class="text-white">${data.version || 'v3.1.0'}</div>
+                        </div>
+                        <div>
+                            <div class="text-gray-400">Uptime</div>
+                            <div class="text-white">${data.uptime || 'N/A'}</div>
+                        </div>
+                        <div>
+                            <div class="text-gray-400">Timestamp</div>
+                            <div class="text-white">${new Date().toLocaleTimeString('fr-FR')}</div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="h-3 w-3 bg-red-400 rounded-full"></div>
+                        <span class="text-red-400 font-semibold">API Indisponible</span>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-2">Impossible de contacter l'API. Vérifiez votre connexion.</p>
+                `;
+            }
+        }
+
+        // Charger les alertes
+        async function loadAlerts() {
+            const container = document.getElementById('alerts-content');
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/alerts/active`);
+                const alerts = await response.json();
+                
+                if (alerts.length === 0) {
+                    container.innerHTML = `
+                        <div class="flex items-center gap-3 text-green-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span class="font-semibold">Aucune alerte active</span>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = alerts.map(alert => `
+                        <div class="bg-${alert.severity === 'critical' ? 'red' : 'yellow'}-900/20 border border-${alert.severity === 'critical' ? 'red' : 'yellow'}-500/50 rounded-lg p-4 mb-3">
+                            <div class="flex items-start gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-${alert.severity === 'critical' ? 'red' : 'yellow'}-400 flex-shrink-0">
+                                    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                    <line x1="12" x2="12" y1="9" y2="13"/>
+                                    <line x1="12" x2="12.01" y1="17" y2="17"/>
+                                </svg>
+                                <div>
+                                    <div class="text-white font-semibold">${alert.title}</div>
+                                    <div class="text-gray-300 text-sm mt-1">${alert.message}</div>
+                                    <div class="text-gray-400 text-xs mt-2">${new Date(alert.timestamp).toLocaleString('fr-FR')}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                container.innerHTML = `
+                    <p class="text-gray-400">Impossible de charger les alertes.</p>
+                `;
+            }
+        }
+
+        // Tester un endpoint
+        async function testEndpoint(endpoint, resultId) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.innerHTML = `
+                <div class="flex items-center gap-2 text-ocean-400 mt-3">
+                    <div class="animate-spin h-4 w-4 border-2 border-ocean-400 border-t-transparent rounded-full"></div>
+                    <span class="text-sm">Test en cours...</span>
+                </div>
+            `;
+            
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`);
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="bg-green-900/20 border border-green-500/50 rounded-lg p-3 mt-3">
+                        <div class="flex items-center gap-2 text-green-400 mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span class="text-sm font-semibold">Succès (${response.status})</span>
+                        </div>
+                        <pre class="text-xs text-gray-300 overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="bg-red-900/20 border border-red-500/50 rounded-lg p-3 mt-3">
+                        <div class="flex items-center gap-2 text-red-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="15" x2="9" y1="9" y2="15"/>
+                                <line x1="9" x2="15" y1="9" y2="15"/>
+                            </svg>
+                            <span class="text-sm font-semibold">Erreur</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-2">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

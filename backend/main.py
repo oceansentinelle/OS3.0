@@ -17,7 +17,7 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Response
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -29,7 +29,11 @@ from psycopg2.pool import SimpleConnectionPool
 # from alerts import SACSAlertSystem  # TODO: Implémenter plus tard
 
 # Routes
-from backend.routes import health as health_routes
+try:
+    from routes import health as health_routes
+except ImportError:
+    # Routes in same directory for local testing
+    from . import routes as health_routes
 
 # Configuration logging
 logging.basicConfig(
@@ -43,7 +47,7 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 
 # Mode test local (sans base de données)
-TEST_MODE = os.getenv('TEST_MODE', 'false').lower() == 'true'
+TEST_MODE = os.getenv('TEST_MODE', 'false').lower() in ('true', '1', 'yes')
 
 if not TEST_MODE:
     DB_CONFIG = {
@@ -54,6 +58,7 @@ if not TEST_MODE:
         'password': os.getenv('DB_PASSWORD', ''),
     }
 else:
+    # Mode test : pas de connexion à la base de données
     DB_CONFIG = None
 
 # Pool de connexions (optimisé RAM)
@@ -239,6 +244,11 @@ async def health_check():
     except Exception as e:
         logger.error(f"Health check failed: {e}")
         raise HTTPException(status_code=503, detail=f"Database unavailable: {str(e)}")
+
+@app.head("/health", tags=["Health"])
+async def health_check_head():
+    """Health check HEAD method pour monitoring"""
+    return Response(status_code=200)
 
 @app.get(
     "/api/v1/station/{station_id}/latest",
@@ -447,6 +457,144 @@ async def list_stations():
     except Exception as e:
         logger.error(f"Error fetching stations: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/v1/meteo/arcachon", tags=["Meteo"])
+async def get_meteo_arcachon():
+    """Données météo pour la zone d'Arcachon (source Météo-France)"""
+    if TEST_MODE:
+        # Mode test local - données simulées réalistes
+        import random
+        
+        meteo_data = {
+            "wind_speed": round(random.uniform(5, 25), 1),
+            "wind_direction": random.choice(["N", "NE", "E", "SE", "S", "SO", "O", "NO"]),
+            "wave_height": round(random.uniform(0.5, 3.0), 1),
+            "wave_period": round(random.uniform(4, 12), 1),
+            "air_temp": round(random.uniform(10, 30), 1),
+            "humidity": random.randint(40, 90),
+            "pressure": random.randint(980, 1030),
+            "last_update": datetime.utcnow().isoformat(),
+            "source": "TEST_MODE",
+            "location": "Arcachon, Bassin d'Arcachon"
+        }
+        return meteo_data
+    
+    # Mode production - requête à Météo-France API
+    import httpx
+    
+    # Coordonnées approximatives pour Arcachon
+    ARCACHON_LAT = 44.65
+    ARCACHON_LON = -1.15
+    
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            # Météo-France API - observations récentes
+            # Note: En production, ajouter une vraie clé API Météo-France
+            obs_url = f"https://api.meteofrance.com/v2/observations?lat={ARCACHON_LAT}&lon={ARCACHON_LON}"
+            
+            response = await client.get(obs_url)
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Extraire la station la plus proche
+                if data.get('observations') and len(data['observations']) > 0:
+                    obs = data['observations'][0]
+                    
+                    meteo_data = {
+                        "wind_speed": obs.get('wind_speed', 0),
+                        "wind_direction": obs.get('wind_direction', 'N'),
+                        "wave_height": obs.get('wave_height', 0),
+                        "wave_period": obs.get('wave_period', 0),
+                        "air_temp": obs.get('temperature', 20),
+                        "humidity": obs.get('humidity', 50),
+                        "pressure": obs.get('pressure', 1013),
+                        "last_update": obs.get('timestamp', datetime.utcnow().isoformat()),
+                        "source": "METEO_FRANCE_API",
+                        "location": "Arcachon, Bassin d'Arcachon",
+                        "station_id": obs.get('station_id', 'unknown')
+                    }
+                    return meteo_data
+            
+            # Si Météo-France n'est pas disponible, utiliser OpenWeatherMap comme fallback
+            logger.warning("Météo-France API unavailable, using fallback")
+            return await _get_meteo_openweather_fallback()
+            
+    except Exception as e:
+        logger.error(f"Error fetching meteo data from Météo-France: {e}")
+        # Fallback vers données simulées en cas d'erreur
+        return await _get_meteo_simulated_fallback()
+
+async def _get_meteo_openweather_fallback():
+    """Fallback OpenWeatherMap si Météo-France indisponible"""
+    import httpx
+    import os
+    
+    # En production, ajouter OPENWEATHER_API_KEY dans .env
+    api_key = os.getenv('OPENWEATHER_API_KEY')
+    if not api_key:
+        logger.warning("OpenWeatherMap API key not configured, using simulated data")
+        return await _get_meteo_simulated_fallback()
+    
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            # Coordonnées Arcachon
+            lat, lon = 44.65, -1.15
+            
+            url = f"https://api.openweathermap.org/data/2.5/weather"
+            params = {
+                'lat': lat,
+                'lon': lon,
+                'appid': api_key,
+                'units': 'metric'
+            }
+            
+            response = await client.get(url, params=params)
+            if response.status_code == 200:
+                data = response.json()
+                
+                meteo_data = {
+                    "wind_speed": data.get('wind', {}).get('speed', 0),
+                    "wind_direction": _degrees_to_direction(data.get('wind', {}).get('deg', 0)),
+                    "wave_height": 0,  # OpenWeatherMap ne fournit pas de vagues
+                    "wave_period": 0,
+                    "air_temp": data.get('main', {}).get('temp', 20),
+                    "humidity": data.get('main', {}).get('humidity', 50),
+                    "pressure": data.get('main', {}).get('pressure', 1013),
+                    "last_update": datetime.utcnow().isoformat(),
+                    "source": "OPENWEATHER_API",
+                    "location": "Arcachon, Bassin d'Arcachon"
+                }
+                return meteo_data
+                
+    except Exception as e:
+        logger.error(f"Error fetching meteo data from OpenWeatherMap: {e}")
+    
+    # Fallback final
+    return await _get_meteo_simulated_fallback()
+
+async def _get_meteo_simulated_fallback():
+    """Fallback simulé si toutes les APIs échouent"""
+    import random
+    
+    meteo_data = {
+        "wind_speed": round(random.uniform(5, 25), 1),
+        "wind_direction": random.choice(["N", "NE", "E", "SE", "S", "SO", "O", "NO"]),
+        "wave_height": round(random.uniform(0.5, 3.0), 1),
+        "wave_period": round(random.uniform(4, 12), 1),
+        "air_temp": round(random.uniform(10, 30), 1),
+        "humidity": random.randint(40, 90),
+        "pressure": random.randint(980, 1030),
+        "last_update": datetime.utcnow().isoformat(),
+        "source": "SIMULATED_FALLBACK",
+        "location": "Arcachon, Bassin d'Arcachon"
+    }
+    return meteo_data
+
+def _degrees_to_direction(degrees: float) -> str:
+    """Convertit les degrés en direction cardinale"""
+    directions = ["N", "NE", "E", "SE", "S", "SO", "O", "NO"]
+    index = round(degrees / 45) % 8
+    return directions[index]
 
 # @app.get("/api/v1/alerts/sacs", tags=["SACS Alerts"])
 # async def check_sacs_alerts(station_id: Optional[str] = None):

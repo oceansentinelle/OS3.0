@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Ocean Sentinelle V3.1 - Plateforme de surveillance océanographique du Bassin d'Arcachon. Données temps réel, alertes écologiques, API REST professionnelle.">
+    <meta name="keywords" content="océanographie, Bassin d'Arcachon, surveillance environnementale, données temps réel, API REST, alertes écologiques">
+    <meta name="author" content="Ocean Sentinelle">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Ocean Sentinelle V3.1 - Surveillance Océanographique">
+    <meta property="og:description" content="Plateforme de surveillance océanographique du Bassin d'Arcachon avec données temps réel et alertes écologiques">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://oceansentinelle.fr">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    
+    <title>Ocean Sentinelle - Surveillance Océanographique Temps Réel</title>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-ocean-900/95 backdrop-blur-md border-b border-ocean-700/50 sticky top-0 z-50 no-print">
+        <nav class="container mx-auto px-4 py-4 flex items-center justify-between max-w-7xl" aria-label="Navigation principale">
+            <div class="flex items-center gap-3">
+                <!-- Logo SVG inline (Lucide Waves) -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                    <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                    <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                    <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                </svg>
+                <span class="text-xl font-bold text-white">Ocean Sentinelle</span>
+            </div>
+            
+            <ul class="flex gap-6 items-center">
+                <li><a href="index.html" class="nav-link" aria-current="page">Accueil</a></li>
+                <li><a href="about.html" class="nav-link">Le Projet</a></li>
+                <li><a href="api.html" class="nav-link">API & Alertes</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-7xl">
+        <!-- Hero Section -->
+        <section class="text-center mb-20" aria-labelledby="hero-title">
+            <div class="card max-w-5xl mx-auto">
+                <!-- Status Badge -->
+                <div class="flex justify-center mb-6">
+                    <span class="badge-live">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="animate-pulse" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"/>
+                        </svg>
+                        Système Opérationnel
+                    </span>
+                </div>
+
+                <div class="flex items-center justify-center gap-4 mb-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                        <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                        <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                        <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                    </svg>
+                    <h1 id="hero-title" class="text-gradient">Ocean Sentinelle</h1>
+                </div>
+                
+                <p class="text-3xl md:text-4xl text-gray-100 font-semibold mb-6 tracking-tight">
+                    Surveillance Océanographique<br class="hidden md:block"/> en Temps Réel
+                </p>
+                
+                <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
+                    Plateforme de monitoring environnemental pour le Bassin d'Arcachon. 
+                    Données océanographiques temps réel, alertes écologiques et API professionnelle.
+                </p>
+                
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a href="about.html" class="btn btn-primary text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4"/>
+                            <path d="M12 8h.01"/>
+                        </svg>
+                        Découvrir le Projet
+                    </a>
+                    <a href="api.html" class="btn btn-secondary text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2" aria-hidden="true">
+                            <polyline points="16 18 22 12 16 6"/>
+                            <polyline points="8 6 2 12 8 18"/>
+                        </svg>
+                        Accéder aux API
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Grid -->
+        <section class="mb-16" aria-labelledby="features-title">
+            <h2 id="features-title" class="sr-only">Fonctionnalités principales</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Feature 1: Real-time Data -->
+                <article class="card">
+                    <div class="flex items-center gap-3 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                            <path d="M3 3v18h18"/>
+                            <path d="m19 9-5 5-4-4-3 3"/>
+                        </svg>
+                        <h3 class="text-xl font-semibold text-white">Données Temps Réel</h3>
+                    </div>
+                    <p class="text-gray-300">
+                        Température, salinité, oxygène dissous, pH, turbidité. 
+                        Mesures actualisées toutes les heures depuis les stations COAST-HF.
+                    </p>
+                </article>
+
+                <!-- Feature 2: Ecological Alerts -->
+                <article class="card">
+                    <div class="flex items-center gap-3 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400" aria-hidden="true">
+                            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                            <path d="M12 9v4"/>
+                            <path d="M12 17h.01"/>
+                        </svg>
+                        <h3 class="text-xl font-semibold text-white">Alertes Écologiques</h3>
+                    </div>
+                    <p class="text-gray-300">
+                        Détection automatique des anomalies : acidification, hypoxie, 
+                        eutrophisation. Notifications pour les professionnels.
+                    </p>
+                </article>
+
+                <!-- Feature 3: REST API -->
+                <article class="card">
+                    <div class="flex items-center gap-3 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400" aria-hidden="true">
+                            <polyline points="16 18 22 12 16 6"/>
+                            <polyline points="8 6 2 12 8 18"/>
+                        </svg>
+                        <h3 class="text-xl font-semibold text-white">API REST</h3>
+                    </div>
+                    <p class="text-gray-300">
+                        Accès programmatique aux données. Documentation Swagger, 
+                        endpoints JSON, intégration facile dans vos applications.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- KPI Dashboard Section -->
+        <section class="mb-20" aria-labelledby="kpi-title">
+            <div class="flex items-center justify-between mb-8">
+                <h2 id="kpi-title" class="text-3xl font-bold text-white">Métriques Temps Réel</h2>
+                <span class="badge-live">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="animate-pulse" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    Live
+                </span>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <!-- KPI: Sources Actives -->
+                <div class="kpi-card">
+                    <div class="kpi-value">2</div>
+                    <div class="kpi-label">Sources Actives</div>
+                    <div class="flex items-center justify-center gap-2 mt-3">
+                        <span class="badge-live text-xs">ERDDAP</span>
+                        <span class="badge-beta text-xs">Hub'Eau</span>
+                    </div>
+                </div>
+
+                <!-- KPI: Dernière Ingestion -->
+                <div class="kpi-card">
+                    <div class="kpi-value text-3xl md:text-4xl">12m</div>
+                    <div class="kpi-label">Dernière Ingestion</div>
+                    <div class="kpi-change-positive">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline" aria-hidden="true">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        Nominal
+                    </div>
+                </div>
+
+                <!-- KPI: Paramètres Mesurés -->
+                <div class="kpi-card">
+                    <div class="kpi-value">8</div>
+                    <div class="kpi-label">Paramètres Mesurés</div>
+                    <div class="text-xs text-gray-400 mt-2 font-normal">
+                        T°, Salinité, O₂, pH, Turbidité, Chl-a
+                    </div>
+                </div>
+
+                <!-- KPI: Alertes Actives -->
+                <div class="kpi-card">
+                    <div class="kpi-value">0</div>
+                    <div class="kpi-label">Alertes Actives</div>
+                    <div class="kpi-change-positive">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Tout normal
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Grid: Dernières Mesures -->
+            <div class="card mt-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ocean-400" aria-hidden="true">
+                        <path d="M3 3v18h18"/>
+                        <path d="m19 9-5 5-4-4-3 3"/>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-white">Dernières Mesures - Arcachon Eyrac</h3>
+                    <span class="badge-simule ml-auto">Données Simulées</span>
+                </div>
+
+                <div class="data-grid">
+                    <div class="data-row">
+                        <span class="data-label">Température</span>
+                        <span class="data-value">14.2°C</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Salinité</span>
+                        <span class="data-value">33.8 PSU</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Oxygène Dissous</span>
+                        <span class="data-value">245 µmol/kg</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">pH</span>
+                        <span class="data-value">8.05</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Turbidité</span>
+                        <span class="data-value">2.1 NTU</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Chlorophylle-a</span>
+                        <span class="data-value">1.8 µg/L</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <a href="api.html" class="text-ocean-400 hover:text-ocean-300 text-sm font-medium inline-flex items-center gap-2 focus-visible-ring">
+                        Voir toutes les données
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-ocean-950 border-t border-ocean-800 py-8 mt-16 no-print">
+        <div class="container mx-auto px-4 text-center max-w-7xl">
+            <p class="text-gray-200 font-semibold mb-2">
+                Ocean Sentinelle V3.1 - Surveillance Océanographique du Bassin d'Arcachon
+            </p>
+            <p class="text-sm text-gray-400">
+                Données : ERDDAP COAST-HF (Ifremer) • Hub'Eau (BRGM) • 
+                API : <a href="https://api.oceansentinelle.fr" class="text-ocean-400 hover:text-ocean-300 focus-visible-ring">api.oceansentinelle.fr</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

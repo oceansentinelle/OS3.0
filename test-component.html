@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Sentinel - Dashboard SACS Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f8fafc;
+            padding: 2rem;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { 
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .header h1 { 
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .header p { color: #94a3b8; }
+        
+        .alert-banner {
+            background: linear-gradient(90deg, #dc2626 0%, #991b1b 100%);
+            border-left: 4px solid #fca5a5;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .alert-banner .icon { font-size: 1.5rem; }
+        
+        .grid { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .card-title {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-mesure {
+            background: #10b981;
+            color: #ffffff;
+        }
+        .badge-infere {
+            background: #f59e0b;
+            color: #ffffff;
+        }
+        .badge-simule {
+            background: #6b7280;
+            color: #ffffff;
+        }
+        
+        .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+        .unit {
+            font-size: 1rem;
+            color: #94a3b8;
+            margin-left: 0.5rem;
+        }
+        
+        .meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+        }
+        .meta-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+        }
+        .meta-label { color: #94a3b8; }
+        .meta-value { color: #f8fafc; font-weight: 500; }
+        
+        .critical { color: #fca5a5; }
+        .warning { color: #fbbf24; }
+        .normal { color: #6ee7b7; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Ocean Sentinel - Dashboard SACS</h1>
+            <p>Données océanographiques en temps réel - Bassin d'Arcachon</p>
+        </div>
+
+        <div class="alert-banner" id="alertBanner" style="display: none;">
+            <span class="icon">🔴</span>
+            <div>
+                <strong>CRITICAL - Seuil SACS dépassé</strong>
+                <p id="alertMessage"></p>
+            </div>
+        </div>
+
+        <div class="grid" id="dataGrid"></div>
+    </div>
+
+    <script>
+        const mockData = [
+            {
+                station: 'BARAG_PROXY',
+                parameter: 'Température',
+                value: 18.5,
+                unit: '°C',
+                status: 'mesuré',
+                source: 'COAST-HF Ifremer',
+                timestamp: '2026-04-22T19:00:00Z',
+                method: 'In-situ CTD',
+                uncertainty: '±0.1°C'
+            },
+            {
+                station: 'BARAG_PROXY',
+                parameter: 'pH',
+                value: 7.65,
+                unit: '',
+                status: 'inféré',
+                source: 'Sentinel-2 MSI + Proxy',
+                timestamp: '2026-04-22T18:45:00Z',
+                method: 'Correction atmosphérique C2RCC',
+                uncertainty: '±0.15'
+            },
+            {
+                station: 'ARCACHON_EYRAC',
+                parameter: 'Oxygène dissous',
+                value: 135,
+                unit: 'µmol/kg',
+                status: 'mesuré',
+                source: 'Hub Eau BRGM',
+                timestamp: '2026-04-22T19:00:00Z',
+                method: 'Sonde optique',
+                uncertainty: '±5 µmol/kg'
+            },
+            {
+                station: 'BARAG_PROXY',
+                parameter: 'Salinité',
+                value: 32.8,
+                unit: 'PSU',
+                status: 'simulé',
+                source: 'MARS3D Ifremer',
+                timestamp: '2026-04-22T18:00:00Z',
+                method: 'Modèle hydrodynamique',
+                uncertainty: '±1.2 PSU'
+            }
+        ];
+
+        function getBadgeClass(status) {
+            const badges = {
+                'mesuré': 'badge-mesure',
+                'inféré': 'badge-infere',
+                'simulé': 'badge-simule'
+            };
+            return badges[status] || 'badge-simule';
+        }
+
+        function getBadgeText(status) {
+            const texts = {
+                'mesuré': 'MESURE IN-SITU',
+                'inféré': 'INFÉRÉ - PROXY SATELLITAIRE',
+                'simulé': 'SIMULÉ - REPLAY ARCHIVE'
+            };
+            return texts[status] || 'INCONNU';
+        }
+
+        function checkThresholds(data) {
+            const alerts = [];
+            
+            data.forEach(item => {
+                if (item.parameter === 'Oxygène dissous' && item.value < 150) {
+                    alerts.push(`Hypoxie détectée (${item.value} µmol/kg < 150 µmol/kg)`);
+                }
+                if (item.parameter === 'pH' && item.value < 7.8) {
+                    alerts.push(`Acidification détectée (pH ${item.value} < 7.8)`);
+                }
+            });
+
+            if (alerts.length > 0) {
+                const banner = document.getElementById('alertBanner');
+                const message = document.getElementById('alertMessage');
+                banner.style.display = 'flex';
+                message.textContent = alerts.join(' | ');
+            }
+        }
+
+        function renderCards(data) {
+            const grid = document.getElementById('dataGrid');
+            
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                const valueClass = 
+                    (item.parameter === 'pH' && item.value < 7.8) || 
+                    (item.parameter === 'Oxygène dissous' && item.value < 150) 
+                    ? 'critical' : 'normal';
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="card-title">${item.station} - ${item.parameter}</div>
+                        <span class="badge ${getBadgeClass(item.status)}">${getBadgeText(item.status)}</span>
+                    </div>
+                    <div class="value ${valueClass}">
+                        ${item.value}<span class="unit">${item.unit}</span>
+                    </div>
+                    <div class="meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Source</span>
+                            <span class="meta-value">${item.source}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Méthode</span>
+                            <span class="meta-value">${item.method}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Incertitude</span>
+                            <span class="meta-value">${item.uncertainty}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Timestamp</span>
+                            <span class="meta-value">${new Date(item.timestamp).toLocaleString('fr-FR')}</span>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        checkThresholds(mockData);
+        renderCards(mockData);
+    </script>
+</body>
+</html>
