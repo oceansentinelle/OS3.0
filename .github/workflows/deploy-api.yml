@@ -1,4 +1,4 @@
-name: Ocean Sentinel API CI/CD
+name: Ocean Sentinel API CI/CD - Security Hardened
 
 on:
   push:
@@ -9,6 +9,9 @@ on:
 env:
   PYTHON_VERSION: '3.11'
   NODE_VERSION: '20'
+  # Security: Disable debug mode
+  PYTHONOPTIMIZE: '2'
+  PYTHONDONTWRITEBYTECODE: '1'
 
 jobs:
   security-and-linting:
@@ -18,7 +21,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+      with:
+        fetch-depth: 1  # Security: Minimize fetch depth
+        
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
