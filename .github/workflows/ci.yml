@@ -56,10 +56,13 @@ jobs:
           set -euo pipefail
 
           private_key_re="BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY"
-          leaked_password="OceanSentinel2026SecurePassword"
+          password_pattern_re="OceanSentinel[0-9]{4}SecurePassword"
 
-          if git grep -nE "$private_key_re|$leaked_password" -- . ':!*.yml' ':!*.yaml'; then
-            echo "::error::Potential sensitive pattern detected in tracked files"
+          matches="$(git grep -lE "$private_key_re|$password_pattern_re" -- . ':!*.yml' ':!*.yaml' ':!.github/workflows/ci.yml' || true)"
+
+          if [ -n "$matches" ]; then
+            echo "::error::Potential sensitive pattern detected in tracked files:"
+            printf '%s\n' "$matches"
             exit 1
           fi
 
