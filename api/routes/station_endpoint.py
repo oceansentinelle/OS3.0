@@ -117,28 +117,10 @@ async def get_station_latest(station_id: str):
                 if result:
                     return StationLatestMeasurement(**dict(result))
 
-                cursor.execute(
-                    """
-                    SELECT EXISTS (
-                        SELECT 1 FROM public.raw_measurements WHERE station_id = %s
-                        UNION ALL
-                        SELECT 1 FROM public.data_quality_reports WHERE station_id = %s
-                        UNION ALL
-                        SELECT 1 FROM public.forecast_predictions WHERE station_id = %s
-                        UNION ALL
-                        SELECT 1 FROM public.alerts WHERE station_id = %s
-                    ) AS station_known;
-                    """,
-                    (station_id, station_id, station_id, station_id),
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"No validated data found for station {station_id}",
                 )
-                station_row = cursor.fetchone()
-                station_known = bool(station_row and station_row.get("station_known"))
-                detail = (
-                    f"No validated data found for station {station_id}"
-                    if station_known
-                    else f"Station {station_id} not found"
-                )
-                raise HTTPException(status_code=404, detail=detail)
         finally:
             db_pool.putconn(conn)
     except HTTPException:

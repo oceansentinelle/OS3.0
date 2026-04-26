@@ -85,21 +85,23 @@ def test_station_latest_returns_existing_station_data():
 
 
 def test_station_latest_returns_404_for_absent_station():
-    client, _ = make_client([None, {"station_known": False}])
+    client, pool = make_client([None])
 
     response = client.get("/api/v1/station/UNKNOWN/latest")
 
     assert response.status_code == 404
-    assert response.json() == {"detail": "Station UNKNOWN not found"}
+    assert response.json() == {"detail": "No validated data found for station UNKNOWN"}
+    assert len(pool.cursor.queries) == 1
 
 
 def test_station_latest_returns_404_when_station_has_no_validated_data():
-    client, _ = make_client([None, {"station_known": True}])
+    client, pool = make_client([None])
 
     response = client.get("/api/v1/station/BARAG/latest")
 
     assert response.status_code == 404
     assert response.json() == {"detail": "No validated data found for station BARAG"}
+    assert len(pool.cursor.queries) == 1
 
 
 def test_station_latest_json_schema_contains_expected_fields():
