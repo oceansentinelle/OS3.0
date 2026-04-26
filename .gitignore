@@ -68,3 +68,5 @@ grafana_data/
 
 # Fichiers de référence temporaires
 BACKUP_QUICK_REFERENCE.txt
+frontend/node_modules/
+frontend/package-lock.json
