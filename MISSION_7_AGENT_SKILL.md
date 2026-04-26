@@ -135,7 +135,7 @@ DB_HOST=76.13.43.3
 DB_PORT=6543
 DB_NAME=oceansentinelle
 DB_USER=oceansentinel
-DB_PASSWORD=OceanSentinel2026SecurePassword!
+DB_PASSWORD=CHANGE_ME_STRONG_PASSWORD
 ```
 
 **Sécurité:**

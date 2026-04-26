@@ -1,0 +1,91 @@
+name: Ocean Sentinel CI
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - "security/**"
+      - "fix/**"
+      - "test/**"
+
+jobs:
+  quality-tests:
+    name: Quality, Security Scan and Tests
+    runs-on: ubuntu-latest
+
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+
+          if [ -f api/requirements.txt ]; then
+            pip install -r api/requirements.txt
+          elif [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+          pip install pytest flake8 bandit
+
+      - name: Minimal Python lint
+        run: |
+          flake8 api tests --count --select=E9,F63,F7,F821 --show-source --statistics
+
+      - name: Security scan with Bandit
+        run: |
+          bandit -r api -ll -ii
+
+      - name: Guard against sensitive patterns
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          private_key_re="BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY"
+          password_pattern_re="OceanSentinel[0-9]{4}SecurePassword"
+
+          matches="$(git grep -lE "$private_key_re|$password_pattern_re" -- . ':!*.yml' ':!*.yaml' ':!.github/workflows/ci.yml' || true)"
+
+          if [ -n "$matches" ]; then
+            echo "::error::Potential sensitive pattern detected in tracked files:"
+            printf '%s\n' "$matches"
+            exit 1
+          fi
+
+          echo "No sensitive pattern detected in tracked files."
+
+      - name: Run tests
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          tests_to_run=()
+
+          if [ -f tests/test_data_structures.py ]; then
+            tests_to_run+=("tests/test_data_structures.py")
+          fi
+
+          if [ -f tests/test_api_route_contract.py ]; then
+            tests_to_run+=("tests/test_api_route_contract.py")
+          fi
+
+          if [ "${#tests_to_run[@]}" -eq 0 ]; then
+            echo "No stable CI tests found. Skipping pytest."
+            exit 0
+          fi
+
+          pytest -q "${tests_to_run[@]}"
