@@ -55,10 +55,19 @@ jobs:
           fi
 
       - name: Guard against sensitive patterns
+        shell: bash
         run: |
-          ! grep -RInE "(BEGIN RSA PRIVATE KEY|BEGIN OPENSSH PRIVATE KEY|BEGIN EC PRIVATE KEY|OceanSentinel2026SecurePassword)" . \
-            --exclude-dir=.git \
-            --exclude-dir=node_modules
+          set -euo pipefail
+
+          private_key_re="BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY"
+          leaked_password="OceanSentinel2026""SecurePassword"
+
+          if git grep -nE "$private_key_re|$leaked_password" -- .; then
+            echo "::error::Potential sensitive pattern detected in tracked files"
+            exit 1
+          fi
+
+          echo "No sensitive pattern detected in tracked files."
 
       - name: Run tests
         run: |
