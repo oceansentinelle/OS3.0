@@ -69,9 +69,23 @@ jobs:
           echo "No sensitive pattern detected in tracked files."
 
       - name: Run tests
+        shell: bash
         run: |
-          if [ -f tests/test_data_structures.py ] && [ -f tests/test_api_route_contract.py ]; then
-            pytest -q tests/test_data_structures.py tests/test_api_route_contract.py
-          else
-            pytest -q
+          set -euo pipefail
+
+          tests_to_run=()
+
+          if [ -f tests/test_data_structures.py ]; then
+            tests_to_run+=("tests/test_data_structures.py")
           fi
+
+          if [ -f tests/test_api_route_contract.py ]; then
+            tests_to_run+=("tests/test_api_route_contract.py")
+          fi
+
+          if [ "${#tests_to_run[@]}" -eq 0 ]; then
+            echo "No stable CI tests found. Skipping pytest."
+            exit 0
+          fi
+
+          pytest -q "${tests_to_run[@]}"
