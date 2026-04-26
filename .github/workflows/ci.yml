@@ -48,11 +48,7 @@ jobs:
 
       - name: Security scan with Bandit
         run: |
-          if [ -d api ]; then
-            bandit -r api -ll -ii
-          else
-            bandit -r . -ll -ii
-          fi
+          bandit -r api -ll -ii
 
       - name: Guard against sensitive patterns
         shell: bash
