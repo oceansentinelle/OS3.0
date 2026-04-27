@@ -30,6 +30,7 @@ from psycopg2.pool import SimpleConnectionPool
 
 # Routes
 from api.routes import health as health_routes
+from api.routes import station_endpoint
 
 # Configuration logging
 logging.basicConfig(
@@ -127,6 +128,7 @@ async def lifespan(app: FastAPI):
             maxconn=2,
             **DB_CONFIG
         )
+        station_endpoint.set_db_pool(db_pool)
         logger.info("✅ Pool de connexions créé (1-2 connexions)")
         
         # Initialiser le système d'alertes SACS
@@ -142,6 +144,7 @@ async def lifespan(app: FastAPI):
     # Shutdown
     if db_pool:
         db_pool.closeall()
+        station_endpoint.set_db_pool(None)
         logger.info("🛑 Pool de connexions fermé")
 
 # ============================================================================
@@ -166,6 +169,7 @@ app.add_middleware(
 
 # Inclure les routes
 app.include_router(health_routes.router, prefix="/api/v1", tags=["Health"])
+app.include_router(station_endpoint.router, prefix="/api/v1")
 
 # ============================================================================
 # ROUTES
@@ -207,63 +211,6 @@ async def health_check():
     except Exception as e:
         logger.error(f"Health check failed: {e}")
         raise HTTPException(status_code=503, detail=f"Database unavailable: {str(e)}")
-
-@app.get(
-    "/api/v1/station/{station_id}/latest",
-    response_model=SensorMeasurement,
-    tags=["Measurements"]
-)
-async def get_latest_measurement(station_id: str):
-    """
-    Récupère la dernière mesure environnementale pour une station
-    
-    Args:
-        station_id: Identifiant de la station (ex: BARAG, VPS_PROD)
-    
-    Returns:
-        SensorMeasurement: Dernière mesure disponible
-    """
-    try:
-        conn = db_pool.getconn()
-        try:
-            with conn.cursor(cursor_factory=RealDictCursor) as cursor:
-                cursor.execute("""
-                    SELECT 
-                        time,
-                        station_id,
-                        temperature_water,
-                        salinity,
-                        conductivity,
-                        pressure_water,
-                        depth,
-                        dissolved_oxygen,
-                        ph,
-                        turbidity,
-                        chlorophyll_a,
-                        quality_flag,
-                        data_source
-                    FROM barag.sensor_data
-                    WHERE station_id = %s
-                    ORDER BY time DESC
-                    LIMIT 1;
-                """, (station_id,))
-                
-                result = cursor.fetchone()
-                
-                if not result:
-                    raise HTTPException(
-                        status_code=404,
-                        detail=f"No data found for station {station_id}"
-                    )
-                
-                return SensorMeasurement(**dict(result))
-        finally:
-            db_pool.putconn(conn)
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error fetching latest measurement: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get(
     "/api/v1/station/{station_id}/history",
