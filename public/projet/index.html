@@ -22,27 +22,10 @@
     .card{background:linear-gradient(180deg,rgba(18,60,91,.72),rgba(13,42,68,.86));border:1px solid rgba(126,215,255,.18);border-radius:var(--radius);padding:20px;box-shadow:0 20px 50px rgba(0,0,0,.18)}.card strong{color:#fff}.quick a{text-decoration:none}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;background:linear-gradient(135deg,#56B6E9,#7ED7FF);color:#052033;padding:10px 15px;border-radius:999px;text-decoration:none;font-weight:900}
     li{margin:7px 0}footer{border-top:1px solid rgba(255,255,255,.12);margin-top:34px;padding-top:20px;color:var(--muted);font-size:.92rem}
   </style>
+  <script src="/assets/nav.js" defer></script>
 </head>
 <body>
-  <header class="topbar">
-    <nav class="nav" aria-label="Navigation Ocean Sentinelle">
-      <div class="brand"><a href="/">Ocean Sentinelle</a><span class="muted">Transparence environnementale</span></div>
-      <div class="tabs" role="list">
-        <a class="tab-link" href="/" role="listitem">Accueil</a>
-        <a class="tab-link" href="/projet/" aria-current="page" role="listitem">Le Projet</a>
-        <a class="tab-link" href="/data/BARAG_PROXY.public_status.json" role="listitem">Données</a>
-        <a class="tab-link" href="/dashboard/" role="listitem">Dashboard</a>
-        <a class="tab-link" href="/dashboard/" role="listitem">Simulations IA</a>
-        <a class="tab-link" href="/dashboard/transparence/osint/" role="listitem">OSINT v1.2</a>
-        <a class="tab-link" href="/dashboard/simulations/library/" role="listitem">Bibliothèque</a>
-        <a class="tab-link" href="/dashboard/transparence/infrastructure/" role="listitem">Infrastructure</a>
-        <a class="tab-link" href="/dashboard/transparence/infrastructure/" role="listitem">Transparence</a>
-        <a class="tab-link" href="/podcast" role="listitem">Podcast</a>
-        <a class="tab-link" href="/data/schema/scenario_template.schema.json" role="listitem">API / Data</a>
-        <a class="tab-link" href="/#contact" role="listitem">Contact</a>
-      </div>
-    </nav>
-  </header>
+  <header data-os-nav data-active="project"></header>
 
   <main>
     <section class="hero">

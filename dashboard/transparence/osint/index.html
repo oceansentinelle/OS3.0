@@ -21,22 +21,10 @@
     .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}@media(max-width:860px){.grid{grid-template-columns:1fr}}
     .card{background:var(--panel);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:18px} li{margin:7px 0}
   </style>
+  <script src="/assets/nav.js" defer></script>
 </head>
 <body>
-  <header class="topbar"><nav class="nav" aria-label="Navigation Ocean Sentinel"><div class="nav-row">
-    <a class="nav-link" href="/">Accueil</a>
-    <a class="nav-link" href="/projet/">Le Projet</a>
-    <a class="nav-link" href="/data/BARAG_PROXY.public_status.json">Données</a>
-    <a class="nav-link" href="/dashboard/">Dashboard</a>
-    <a class="nav-link" href="/dashboard/">Simulations IA</a>
-    <a class="nav-link" href="/dashboard/transparence/osint/" aria-current="page">OSINT v1.2</a>
-    <a class="nav-link" href="/dashboard/simulations/library/">Bibliothèque</a>
-    <a class="nav-link" href="/dashboard/transparence/infrastructure/">Infrastructure</a>
-    <a class="nav-link" href="/dashboard/transparence/infrastructure/">Transparence</a>
-    <a class="nav-link" href="/podcast">Podcast</a>
-    <a class="nav-link" href="/data/schema/scenario_template.schema.json">API / Data</a>
-    <a class="nav-link" href="/#contact">Contact</a>
-  </div></nav></header>
+  <header data-os-nav data-active="osint"></header>
   <main class="wrap">
     <h1>OSINT v1.2</h1>
     <p class="lead">Cadre public pour sources ouvertes, preuves, limites et traçabilité Ocean Sentinel.</p>

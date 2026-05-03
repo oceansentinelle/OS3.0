@@ -506,36 +506,10 @@
             }
         }
     </style>
+    <script src="/assets/nav.js" defer></script>
 </head>
 <body>
-    <header class="site-header">
-        <nav class="nav-shell" aria-label="Navigation principale">
-            <div class="brand-row">
-                <a class="brand" href="/" aria-label="Ocean Sentinelle - Accueil">
-                    <span class="brand-mark">OS</span>
-                    <span>
-                        <span class="brand-title">Ocean Sentinelle</span>
-                        <span class="brand-subtitle">Bassin d'Arcachon · transparence publique</span>
-                    </span>
-                </a>
-                <span class="header-status">Version publique volontairement partielle</span>
-            </div>
-            <div class="tab-nav" role="list" aria-label="Onglets du site">
-                <a class="tab-link" href="/" aria-current="page" role="listitem">Accueil</a>
-                <a class="tab-link" href="/projet/" role="listitem">Le Projet</a>
-                <a class="tab-link" href="/data/BARAG_PROXY.public_status.json" role="listitem">Données</a>
-                <a class="tab-link" href="/dashboard/" role="listitem">Dashboard</a>
-                <a class="tab-link" href="/dashboard/" role="listitem">Simulations IA</a>
-                <a class="tab-link" href="/dashboard/transparence/osint/" role="listitem">OSINT v1.2</a>
-                <a class="tab-link" href="/dashboard/simulations/library/" role="listitem">Bibliothèque</a>
-                <a class="tab-link" href="/dashboard/transparence/infrastructure/" role="listitem">Infrastructure</a>
-                <a class="tab-link" href="#transparence" role="listitem">Transparence</a>
-                <a class="tab-link" href="/podcast" role="listitem">Podcast</a>
-                <a class="tab-link" href="/data/schema/scenario_template.schema.json" role="listitem">API / Data</a>
-                <a class="tab-link" href="#contact" role="listitem">Contact</a>
-            </div>
-        </nav>
-    </header>
+    <header data-os-nav data-active="home"></header>
 
     <main class="page">
         <section class="hero" aria-labelledby="home-title">
@@ -691,7 +665,7 @@
                 <a href="/projet/">Le Projet</a>
                 <a href="/dashboard/">Dashboard</a>
                 <a href="/dashboard/transparence/infrastructure/">Infrastructure</a>
-                <a href="/podcast">Podcast</a>
+                <a href="/podcast/">Podcast</a>
             </div>
         </div>
     </footer>

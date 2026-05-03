@@ -27,26 +27,10 @@
     .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.tag{font-size:.72rem;border:1px solid rgba(55,200,232,.35);border-radius:999px;padding:4px 8px;color:#c8f5ff}.detail{position:sticky;top:78px;max-height:calc(100vh - 96px);overflow:auto}.kv{display:grid;grid-template-columns:120px 1fr;gap:8px;margin:10px 0}.k{color:rgba(237,245,255,.55);font-size:.78rem;text-transform:uppercase}.empty{padding:20px;border:1px dashed rgba(255,255,255,.22);border-radius:var(--radius);color:var(--muted)}
     ul{margin:8px 0 0 20px;padding:0} li{margin:6px 0}
   </style>
+  <script src="/assets/nav.js" defer></script>
 </head>
 <body>
-  <header class="topbar">
-    <nav class="nav" aria-label="Navigation Ocean Sentinel">
-      <div class="nav-row">
-        <a class="nav-link" href="/">Accueil</a>
-        <a class="nav-link" href="/projet/">Le Projet</a>
-        <a class="nav-link" href="/data/BARAG_PROXY.public_status.json">Données</a>
-        <a class="nav-link" href="/dashboard/">Dashboard</a>
-        <a class="nav-link" href="/dashboard/">Simulations IA</a>
-        <a class="nav-link" href="/dashboard/transparence/osint/">OSINT v1.2</a>
-        <a class="nav-link" href="/dashboard/simulations/library/" aria-current="page">Bibliothèque</a>
-        <a class="nav-link" href="/dashboard/transparence/infrastructure/">Infrastructure</a>
-        <a class="nav-link" href="/dashboard/transparence/infrastructure/">Transparence</a>
-        <a class="nav-link" href="/podcast">Podcast</a>
-        <a class="nav-link" href="/data/schema/scenario_template.schema.json">API / Data</a>
-        <a class="nav-link" href="/#contact">Contact</a>
-      </div>
-    </nav>
-  </header>
+  <header data-os-nav data-active="library"></header>
   <main class="wrap">
     <h1>Bibliothèque de scénarios</h1>
     <p class="lead">Starter pack public de 12 scénarios prospectifs. Ces cartes sont des hypothèses de travail, séparées des mesures et non décisionnelles.</p>
