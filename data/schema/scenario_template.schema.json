@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://oceansentinelle.fr/data/schema/scenario_template.schema.json",
+  "title": "Ocean Sentinel Scenario Library Template",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metadata", "taxonomy", "summary", "causal_mechanism", "parameters", "outputs", "limitations", "provenance"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scenario_id", "name", "version", "truth_status", "shadow_mode", "alert_allowed", "decision_ready"],
+      "properties": {
+        "scenario_id": { "type": "string", "pattern": "^[A-Z0-9_]{8,40}$" },
+        "name": { "type": "string", "minLength": 3, "maxLength": 160 },
+        "version": { "type": "string", "pattern": "^v[0-9]+\\.[0-9]+$" },
+        "truth_status": { "const": "SCENARIO" },
+        "shadow_mode": { "const": true },
+        "alert_allowed": { "const": false },
+        "decision_ready": { "const": false }
+      }
+    },
+    "taxonomy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frequency", "exposure_cycle", "driver_principal", "drivers", "zones_impacted"],
+      "properties": {
+        "frequency": { "type": "string", "enum": ["FREQUENT", "LESS_FREQUENT", "RARE_EXTREME"] },
+        "exposure_cycle": { "type": "string", "enum": ["DIURNAL", "TIDAL", "SYNOPTIC", "SEASONAL", "MULTI_ANNUAL"] },
+        "driver_principal": { "type": "string", "minLength": 3, "maxLength": 40 },
+        "drivers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "enum": ["PHYS", "HYDR", "BIOG", "BIOL", "ANTH"] }
+        },
+        "zones_impacted": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "enum": ["Z1_PASSES", "Z2_MEC_AMONT", "Z3_DELTA_LEYRE", "Z4_CHENAUX", "Z5_ESTRANS"] }
+        }
+      }
+    },
+    "summary": { "type": "string", "minLength": 10, "maxLength": 700 },
+    "causal_mechanism": { "type": "string", "minLength": 10, "maxLength": 1200 },
+    "parameters": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "expected_signal", "value_status"],
+        "properties": {
+          "name": { "type": "string", "minLength": 2, "maxLength": 80 },
+          "expected_signal": { "type": "string", "minLength": 3, "maxLength": 240 },
+          "value_status": { "type": "string", "minLength": 3, "maxLength": 120 }
+        }
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 3, "maxLength": 100 }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 3, "maxLength": 300 }
+    },
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "date", "methode", "incertitude", "version", "status"],
+        "properties": {
+          "source": { "type": "string", "minLength": 3, "maxLength": 180 },
+          "date": { "type": "string", "minLength": 3, "maxLength": 80 },
+          "methode": { "type": "string", "minLength": 3, "maxLength": 240 },
+          "incertitude": { "type": "string", "minLength": 3, "maxLength": 240 },
+          "version": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "status": { "type": "string", "minLength": 3, "maxLength": 80 }
+        }
+      }
+    }
+  }
+}
