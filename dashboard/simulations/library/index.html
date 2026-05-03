@@ -27,10 +27,11 @@
     .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.tag{font-size:.72rem;border:1px solid rgba(55,200,232,.35);border-radius:999px;padding:4px 8px;color:#c8f5ff}.detail{position:sticky;top:78px;max-height:calc(100vh - 96px);overflow:auto}.kv{display:grid;grid-template-columns:120px 1fr;gap:8px;margin:10px 0}.k{color:rgba(237,245,255,.55);font-size:.78rem;text-transform:uppercase}.empty{padding:20px;border:1px dashed rgba(255,255,255,.22);border-radius:var(--radius);color:var(--muted)}
     ul{margin:8px 0 0 20px;padding:0} li{margin:6px 0}
   </style>
-  <script src="/assets/nav.js" defer></script>
+  <link rel="stylesheet" href="/assets/os_nav.css">
+  <script src="/assets/os_nav.js" defer></script>
 </head>
 <body>
-  <header data-os-nav data-active="library"></header>
+  <div id="os-topnav" data-active="library"></div>
   <main class="wrap">
     <h1>Bibliothèque de scénarios</h1>
     <p class="lead">Starter pack public de 12 scénarios prospectifs. Ces cartes sont des hypothèses de travail, séparées des mesures et non décisionnelles.</p>
