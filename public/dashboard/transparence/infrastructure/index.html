@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Infrastructure Overview - Ocean Sentinel</title>
+  <style>
+    :root{
+      --bg:#07111f;
+      --panel:#101b2f;
+      --panel-2:#14213a;
+      --line:#37c8e8;
+      --line-soft:rgba(55,200,232,.35);
+      --text:#edf5ff;
+      --muted:rgba(237,245,255,.72);
+      --warning:#ffbf5c;
+      --ok:#55d68a;
+      --radius:8px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      color:var(--text);
+      background:var(--bg);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      line-height:1.55;
+    }
+    a{color:#9eddf2}
+    code{background:rgba(255,255,255,.07);padding:2px 6px;border-radius:6px}
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:50;
+      background:#061425;
+      border-bottom:2px solid var(--line-soft);
+    }
+    .nav{max-width:1180px;margin:0 auto;padding:0 20px}
+    .nav-row{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      padding:10px 0 9px;
+    }
+    .nav-row::-webkit-scrollbar{display:none}
+    .nav-link{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.035);
+      color:var(--muted);
+      border-radius:var(--radius);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:9px 14px;
+      font-weight:700;
+      font-size:14px;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+    .nav-link:hover,.nav-link:focus-visible{
+      color:var(--text);
+      border-color:var(--line);
+      outline:3px solid rgba(55,200,232,.25);
+      outline-offset:2px;
+    }
+    .nav-link[aria-current="page"]{
+      color:#fff;
+      border-color:var(--line);
+      background:rgba(55,200,232,.12);
+    }
+    .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 44px}
+    .hero{
+      border-bottom:1px solid rgba(255,255,255,.1);
+      padding:20px 0 24px;
+    }
+    h1{font-size:clamp(2rem,5vw,4.2rem);line-height:1.02;margin:0 0 12px}
+    h2{font-size:1.45rem;margin:0 0 12px}
+    h3{font-size:1.05rem;margin:0 0 8px}
+    p{margin:0 0 12px}
+    .lead{font-size:1.08rem;color:var(--muted);max-width:850px}
+    .banner{
+      background:rgba(255,191,92,.11);
+      border:1px solid rgba(255,191,92,.55);
+      border-left:5px solid var(--warning);
+      border-radius:var(--radius);
+      padding:16px 18px;
+      margin:18px 0;
+    }
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    @media (max-width:860px){.grid,.grid-3{grid-template-columns:1fr}}
+    .card{
+      background:var(--panel);
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:var(--radius);
+      padding:18px;
+    }
+    .card.soft{background:var(--panel-2)}
+    .muted{color:var(--muted)}
+    .badge{
+      display:inline-flex;
+      border:1px solid rgba(85,214,138,.55);
+      border-radius:999px;
+      padding:6px 10px;
+      background:rgba(85,214,138,.12);
+      color:var(--text);
+      font-size:.78rem;
+      font-weight:800;
+      white-space:nowrap;
+    }
+    ul{margin:8px 0 0 20px;padding:0}
+    li{margin:7px 0}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav" aria-label="Navigation Ocean Sentinel">
+      <div class="nav-row">
+        <a class="nav-link" href="/">Accueil</a>
+        <a class="nav-link" href="/dashboard/">Simulations IA</a>
+        <a class="nav-link" href="/dashboard/transparence/infrastructure/" aria-current="page">Infrastructure Overview</a>
+        <a class="nav-link" href="/about">Le Projet</a>
+        <a class="nav-link" href="/api">API REST</a>
+        <a class="nav-link" href="/podcast">Podcast</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>Infrastructure Overview</h1>
+      <p class="lead">
+        Vue publique et volontairement partielle de l'infrastructure Ocean Sentinel.
+        Cette page explique les grands composants, les garanties de transparence et les limites publiables,
+        sans exposer d'éléments d'administration, de revue opérationnelle ou de configuration confidentielle.
+      </p>
+      <div class="banner" role="note">
+        <strong>Version publique volontairement partielle.</strong>
+        Les détails d'exploitation, inventaires techniques complets, règles de filtrage,
+        identifiants d'administration et procédures de vérification ne sont pas publiés.
+      </div>
+    </section>
+
+    <section class="grid-3" aria-label="Résumé infrastructure">
+      <article class="card">
+        <h2>Hébergement</h2>
+        <p class="muted">
+          Ocean Sentinel est servi depuis un VPS Linux durci, avec séparation entre contenu statique,
+          API applicative et données publiées.
+        </p>
+        <span class="badge">Public summary</span>
+      </article>
+      <article class="card">
+        <h2>Publication</h2>
+        <p class="muted">
+          Les pages publiques et fichiers JSON de statut sont publiés de façon statique lorsque c'est possible,
+          afin de limiter la surface d'exposition.
+        </p>
+        <span class="badge">Static-first</span>
+      </article>
+      <article class="card">
+        <h2>Décisionnel</h2>
+        <p class="muted">
+          Les mesures actuellement affichées sont historiques (EXPIRED). Le système reste en shadow mode
+          et ne déclenche aucune alerte opérationnelle.
+        </p>
+        <span class="badge">Shadow mode</span>
+      </article>
+    </section>
+
+    <section class="grid" style="margin-top:14px">
+      <article class="card soft">
+        <h2>Architecture publique</h2>
+        <ul class="muted">
+          <li>Un frontal web sert le site public et les pages de transparence.</li>
+          <li>Une API applicative expose des endpoints documentés pour les statuts publics.</li>
+          <li>Les fichiers JSON publics sont séparés des données internes et des journaux d'exploitation.</li>
+          <li>La supervision existe, mais ses interfaces et détails opérationnels ne sont pas publics.</li>
+        </ul>
+      </article>
+      <article class="card soft">
+        <h2>Transparence publiée</h2>
+        <ul class="muted">
+          <li>Source et statut des mesures sont affichés dans le dashboard.</li>
+          <li>Fraîcheur, décisionnel, limites et incertitude sont rendus visibles.</li>
+          <li>SCENARIO != MEASURED : les simulations IA ne sont pas des mesures.</li>
+          <li>EXPIRED implique une absence d'alerte opérationnelle.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top:14px">
+      <h2>Ce qui n'est pas publié</h2>
+      <p class="muted">
+        Pour préserver la sécurité du service, cette page n'expose pas les inventaires détaillés,
+        les accès d'administration, les chemins de configuration, les procédures de vérification,
+        les paramètres de durcissement, les journaux, les identifiants ou les procédures confidentielles.
+      </p>
+    </section>
+
+    <section class="card" style="margin-top:14px">
+      <h2>Liens publics utiles</h2>
+      <ul class="muted">
+        <li><a href="/dashboard/">Dashboard Simulations IA</a></li>
+        <li><a href="/data/BARAG_PROXY.public_status.json">Statut public BARAG_PROXY</a></li>
+        <li><a href="/api">Documentation API publique</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
