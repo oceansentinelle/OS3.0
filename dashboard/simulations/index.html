@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Simulations IA - Ocean Sentinelle</title>
+  <link rel="stylesheet" href="/assets/os_nav.css">
+  <script src="/assets/os_nav.js" defer></script>
+  <style>
+    :root{--bg:#07111f;--panel:#101b2f;--panel2:#14213a;--line:#37c8e8;--text:#edf5ff;--muted:rgba(237,245,255,.72);--warn:#ffbf5c;--bad:#ff6b6b;--radius:8px}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 0,rgba(126,215,255,.18),transparent 34rem),linear-gradient(180deg,#07111f,#091827 72%,#06111e);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.55}
+    a{color:#9eddf2}code{background:rgba(255,255,255,.07);padding:2px 6px;border-radius:6px}
+    .wrap{max-width:1180px;margin:0 auto;padding:34px 20px 54px}.hero{padding:22px 0 26px;border-bottom:1px solid rgba(255,255,255,.12)}
+    .eyebrow{color:#7ed7ff;font-weight:900;text-transform:uppercase;font-size:.78rem;letter-spacing:.08em;margin-bottom:12px}
+    h1{font-size:clamp(2.1rem,5vw,4.4rem);line-height:1.02;margin:0 0 12px}h2{font-size:1.35rem;margin:0 0 10px}p{margin:0 0 12px}.lead,.muted{color:var(--muted)}
+    .banner{margin:18px 0;padding:16px 18px;border:1px solid rgba(255,191,92,.55);border-left:5px solid var(--warn);border-radius:var(--radius);background:rgba(255,191,92,.11)}
+    .badges{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.badge{display:inline-flex;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px 10px;background:rgba(255,255,255,.045);font-size:.78rem;font-weight:850}.badge.bad{border-color:rgba(255,107,107,.55);background:rgba(255,107,107,.12)}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}@media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{background:linear-gradient(180deg,rgba(20,33,58,.86),rgba(16,27,47,.94));border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:18px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;border-radius:999px;padding:10px 14px;text-decoration:none;font-weight:900}.btn.primary{background:linear-gradient(135deg,#56b6e9,#7ed7ff);color:#052033}.btn.secondary{border:1px solid rgba(126,215,255,.3);color:var(--text);background:rgba(255,255,255,.055)}
+  </style>
+</head>
+<body>
+  <div id="os-topnav" data-active="simulations"></div>
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Simulations IA - shadow mode</div>
+      <h1>Scenarios prospectifs non decisionnels</h1>
+      <p class="lead">Cette surface rassemble les exercices de simulation Ocean Sentinelle. Les scenarios sont separes des mesures et ne produisent aucune alerte operationnelle.</p>
+    </section>
+
+    <div class="banner" role="note">
+      <strong>Version publique volontairement partielle.</strong>
+      Toute simulation affiche le cadrage <code>truth_status="SCENARIO"</code>, <code>shadow_mode=true</code>, <code>alert_allowed=false</code>, <code>decision_ready=false</code>.
+    </div>
+
+    <div class="badges" aria-label="Garanties publiques">
+      <span class="badge">SCENARIO != MEASURED</span>
+      <span class="badge">SIMULATED != MEASURED</span>
+      <span class="badge">MEASURED != FRESH</span>
+      <span class="badge bad">Aucune alerte operationnelle</span>
+      <span class="badge bad">Aucune consigne metier</span>
+    </div>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Bibliotheque</h2>
+        <p class="muted">Starter pack public de scenarios versionnes, avec drivers, zones, limites, provenance et parametres a sourcer.</p>
+        <div class="actions"><a class="btn primary" href="/dashboard/simulations/library/">Ouvrir la bibliotheque</a></div>
+      </article>
+      <article class="card">
+        <h2>Etat des mesures</h2>
+        <p class="muted">Les mesures publiques peuvent etre historiques ou expirees. La fraicheur est une information de transparence, pas une instruction.</p>
+        <div class="actions"><a class="btn secondary" href="/dashboard/">Voir le dashboard</a></div>
+      </article>
+      <article class="card">
+        <h2>Transparence</h2>
+        <p class="muted">Chaque scenario doit rendre visibles limites, incertitude, source et statut. Les elements non verifies restent marques "A sourcer".</p>
+        <div class="actions"><a class="btn secondary" href="/dashboard/transparence/osint/">Lire OSINT v1.2</a></div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Bibliothèque de scénarios - Ocean Sentinel</title>
+  <style>
+    :root{--bg:#07111f;--panel:#101b2f;--panel2:#14213a;--line:#37c8e8;--text:#edf5ff;--muted:rgba(237,245,255,.72);--warn:#ffbf5c;--bad:#ff6b6b;--ok:#55d68a;--radius:8px}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;line-height:1.55}
+    a{color:#9eddf2} code{background:rgba(255,255,255,.07);padding:2px 6px;border-radius:6px}
+    .topbar{position:sticky;top:0;z-index:50;background:#061425;border-bottom:2px solid rgba(55,200,232,.35)}
+    .nav{max-width:1180px;margin:0 auto;padding:0 20px}.nav-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:10px 0}.nav-row::-webkit-scrollbar{display:none}
+    .nav-link{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.035);color:var(--muted);border-radius:var(--radius);padding:9px 14px;font-weight:700;font-size:14px;text-decoration:none;white-space:nowrap}
+    .nav-link[aria-current="page"],.nav-link:hover,.nav-link:focus-visible{color:#fff;border-color:var(--line);outline:3px solid rgba(55,200,232,.25);outline-offset:2px}
+    .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 44px}
+    h1{font-size:clamp(2rem,5vw,4.2rem);line-height:1.02;margin:0 0 12px} h2{font-size:1.25rem;margin:0 0 10px} h3{margin:0 0 8px}
+    .lead,.muted{color:var(--muted)} .banner{background:rgba(255,191,92,.11);border:1px solid rgba(255,191,92,.55);border-left:5px solid var(--warn);border-radius:var(--radius);padding:16px 18px;margin:18px 0}
+    .badges,.filters{display:flex;gap:8px;flex-wrap:wrap}.badge{display:inline-flex;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px 10px;background:rgba(255,255,255,.045);font-size:.78rem;font-weight:800}.badge.warn{border-color:rgba(255,191,92,.55);background:rgba(255,191,92,.12)}.badge.bad{border-color:rgba(255,107,107,.55);background:rgba(255,107,107,.12)}
+    .filters{background:var(--panel);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:14px;margin:16px 0}.filters label{display:grid;gap:4px;font-size:.82rem;color:var(--muted)} select,input{min-height:38px;border-radius:var(--radius);border:1px solid rgba(255,255,255,.18);background:#081629;color:var(--text);padding:8px 10px}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:14px}@media(max-width:980px){.layout{grid-template-columns:1fr}}
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}@media(max-width:720px){.cards{grid-template-columns:1fr}}
+    .card,.detail{background:var(--panel);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:16px}.card{cursor:pointer;text-align:left;color:var(--text)}.card:hover,.card:focus-visible{border-color:var(--line);outline:3px solid rgba(55,200,232,.2);outline-offset:2px}.card.active{border-color:var(--line);background:var(--panel2)}
+    .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.tag{font-size:.72rem;border:1px solid rgba(55,200,232,.35);border-radius:999px;padding:4px 8px;color:#c8f5ff}.detail{position:sticky;top:78px;max-height:calc(100vh - 96px);overflow:auto}.kv{display:grid;grid-template-columns:120px 1fr;gap:8px;margin:10px 0}.k{color:rgba(237,245,255,.55);font-size:.78rem;text-transform:uppercase}.empty{padding:20px;border:1px dashed rgba(255,255,255,.22);border-radius:var(--radius);color:var(--muted)}
+    ul{margin:8px 0 0 20px;padding:0} li{margin:6px 0}
+  </style>
+  <link rel="stylesheet" href="/assets/os_nav.css">
+  <script src="/assets/os_nav.js" defer></script>
+</head>
+<body>
+  <div id="os-topnav" data-active="library"></div>
+  <main class="wrap">
+    <h1>Bibliothèque de scénarios</h1>
+    <p class="lead">Starter pack public de 12 scénarios prospectifs. Ces cartes sont des hypothèses de travail, séparées des mesures et non décisionnelles.</p>
+    <div class="banner">
+      <strong>Version publique volontairement partielle.</strong>
+      FR: simulation prospective, shadow mode, aucune alerte. EN: prospective simulation, shadow mode, no operational alert.
+    </div>
+    <div class="badges" aria-label="Garanties anti-ambiguïté">
+      <span class="badge warn">SCÉNARIO</span>
+      <span class="badge warn">Shadow mode</span>
+      <span class="badge bad">Non décisionnel</span>
+      <span class="badge bad">Alertes interdites</span>
+      <span class="badge">truth_status="SCENARIO"</span>
+      <span class="badge">shadow_mode=true</span>
+      <span class="badge">alert_allowed=false</span>
+      <span class="badge">decision_ready=false</span>
+    </div>
+    <section class="filters" aria-label="Filtres">
+      <label>Recherche <input id="search" type="search" placeholder="Nom, ID, résumé" /></label>
+      <label>Fréquence <select id="frequency"><option value="">Toutes</option></select></label>
+      <label>Cycle <select id="cycle"><option value="">Tous</option></select></label>
+      <label>Driver <select id="driver"><option value="">Tous</option></select></label>
+      <label>Zone <select id="zone"><option value="">Toutes</option></select></label>
+    </section>
+    <section class="layout">
+      <div>
+        <p class="muted" id="count">Chargement des scénarios...</p>
+        <div class="cards" id="cards"></div>
+      </div>
+      <aside class="detail" id="detail">
+        <h2>Détail scénario</h2>
+        <p class="muted">Sélectionner une carte pour afficher le mécanisme, les paramètres, les limites et la provenance.</p>
+      </aside>
+    </section>
+    <p class="muted">Schéma public: <a href="/data/schema/scenario_template.schema.json">/data/schema/scenario_template.schema.json</a></p>
+  </main>
+  <script>
+    const state = {items: [], filtered: [], active: null};
+    const els = {
+      cards: document.getElementById("cards"), detail: document.getElementById("detail"), count: document.getElementById("count"),
+      search: document.getElementById("search"), frequency: document.getElementById("frequency"), cycle: document.getElementById("cycle"), driver: document.getElementById("driver"), zone: document.getElementById("zone")
+    };
+    const esc = value => String(value ?? "À sourcer").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    const list = values => values.map(v => `<span class="tag">${esc(v)}</span>`).join("");
+    const fillSelect = (el, values) => values.forEach(v => el.insertAdjacentHTML("beforeend", `<option value="${esc(v)}">${esc(v)}</option>`));
+    function renderCards(){
+      els.count.textContent = `${state.filtered.length} scénario(s) affiché(s) sur ${state.items.length}.`;
+      els.cards.innerHTML = state.filtered.length ? state.filtered.map(item => {
+        const m = item.metadata, t = item.taxonomy;
+        return `<button class="card ${state.active === m.scenario_id ? "active" : ""}" type="button" data-id="${esc(m.scenario_id)}">
+          <h2>${esc(m.name)}</h2><p class="muted">${esc(item.summary)}</p>
+          <div class="tags">${list([m.scenario_id,t.frequency,t.exposure_cycle,t.driver_principal,...t.zones_impacted])}</div>
+        </button>`;
+      }).join("") : `<div class="empty">Aucun scénario ne correspond aux filtres.</div>`;
+      document.querySelectorAll("[data-id]").forEach(btn => btn.addEventListener("click", () => showDetail(btn.dataset.id)));
+    }
+    function showDetail(id){
+      state.active = id;
+      const item = state.items.find(x => x.metadata.scenario_id === id);
+      if(!item) return;
+      const m = item.metadata, t = item.taxonomy;
+      els.detail.innerHTML = `<h2>${esc(m.name)}</h2>
+        <div class="badges"><span class="badge warn">${esc(m.truth_status)}</span><span class="badge">shadow_mode=${esc(m.shadow_mode)}</span><span class="badge bad">alert_allowed=${esc(m.alert_allowed)}</span><span class="badge bad">decision_ready=${esc(m.decision_ready)}</span></div>
+        <div class="kv"><div class="k">ID</div><div>${esc(m.scenario_id)}</div><div class="k">Taxonomie</div><div>${list([t.frequency,t.exposure_cycle,t.driver_principal,...t.drivers,...t.zones_impacted])}</div></div>
+        <h3>Mécanisme causal</h3><p class="muted">${esc(item.causal_mechanism)}</p>
+        <h3>Paramètres</h3><ul>${item.parameters.map(p => `<li><strong>${esc(p.name)}</strong>: ${esc(p.expected_signal)} - ${esc(p.value_status)}</li>`).join("")}</ul>
+        <h3>Sorties</h3><div class="tags">${list(item.outputs)}</div>
+        <h3>Limites</h3><ul>${item.limitations.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+        <h3>Provenance</h3><ul>${item.provenance.map(p => `<li>${esc(p.source)} (${esc(p.date)}): ${esc(p.methode)}; incertitude=${esc(p.incertitude)}; status=${esc(p.status)}</li>`).join("")}</ul>`;
+      renderCards();
+    }
+    function applyFilters(){
+      const q = els.search.value.trim().toLowerCase();
+      state.filtered = state.items.filter(item => {
+        const m = item.metadata, t = item.taxonomy;
+        const blob = `${m.scenario_id} ${m.name} ${item.summary}`.toLowerCase();
+        return (!q || blob.includes(q)) && (!els.frequency.value || t.frequency === els.frequency.value) && (!els.cycle.value || t.exposure_cycle === els.cycle.value) && (!els.driver.value || t.drivers.includes(els.driver.value)) && (!els.zone.value || t.zones_impacted.includes(els.zone.value));
+      });
+      renderCards();
+    }
+    async function init(){
+      try{
+        const res = await fetch("./scenarios.json", {cache:"no-store"});
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
+        state.items = await res.json();
+        fillSelect(els.frequency, [...new Set(state.items.map(x => x.taxonomy.frequency))].sort());
+        fillSelect(els.cycle, [...new Set(state.items.map(x => x.taxonomy.exposure_cycle))].sort());
+        fillSelect(els.driver, [...new Set(state.items.flatMap(x => x.taxonomy.drivers))].sort());
+        fillSelect(els.zone, [...new Set(state.items.flatMap(x => x.taxonomy.zones_impacted))].sort());
+        [els.search, els.frequency, els.cycle, els.driver, els.zone].forEach(el => el.addEventListener("input", applyFilters));
+        state.filtered = state.items;
+        renderCards();
+        if(state.items[0]) showDetail(state.items[0].metadata.scenario_id);
+      }catch(err){
+        els.count.textContent = "Statut indisponible, réessayer.";
+        els.cards.innerHTML = `<div class="empty">Impossible de charger scenarios.json: ${esc(err.message)}</div>`;
+      }
+    }
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Podcast - Ocean Sentinelle</title>
+  <style>
+    :root{--bg:#071B2E;--panel:#0D2A44;--panel2:#123C5B;--line:#56B6E9;--text:#EAF4FF;--muted:#B8CBE0;--warn:#ffbf5c;--radius:8px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}
+    body{margin:0;background:radial-gradient(circle at 50% 0,rgba(126,215,255,.2),transparent 34%),linear-gradient(180deg,#071B2E,#06111e);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.6}
+    a{color:#9eddf2}.wrap{max-width:1180px;margin:0 auto;padding:48px 20px 56px}
+    .hero{padding:32px 0 24px;border-bottom:1px solid rgba(255,255,255,.12)}.eyebrow{color:#7ED7FF;font-weight:900;text-transform:uppercase;font-size:.78rem;letter-spacing:.08em;margin-bottom:12px}
+    h1{font-size:clamp(2.35rem,6vw,5rem);line-height:1;margin:0 0 16px;max-width:900px}h2{font-size:1.35rem;margin:0 0 12px}p{margin:0 0 12px}.lead,.muted{color:var(--muted)}
+    .banner{background:rgba(255,191,92,.12);border:1px solid rgba(255,191,92,.55);border-left:5px solid var(--warn);border-radius:var(--radius);padding:16px 18px;margin:22px 0}
+    .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.badge{display:inline-flex;border:1px solid rgba(126,215,255,.22);border-radius:999px;padding:6px 10px;background:rgba(18,60,91,.72);font-size:.8rem;font-weight:900}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}@media(max-width:860px){.grid{grid-template-columns:1fr}}
+    .card{background:linear-gradient(180deg,rgba(18,60,91,.72),rgba(13,42,68,.86));border:1px solid rgba(126,215,255,.18);border-radius:var(--radius);padding:20px}
+    footer{border-top:1px solid rgba(255,255,255,.12);margin-top:34px;padding-top:20px;color:var(--muted);font-size:.92rem}
+  </style>
+  <link rel="stylesheet" href="/assets/os_nav.css">
+  <script src="/assets/os_nav.js" defer></script>
+</head>
+<body>
+  <div id="os-topnav" data-active="podcast"></div>
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Podcast · médiation scientifique</div>
+      <h1>Podcast Ocean Sentinelle</h1>
+      <p class="lead">Surface éditoriale dédiée aux épisodes publics de médiation : contexte, sources, limites et séparation stricte entre mesure, inférence et scénario.</p>
+    </section>
+
+    <div class="banner" role="note">
+      <strong>Version publique volontairement partielle.</strong>
+      <div class="badges">
+        <span class="badge">Shadow mode</span>
+        <span class="badge">Non décisionnel</span>
+        <span class="badge">Simulation ≠ mesure</span>
+        <span class="badge">Aucune alerte opérationnelle</span>
+      </div>
+      <p style="margin-top:10px">Les contenus audio ne constituent pas une consigne métier. Les données citées sont publiques ou historiques et doivent être lues avec leurs limites.</p>
+    </div>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Épisodes</h2>
+        <p class="muted">Aucun épisode public n'est intégré dans cette version. Cette page évite le fallback silencieux vers l'accueil et sert de point canonique.</p>
+      </article>
+      <article class="card">
+        <h2>Doctrine éditoriale</h2>
+        <p class="muted">Chaque épisode devra afficher source, statut, fraîcheur, limites, incertitude et nature de vérité lorsque des données sont citées.</p>
+      </article>
+      <article class="card">
+        <h2>Scénarios</h2>
+        <p class="muted">Toute simulation évoquée reste <code>SCENARIO</code>, <code>shadow_mode=true</code>, <code>alert_allowed=false</code>, <code>decision_ready=false</code>.</p>
+      </article>
+    </section>
+
+    <footer>Ocean Sentinelle · Podcast public · Shadow mode · Non décisionnel.</footer>
+  </main>
+</body>
+</html>
