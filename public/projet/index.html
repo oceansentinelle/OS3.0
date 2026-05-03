@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Le Projet — Ocean Sentinelle</title>
+  <meta name="robots" content="index,follow" />
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#081c2c;color:#eaf2ff}
+    header{padding:24px 32px;background:linear-gradient(90deg,#0b2b44,#123b5c)}
+    nav a{color:#eaf2ff;text-decoration:none;margin-right:18px;font-weight:600}
+    main{max-width:980px;margin:0 auto;padding:32px}
+    .banner{background:#0d3554;border:1px solid rgba(255,255,255,.12);padding:14px 16px;border-radius:10px;margin:16px 0}
+    h1{margin:0 0 8px}
+    h2{margin-top:26px}
+    .tags span{display:inline-block;background:#123b5c;border:1px solid rgba(255,255,255,.12);padding:6px 10px;border-radius:999px;margin:4px 8px 0 0;font-size:13px}
+    .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:18px;margin-top:14px}
+    a.btn{display:inline-block;background:#4aa3d8;color:#062033;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700}
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/index.html">Accueil</a>
+      <a href="/projet/" aria-current="page">Le Projet</a>
+      <a href="/dashboard/">Dashboard</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Le Projet Ocean Sentinelle</h1>
+    <p>Transparence environnementale pour le Bassin d’Arcachon, avec une séparation stricte entre données mesurées et scénarios simulés.</p>
+
+    <div class="banner">
+      <strong>Version publique volontairement partielle.</strong>
+      <div class="tags">
+        <span>Shadow mode</span><span>Non décisionnel</span><span>SCENARIO ≠ MEASURED</span><span>Alertes interdites</span>
+      </div>
+      <p style="margin:10px 0 0">
+        Les contenus de simulation sont produits à des fins de recherche et de compréhension. Aucune notification opérationnelle n’est générée.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Objectifs</h2>
+      <ul>
+        <li>Centraliser des données publiques ou historiques, avec provenance et limites.</li>
+        <li>Documenter les risques et stressors (température, salinité, etc.) via des indices explicables.</li>
+        <li>Explorer des scénarios prospectifs (what-if) en mode <em>shadow</em>.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Sources (exemples)</h2>
+      <p>Les sources sont ouvertes et citées quand disponibles. Quand un élément n’est pas sourcé, il est marqué « À sourcer ».</p>
+    </div>
+
+    <div class="card">
+      <h2>Bibliothèque de scénarios</h2>
+      <p>Une bibliothèque de scénarios (shadow mode) est publiée et versionnée pour éviter toute ambiguïté.</p>
+      <a class="btn" href="/dashboard/simulations/library/">Voir la bibliothèque</a>
+    </div>
+  </main>
+</body>
+</html>
