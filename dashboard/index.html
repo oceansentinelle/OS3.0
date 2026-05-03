@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Simulations IA (Shadow Mode) - Ocean Sentinel</title>
+  <style>
+    :root{
+      --bg:#07111f;
+      --panel:#101b2f;
+      --panel-2:#14213a;
+      --line:#37c8e8;
+      --line-soft:rgba(55,200,232,.35);
+      --text:#edf5ff;
+      --muted:rgba(237,245,255,.72);
+      --muted-2:rgba(237,245,255,.58);
+      --warning:#ffbf5c;
+      --danger:#ff6b6b;
+      --ok:#55d68a;
+      --radius:8px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      background:var(--bg);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      line-height:1.5;
+    }
+    a{color:#9eddf2}
+    code{background:rgba(255,255,255,.07);padding:2px 6px;border-radius:6px}
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:50;
+      background:#061425;
+      border-bottom:2px solid var(--line-soft);
+    }
+    .nav{
+      max-width:1180px;
+      margin:0 auto;
+      padding:0 20px;
+    }
+    .nav-row{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      padding:10px 0 9px;
+    }
+    .nav-row::-webkit-scrollbar,.tabs::-webkit-scrollbar{display:none}
+    .nav-link,.tab{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.035);
+      color:var(--muted);
+      border-radius:var(--radius);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:9px 14px;
+      font-weight:700;
+      font-size:14px;
+      text-decoration:none;
+      white-space:nowrap;
+      cursor:pointer;
+    }
+    .nav-link:hover,.tab:hover,.nav-link:focus-visible,.tab:focus-visible{
+      color:var(--text);
+      border-color:var(--line);
+      outline:3px solid rgba(55,200,232,.25);
+      outline-offset:2px;
+    }
+    .nav-link[aria-current="page"],.tab[aria-current="true"]{
+      color:#fff;
+      border-color:var(--line);
+      background:rgba(55,200,232,.12);
+    }
+    .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 44px}
+    .hero{
+      border-bottom:1px solid rgba(255,255,255,.1);
+      padding:20px 0 24px;
+    }
+    h1{font-size:clamp(2rem,5vw,4.4rem);line-height:1.02;margin:0 0 12px}
+    h2{font-size:1.55rem;margin:0 0 12px}
+    h3{font-size:1.05rem;margin:0 0 8px}
+    p{margin:0 0 12px}
+    .lead{font-size:1.08rem;color:var(--muted);max-width:820px}
+    .tabs{
+      display:flex;
+      gap:8px;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      padding:16px 0 8px;
+      margin:6px 0 20px;
+    }
+    .panel{display:none}
+    .panel.is-active{display:block}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    @media (max-width:860px){.grid,.grid-2{grid-template-columns:1fr}}
+    .card{
+      background:var(--panel);
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:var(--radius);
+      padding:18px;
+    }
+    .card.soft{background:var(--panel-2)}
+    .notice{
+      background:rgba(255,191,92,.11);
+      border:1px solid rgba(255,191,92,.55);
+      border-left:5px solid var(--warning);
+      border-radius:var(--radius);
+      padding:16px 18px;
+      margin:18px 0;
+    }
+    .danger{
+      background:rgba(255,107,107,.10);
+      border-color:rgba(255,107,107,.45);
+      border-left-color:var(--danger);
+    }
+    .muted{color:var(--muted)}
+    .small{font-size:.9rem;color:var(--muted)}
+    .k{font-size:.77rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted-2)}
+    .v{font-weight:750;overflow-wrap:anywhere}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:.78rem;
+      font-weight:800;
+      color:var(--text);
+      background:rgba(255,255,255,.045);
+      white-space:nowrap;
+    }
+    .badge.ok{border-color:rgba(85,214,138,.55);background:rgba(85,214,138,.12)}
+    .badge.warn{border-color:rgba(255,191,92,.58);background:rgba(255,191,92,.12)}
+    .badge.bad{border-color:rgba(255,107,107,.58);background:rgba(255,107,107,.12)}
+    .meta{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin:14px 0;
+    }
+    @media (max-width:980px){.meta{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:560px){.meta{grid-template-columns:1fr}}
+    .button-disabled{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.08);
+      color:rgba(237,245,255,.62);
+      min-height:42px;
+      border-radius:var(--radius);
+      padding:10px 14px;
+      font-weight:800;
+      cursor:not-allowed;
+    }
+    ul{margin:8px 0 0 20px;padding:0}
+    li{margin:7px 0}
+    .sr-only{
+      position:absolute;
+      width:1px;
+      height:1px;
+      padding:0;
+      margin:-1px;
+      overflow:hidden;
+      clip:rect(0,0,0,0);
+      white-space:nowrap;
+      border:0;
+    }
+  </style>
+  <script src="/assets/nav.js" defer></script>
+</head>
+<body>
+  <header data-os-nav data-active="dashboard"></header>
+
+  <main class="wrap">
+    <section class="hero" aria-labelledby="page-title">
+      <h1 id="page-title">Simulations IA (Shadow Mode)</h1>
+      <p class="lead">
+        Exploration scientifique non opérationnelle pour le Bassin d'Arcachon. Les mesures disponibles sont historiques
+        (<b>EXPIRED</b>) et le système reste non décisionnel tant que la chaîne de décision publique retourne
+        <code>decision_ready=false</code>.
+      </p>
+      <div class="notice danger" role="status">
+        <b>Mesures disponibles mais historiques (EXPIRED) - non décisionnel.</b>
+        Shadow mode: <code>alert_allowed=false</code>, aucune alerte opérationnelle, aucune consigne métier.
+      </div>
+    </section>
+
+    <div class="tabs" role="tablist" aria-label="Sections du dashboard">
+      <button class="tab" type="button" id="tab-simulations" role="tab" aria-controls="simulations" aria-current="true" aria-selected="true" data-tab="simulations">Simulations IA</button>
+      <button class="tab" type="button" id="tab-measures" role="tab" aria-controls="measures" aria-current="false" aria-selected="false" data-tab="measures">État des mesures</button>
+      <button class="tab" type="button" id="tab-transparency" role="tab" aria-controls="transparency" aria-current="false" aria-selected="false" data-tab="transparency">Transparence &amp; limites</button>
+    </div>
+
+    <section id="simulations" class="panel is-active" role="tabpanel" aria-labelledby="tab-simulations">
+      <div class="card soft">
+        <h2>Simulations IA</h2>
+        <p class="muted">
+          Shadow mode: aucun déclenchement d'alerte. Les scénarios ci-dessous sont des exercices de simulation,
+          séparés des mesures. <span title="FR: simulation non opérationnelle. EN: non-operational simulation.">FR/EN disclaimer</span>:
+          simulation is not measurement; scenario output is not an operational alert.
+        </p>
+      </div>
+
+      <div class="grid" style="margin-top:14px">
+        <article class="card">
+          <h3>Canicule marine proxy</h3>
+          <p class="small">Scénario statique MVP: stress thermique hypothétique sur plusieurs jours.</p>
+          <div class="badge warn" title="FR: scénario IA, pas une mesure. EN: AI scenario, not measured data.">SIMULATED</div>
+        </article>
+        <article class="card">
+          <h3>Salinité basse</h3>
+          <p class="small">Scénario statique MVP: dilution potentielle liée à apports continentaux.</p>
+          <div class="badge warn" title="FR: hypothèse exploratoire. EN: exploratory hypothesis.">SIMULATED</div>
+        </article>
+        <article class="card">
+          <h3>Hypoxie proxy</h3>
+          <p class="small">Scénario statique MVP: proxy de baisse d'oxygène, sans preuve opérationnelle.</p>
+          <div class="badge warn" title="FR: aucune alerte permise. EN: no alert allowed.">SIMULATED</div>
+        </article>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <button class="button-disabled" type="button" disabled title="FR: fonctionnalité prévue. EN: planned feature.">Lancer une simulation (bientôt)</button>
+        <p class="small" style="margin-top:10px">
+          Roadmap: connecter des scénarios versionnés, afficher les hypothèses, séparer entrée mesurée, modèle,
+          incertitude et sortie simulée, puis faire valider les seuils par revue humaine.
+        </p>
+      </div>
+    </section>
+
+    <section id="measures" class="panel" role="tabpanel" aria-labelledby="tab-measures">
+      <div class="card soft">
+        <h2>État des mesures</h2>
+        <p class="muted">
+          Cette section lit <code>/data/BARAG_PROXY.public_status.json</code> avec cache désactivé côté navigateur.
+          Elle affiche source, statut, fraîcheur, décisionnel, limites et incertitude.
+        </p>
+      </div>
+      <div id="measure-status" class="card" style="margin-top:14px" aria-live="polite">Chargement du statut public...</div>
+    </section>
+
+    <section id="transparency" class="panel" role="tabpanel" aria-labelledby="tab-transparency">
+      <div class="grid-2">
+        <article class="card">
+          <h2>Ce que nous savons</h2>
+          <ul class="muted">
+            <li>La source actuelle est COAST-HF via SEANOE, DOI <a href="https://doi.org/10.17882/100119" target="_blank" rel="noopener">10.17882/100119</a>.</li>
+            <li>Les variables publiques disponibles pour <code>BARAG_PROXY</code> sont mesurées (<code>MEASURED</code>).</li>
+            <li>Les mesures affichées ici sont historiques (<code>EXPIRED</code>).</li>
+            <li><code>decision_ready=false</code> implique un affichage non décisionnel.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h2>Ce que nous ne savons pas</h2>
+          <ul class="muted">
+            <li>ERDDAP Ifremer est instable: réponses HTTP 503 observées.</li>
+            <li>Coriolis: timelines accessibles, mais les appels timeseries testés retournent 0 point exploitable.</li>
+            <li>Coriolis-Côtier <code>/observations</code>: catalogue de métadonnées, pas encore endpoint de valeurs exploitable.</li>
+            <li>L'incertitude est explicitement affichée lorsqu'elle existe; sinon elle reste <code>UNKNOWN</code>.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="notice" role="note">
+        <b>Limites publiques / Public limitations.</b>
+        FR: une mesure historique ne permet pas de conclure sur l'état présent du milieu.
+        EN: an expired historical measurement cannot support an operational present-state decision.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const tabs = Array.from(document.querySelectorAll("[data-tab]"));
+      const panels = Array.from(document.querySelectorAll(".panel"));
+      let statusLoaded = false;
+
+      function esc(value){
+        return String(value ?? "UNKNOWN").replace(/[&<>"']/g, c => ({
+          "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+        }[c]));
+      }
+
+      function badge(value, kind){
+        return `<span class="badge ${kind || ""}">${esc(value)}</span>`;
+      }
+
+      function showTab(id){
+        tabs.forEach(tab => {
+          const active = tab.dataset.tab === id;
+          tab.setAttribute("aria-current", active ? "true" : "false");
+          tab.setAttribute("aria-selected", active ? "true" : "false");
+        });
+        panels.forEach(panel => panel.classList.toggle("is-active", panel.id === id));
+        if(id === "measures" && !statusLoaded){
+          statusLoaded = true;
+          loadStatus();
+        }
+      }
+
+      tabs.forEach(tab => tab.addEventListener("click", () => showTab(tab.dataset.tab)));
+
+      async function loadStatus(){
+        const target = document.getElementById("measure-status");
+        const url = "/data/BARAG_PROXY.public_status.json";
+        try{
+          const response = await fetch(url, {cache:"no-store"});
+          if(!response.ok) throw new Error(`HTTP ${response.status}`);
+          const json = await response.json();
+          const status = json.status || {};
+          const source = json.source || {};
+          const truthMix = Array.isArray(status.truth_mix) ? status.truth_mix.join(", ") : "UNKNOWN";
+          const freshness = status.freshness_overall || "UNKNOWN";
+          const decisionReady = status.decision_ready === true;
+          const decisionStatus = status.decision_status || "UNKNOWN";
+          const stationTs = status.station_ts || json.generated_at_utc || "UNKNOWN";
+          const doi = source.doi || "UNKNOWN";
+          const sourceLabel = source.type || "UNKNOWN";
+          const freshKind = freshness === "FRESH" ? "ok" : freshness === "STALE" ? "warn" : "bad";
+          const decisionKind = decisionReady ? "ok" : "bad";
+          const variables = Array.isArray(json.variables) ? json.variables : [];
+          const uncertaintyValues = variables.map(v => v.uncertainty).filter(v => v !== null && v !== undefined);
+          const uncertaintySummary = uncertaintyValues.length ? uncertaintyValues.join(", ") : "UNKNOWN / non fournie";
+
+          const variableHtml = variables.map(v => `
+            <article class="card" style="background:rgba(255,255,255,.035)">
+              <h3>${esc(v.variable)} <span class="small">${esc(v.unit)}</span></h3>
+              <div class="meta">
+                <div><div class="k">Valeur</div><div class="v">${esc(v.value)}</div></div>
+                <div><div class="k">Statut</div><div class="v">${esc(v.truth_status)}</div></div>
+                <div><div class="k">Fraîcheur</div><div class="v">${esc(v.freshness_status)}</div></div>
+                <div><div class="k">Incertitude</div><div class="v">${esc(v.uncertainty ?? "UNKNOWN")}</div></div>
+              </div>
+              <p class="small">Source: ${esc(v.provenance?.source || sourceLabel)}; station: ${esc(v.provenance?.source_id || json.station_ref?.platform_code || "UNKNOWN")}; QC: ${esc(v.qc_flag ?? "UNKNOWN")}.</p>
+            </article>
+          `).join("");
+
+          target.innerHTML = `
+            <div class="notice danger">
+              <b>Mesures disponibles mais historiques (EXPIRED) - non décisionnel.</b>
+              SCÉNARIO ≠ MESURE. SIMULATED ≠ MEASURED. EXPIRED => aucune alerte opérationnelle.
+            </div>
+            <div class="meta">
+              <div><div class="k">station_ts</div><div class="v"><code>${esc(stationTs)}</code></div></div>
+              <div><div class="k">truth_mix</div><div class="v">${badge(truthMix, truthMix.includes("MEASURED") ? "ok" : "warn")}</div></div>
+              <div><div class="k">freshness_overall</div><div class="v">${badge(freshness, freshKind)}</div></div>
+              <div><div class="k">decision_ready</div><div class="v">${badge(decisionReady, decisionKind)}</div></div>
+              <div><div class="k">decision_status</div><div class="v">${esc(decisionStatus)}</div></div>
+              <div><div class="k">doi</div><div class="v"><a href="${esc(source.landing_page || "https://doi.org/" + doi)}" target="_blank" rel="noopener">${esc(doi)}</a></div></div>
+              <div><div class="k">source</div><div class="v">${esc(sourceLabel)}</div></div>
+              <div><div class="k">incertitude</div><div class="v">${esc(uncertaintySummary)}</div></div>
+            </div>
+            <div class="grid-2" style="margin-top:14px">
+              <div class="card">
+                <h3>Décisionnel</h3>
+                <p class="muted">Shadow mode: <code>alert_allowed=false</code>. La page ne produit aucune alerte et aucune instruction opérationnelle.</p>
+              </div>
+              <div class="card">
+                <h3>Limites</h3>
+                <p class="muted">Les mesures affichées ici sont historiques (<code>EXPIRED</code>). Toute interprétation présente nécessite une source fraîche et une revue humaine.</p>
+              </div>
+            </div>
+            <h3 style="margin-top:18px">Variables publiques</h3>
+            <div class="grid-2">${variableHtml || '<div class="card muted">Aucune variable disponible.</div>'}</div>
+          `;
+        }catch(error){
+          target.innerHTML = `
+            <div class="notice danger">
+              <b>Statut indisponible, réessayer.</b>
+              Le JSON public n'a pas pu être chargé: ${esc(error.message)}.
+            </div>
+          `;
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
