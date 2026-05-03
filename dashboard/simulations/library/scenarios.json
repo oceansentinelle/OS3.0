@@ -1,0 +1,122 @@
+[
+  {
+    "metadata": {"scenario_id":"MF_ANTH_SPILL_27","name":"Déversement anthropique côtier","version":"v1.0","truth_status":"SCENARIO","shadow_mode":true,"alert_allowed":false,"decision_ready":false},
+    "taxonomy": {"frequency":"LESS_FREQUENT","exposure_cycle":"SYNOPTIC","driver_principal":"ANTH","drivers":["ANTH","HYDR"],"zones_impacted":["Z1_PASSES","Z4_CHENAUX"]},
+    "summary":"Scénario prospectif de panache lié à un rejet ou incident côtier, sans qualification opérationnelle.",
+    "causal_mechanism":"Un apport anthropique ponctuel pourrait être transporté par les chenaux et modulé par la marée. Les effets potentiels dépendent de la nature du rejet, de la dilution et du renouvellement hydrodynamique.",
+    "parameters":[{"name":"Type de rejet","expected_signal":"Nature et quantité potentielles","value_status":"À sourcer"},{"name":"Courant de marée","expected_signal":"Transport vers chenaux ou passes","value_status":"À sourcer"},{"name":"Turbidité","expected_signal":"Signal indirect possible","value_status":"À sourcer"}],
+    "outputs":["indice_panache_shadow","indice_exposition_zone"],
+    "limitations":["Risque d’interprétation: ne pas assimiler un scénario à un incident observé.","Absence de caractérisation chimique publique validée.","Aucune alerte opérationnelle."],
+    "provenance":[{"source":"Sources publiques environnementales","date":"À sourcer","methode":"Revue documentaire et hypothèses hydrodynamiques","incertitude":"Élevée","version":"v1.0","status":"À sourcer"}]
+  },
+  {
+    "metadata": {"scenario_id":"MF_BIOL_OSHV_24","name":"Pression biologique OSHV hypothétique","version":"v1.0","truth_status":"SCENARIO","shadow_mode":true,"alert_allowed":false,"decision_ready":false},
+    "taxonomy": {"frequency":"LESS_FREQUENT","exposure_cycle":"SEASONAL","driver_principal":"BIOL","drivers":["BIOL","PHYS"],"zones_impacted":["Z5_ESTRANS","Z4_CHENAUX"]},
+    "summary":"Scénario de vulnérabilité biologique associé à une pression pathogène hypothétique et à un contexte environnemental favorable.",
+    "causal_mechanism":"Une combinaison de stress thermique, densité biologique et état physiologique peut accroître la sensibilité des organismes. Le scénario ne démontre aucune présence pathogène.",
+    "parameters":[{"name":"Température eau","expected_signal":"Stress saisonnier possible","value_status":"À sourcer"},{"name":"Densité biologique","expected_signal":"Facteur d’exposition","value_status":"À sourcer"},{"name":"Observation sanitaire","expected_signal":"Signal externe nécessaire","value_status":"À sourcer"}],
+    "outputs":["indice_vulnerabilite_biologique","indice_contexte_saisonnier"],
+    "limitations":["Risque d’interprétation: aucun diagnostic sanitaire.","Absence de données pathogènes validées dans ce starter pack.","Non décisionnel."],
+    "provenance":[{"source":"Littérature publique santé mollusques","date":"À sourcer","methode":"Synthèse bibliographique","incertitude":"Moyenne à élevée","version":"v1.0","status":"À sourcer"}]
+  },
+  {
+    "metadata": {"scenario_id":"MF_HYDR_CRUE_21","name":"Crue et dessalure","version":"v1.0","truth_status":"SCENARIO","shadow_mode":true,"alert_allowed":false,"decision_ready":false},
+    "taxonomy": {"frequency":"FREQUENT","exposure_cycle":"SYNOPTIC","driver_principal":"HYDR","drivers":["HYDR","PHYS"],"zones_impacted":["Z3_DELTA_LEYRE","Z4_CHENAUX","Z5_ESTRANS"]},
+    "summary":"Scénario de baisse de salinité liée à des apports continentaux et à la dispersion dans le bassin.",
+    "causal_mechanism":"Un épisode de crue peut augmenter les apports d’eau douce, réduire la salinité locale et déplacer le gradient vers les chenaux selon la marée et les vents.",
+    "parameters":[{"name":"Débit amont","expected_signal":"Hausse relative","value_status":"À sourcer"},{"name":"Salinité","expected_signal":"Baisse possible","value_status":"À sourcer"},{"name":"Vent","expected_signal":"Modulation de dispersion","value_status":"À sourcer"}],
+    "outputs":["indice_dessalure_shadow","indice_exposition_estran"],
+    "limitations":["Risque d’interprétation si absence de mesure fraîche.","Gradients spatiaux non résolus sans observation locale.","Aucune consigne opérationnelle."],
+    "provenance":[{"source":"Données hydrologiques publiques","date":"À sourcer","methode":"Croisement hypothétique débit-salinité","incertitude":"Moyenne","version":"v1.0","status":"À sourcer"}]
+  },
+  {
+    "metadata": {"scenario_id":"MF_PHYS_HEAT_22","name":"Stress thermique estival","version":"v1.0","truth_status":"SCENARIO","shadow_mode":true,"alert_allowed":false,"decision_ready":false},
+    "taxonomy": {"frequency":"FREQUENT","exposure_cycle":"SEASONAL","driver_principal":"PHYS","drivers":["PHYS"],"zones_impacted":["Z5_ESTRANS","Z4_CHENAUX"]},
+    "summary":"Scénario de stress thermique basé sur une hypothèse de température élevée et de faible renouvellement local.",
+    "causal_mechanism":"Des températures élevées peuvent accroître le stress physiologique et interagir avec les cycles d’émersion, sans constituer une mesure ni une alerte.",
+    "parameters":[{"name":"Température eau","expected_signal":"Hausse prolongée possible","value_status":"À sourcer"},{"name":"Température air","expected_signal":"Contrainte d’émersion","value_status":"À sourcer"},{"name":"Durée exposition","expected_signal":"Cumul de stress","value_status":"À sourcer"}],
+    "outputs":["indice_stress_thermique","indice_exposition_shadow"],
+    "limitations":["Risque d’interprétation: seuils non validés pour décision.","Données locales manquantes à sourcer.","Non décisionnel."],
+    "provenance":[{"source":"Sources météo et observations publiques","date":"À sourcer","methode":"Analyse de contexte thermique","incertitude":"Moyenne","version":"v1.0","status":"À sourcer"}]
+  },
+  {
+    "metadata": {"scenario_id":"MF_HYDR_GAP_35","name":"Rupture de continuité hydrodynamique","version":"v1.0","truth_status":"SCENARIO","shadow_mode":true,"alert_allowed":false,"decision_ready":false},
+    "taxonomy": {"frequency":"LESS_FREQUENT","exposure_cycle":"TIDAL","driver_principal":"HYDR","drivers":["HYDR"],"zones_impacted":["Z2_MEC_AMONT","Z4_CHENAUX"]},
+    "summary":"Scénario de zone peu renouvelée ou mal connectée pendant certaines configurations de marée.",
+    "causal_mechanism":"Un ralentissement local des échanges peut favoriser l’accumulation ou la persistance d’un signal environnemental, mais nécessite des observations dédiées.",
+    "parameters":[{"name":"Marnage","expected_signal":"Variation d’échange","value_status":"À sourcer"},{"name":"Courant local","expected_signal":"Baisse possible","value_status":"À sourcer"},{"name":"Temps de résidence","expected_signal":"Hausse possible","value_status":"À sourcer"}],
+    "outputs":["indice_connectivite_shadow","indice_residence"],
+    "limitations":["Risque d’interprétation sans modèle validé.","Résolution spatiale À sourcer.","Aucune décision automatique."],
+    "provenance":[{"source":"Bathymétrie et marée publiques","date":"À sourcer","methode":"Hypothèse de connectivité","incertitude":"Élevée","version":"v1.0","status":"À sourcer"}]
+  },
+  {
+    "metadata": {"scenario_id":"SYN_CRUE_OSHV_01","name":"Crue et vulnérabilité biologique combinées","version":"v1.0","truth_status":"SCENARIO","shadow_mode":true,"alert_allowed":false,"decision_ready":false},
+    "taxonomy": {"frequency":"LESS_FREQUENT","exposure_cycle":"SYNOPTIC","driver_principal":"MULTI","drivers":["HYDR","BIOL","PHYS"],"zones_impacted":["Z3_DELTA_LEYRE","Z5_ESTRANS"]},
+    "summary":"Scénario combiné où un épisode hydrologique et un contexte biologique sensible coexistent.",
+    "causal_mechanism":"La dessalure, la turbidité et le stress biologique pourraient se superposer. La combinaison reste une hypothèse à sourcer et ne prouve pas un risque sanitaire.",
+    "parameters":[{"name":"Débit amont","expected_signal":"Hausse possible","value_status":"À sourcer"},{"name":"Salinité","expected_signal":"Baisse possible","value_status":"À sourcer"},{"name":"Signal biologique","expected_signal":"Indicateur externe requis","value_status":"À sourcer"},{"name":"Température","expected_signal":"Modulateur de sensibilité","value_status":"À sourcer"}],
+    "outputs":["indice_surcharge_multi","indice_vulnerabilite_shadow"],
+    "limitations":["Risque d’interprétation élevé en scénario combiné.","Aucun diagnostic biologique.","Aucune alerte opérationnelle."],
+    "provenance":[{"source":"Sources publiques hydrologie et biologie","date":"À sourcer","methode":"Croisement qualitatif multi-drivers","incertitude":"Élevée","version":"v1.0","status":"À sourcer"}]
+  },
+  {
+    "metadata": {"scenario_id":"EX_BIOG_ACID_43","name":"Acidification carbonate extrême","version":"v1.0","truth_status":"SCENARIO","shadow_mode":true,"alert_allowed":false,"decision_ready":false},
+    "taxonomy": {"frequency":"RARE_EXTREME","exposure_cycle":"MULTI_ANNUAL","driver_principal":"BIOG","drivers":["BIOG","PHYS"],"zones_impacted":["Z1_PASSES","Z4_CHENAUX","Z5_ESTRANS"]},
+    "summary":"Scénario extrême de contrainte carbonate, à utiliser uniquement comme exploration scientifique.",
+    "causal_mechanism":"Une évolution du système carbonate peut affecter la saturation en aragonite. Les paramètres nécessaires ne sont pas tous disponibles dans le starter pack.",
+    "parameters":[{"name":"pH","expected_signal":"Baisse possible","value_status":"À sourcer"},{"name":"Alcalinité totale","expected_signal":"Nécessaire au calcul carbonate","value_status":"À sourcer"},{"name":"DIC ou pCO2","expected_signal":"Nécessaire au calcul carbonate","value_status":"À sourcer"}],
+    "outputs":["indice_omega_arag_shadow","indice_contrainte_carbonate"],
+    "limitations":["Risque d’interprétation: paramètres carbonate incomplets.","Ne pas déduire une acidification observée sans mesure.","Non décisionnel."],
+    "provenance":[{"source":"Références publiques système carbonate","date":"À sourcer","methode":"Template de calcul non activé","incertitude":"Élevée","version":"v1.0","status":"À sourcer"}]
+  },
+  {
+    "metadata": {"scenario_id":"MF_ANTH_CLAP_28","name":"Clapage ou remise en suspension","version":"v1.0","truth_status":"SCENARIO","shadow_mode":true,"alert_allowed":false,"decision_ready":false},
+    "taxonomy": {"frequency":"LESS_FREQUENT","exposure_cycle":"TIDAL","driver_principal":"ANTH","drivers":["ANTH","HYDR"],"zones_impacted":["Z1_PASSES","Z4_CHENAUX"]},
+    "summary":"Scénario de turbidité ou remise en suspension associée à une activité anthropique hypothétique.",
+    "causal_mechanism":"Une perturbation sédimentaire peut modifier localement la turbidité et la lumière disponible, selon marée, granulométrie et durée.",
+    "parameters":[{"name":"Turbidité","expected_signal":"Hausse possible","value_status":"À sourcer"},{"name":"Calendrier activité","expected_signal":"À documenter publiquement","value_status":"À sourcer"},{"name":"Courant","expected_signal":"Dispersion potentielle","value_status":"À sourcer"}],
+    "outputs":["indice_turbidite_shadow","indice_dispersion_sediment"],
+    "limitations":["Risque d’interprétation: activité non confirmée.","Pas d’attribution causale sans source publique.","Aucune alerte."],
+    "provenance":[{"source":"Avis publics et observation environnementale","date":"À sourcer","methode":"Croisement documentaire","incertitude":"Élevée","version":"v1.0","status":"À sourcer"}]
+  },
+  {
+    "metadata": {"scenario_id":"MF_BIOL_HAB_23","name":"Stress habitat intertidal","version":"v1.0","truth_status":"SCENARIO","shadow_mode":true,"alert_allowed":false,"decision_ready":false},
+    "taxonomy": {"frequency":"FREQUENT","exposure_cycle":"TIDAL","driver_principal":"BIOL","drivers":["BIOL","PHYS"],"zones_impacted":["Z5_ESTRANS"]},
+    "summary":"Scénario de stress d’habitat sur estran, lié à l’émersion, la température et la durée d’exposition.",
+    "causal_mechanism":"La combinaison entre durée d’émersion et conditions météorologiques peut affecter la contrainte biologique locale.",
+    "parameters":[{"name":"Durée émersion","expected_signal":"Cumul de contrainte","value_status":"À sourcer"},{"name":"Température air","expected_signal":"Stress potentiel","value_status":"À sourcer"},{"name":"Humidité ou dessiccation","expected_signal":"Modulateur possible","value_status":"À sourcer"}],
+    "outputs":["indice_habitat_estran","indice_stress_emersion"],
+    "limitations":["Risque d’interprétation sans observation biologique.","Paramètres micro-locaux À sourcer.","Non décisionnel."],
+    "provenance":[{"source":"Marée et sources météo publiques","date":"À sourcer","methode":"Contexte habitat","incertitude":"Moyenne","version":"v1.0","status":"À sourcer"}]
+  },
+  {
+    "metadata": {"scenario_id":"MF_BIOG_HYPO_37","name":"Hypoxie proxy","version":"v1.0","truth_status":"SCENARIO","shadow_mode":true,"alert_allowed":false,"decision_ready":false},
+    "taxonomy": {"frequency":"LESS_FREQUENT","exposure_cycle":"DIURNAL","driver_principal":"BIOG","drivers":["BIOG","PHYS"],"zones_impacted":["Z4_CHENAUX","Z5_ESTRANS"]},
+    "summary":"Scénario proxy de baisse d’oxygène, sans mesure directe suffisante dans le starter pack.",
+    "causal_mechanism":"Respiration, température et faible renouvellement peuvent contribuer à une baisse d’oxygène dissous. Le scénario exige des mesures directes pour toute interprétation.",
+    "parameters":[{"name":"Oxygène dissous","expected_signal":"Baisse possible","value_status":"À sourcer"},{"name":"Température eau","expected_signal":"Solubilité réduite possible","value_status":"À sourcer"},{"name":"Renouvellement local","expected_signal":"Modulateur de risque","value_status":"À sourcer"}],
+    "outputs":["indice_hypoxie_proxy","indice_contrainte_biog"],
+    "limitations":["Risque d’interprétation: proxy uniquement.","Pas de seuil opérationnel.","Aucune alerte opérationnelle."],
+    "provenance":[{"source":"Sources publiques oxygène et contexte physique","date":"À sourcer","methode":"Proxy non décisionnel","incertitude":"Élevée","version":"v1.0","status":"À sourcer"}]
+  },
+  {
+    "metadata": {"scenario_id":"MF_BIOL_VER_26","name":"Verdissement biologique proxy","version":"v1.0","truth_status":"SCENARIO","shadow_mode":true,"alert_allowed":false,"decision_ready":false},
+    "taxonomy": {"frequency":"FREQUENT","exposure_cycle":"SEASONAL","driver_principal":"BIOL","drivers":["BIOL","BIOG"],"zones_impacted":["Z3_DELTA_LEYRE","Z5_ESTRANS"]},
+    "summary":"Scénario de verdissement ou biomasse algale proxy, sans classification écologique automatique.",
+    "causal_mechanism":"Nutriments, lumière et température peuvent favoriser un signal de biomasse. Le scénario ne conclut pas sur une nuisance ou un état écologique.",
+    "parameters":[{"name":"Chlorophylle proxy","expected_signal":"Hausse possible","value_status":"À sourcer"},{"name":"Turbidité","expected_signal":"Influence optique","value_status":"À sourcer"},{"name":"Nutriments","expected_signal":"Facteur explicatif possible","value_status":"À sourcer"}],
+    "outputs":["indice_verdissement_proxy","indice_biomasse_shadow"],
+    "limitations":["Risque d’interprétation optique.","Nutriments À sourcer.","Non décisionnel."],
+    "provenance":[{"source":"Sources publiques observation couleur/eau","date":"À sourcer","methode":"Proxy visuel ou biogéochimique","incertitude":"Élevée","version":"v1.0","status":"À sourcer"}]
+  },
+  {
+    "metadata": {"scenario_id":"SYN_HEAT_ACID_02","name":"Stress thermique et carbonate combinés","version":"v1.0","truth_status":"SCENARIO","shadow_mode":true,"alert_allowed":false,"decision_ready":false},
+    "taxonomy": {"frequency":"RARE_EXTREME","exposure_cycle":"SEASONAL","driver_principal":"MULTI","drivers":["PHYS","BIOG","BIOL"],"zones_impacted":["Z4_CHENAUX","Z5_ESTRANS"]},
+    "summary":"Scénario combiné chaleur et contrainte carbonate, réservé à l’exploration scientifique publique.",
+    "causal_mechanism":"Une température élevée peut se superposer à une contrainte carbonate et augmenter la vulnérabilité biologique. Les variables carbonate restent à sourcer.",
+    "parameters":[{"name":"Température eau","expected_signal":"Hausse prolongée possible","value_status":"À sourcer"},{"name":"pH","expected_signal":"Baisse possible","value_status":"À sourcer"},{"name":"Alcalinité ou DIC","expected_signal":"Nécessaire pour carbonate","value_status":"À sourcer"},{"name":"Indicateur biologique","expected_signal":"Sensibilité potentielle","value_status":"À sourcer"}],
+    "outputs":["indice_stress_combine_shadow","indice_vulnerabilite_carbonate"],
+    "limitations":["Risque d’interprétation très élevé en multi-driver.","Paramètres carbonate manquants.","Aucune alerte opérationnelle."],
+    "provenance":[{"source":"Références publiques chaleur et carbonate","date":"À sourcer","methode":"Scénario combiné non décisionnel","incertitude":"Élevée","version":"v1.0","status":"À sourcer"}]
+  }
+]

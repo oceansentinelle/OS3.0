@@ -5,31 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex,follow" />
   <meta http-equiv="refresh" content="0; url=/projet/" />
-  <title>Page déplacée — Ocean Sentinelle</title>
+  <title>Page déplacée - Ocean Sentinelle</title>
   <style>
-    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#081c2c;color:#eaf2ff}
-    header{padding:24px 32px;background:linear-gradient(90deg,#0b2b44,#123b5c)}
-    nav a{color:#eaf2ff;text-decoration:none;margin-right:18px;font-weight:600}
-    main{max-width:760px;margin:0 auto;padding:32px}
-    .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:18px;margin-top:14px}
-    a.btn{display:inline-block;background:#4aa3d8;color:#062033;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700}
+    :root{--bg:#071B2E;--panel:#0D2A44;--line:#56B6E9;--text:#EAF4FF;--muted:#B8CBE0}
+    *{box-sizing:border-box}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:radial-gradient(circle at 50% 0,rgba(126,215,255,.18),transparent 34%),linear-gradient(180deg,#071B2E,#06111e);color:var(--text);line-height:1.6}
+    .topbar{background:rgba(5,18,32,.9);border-bottom:1px solid rgba(126,215,255,.22)}
+    nav{max-width:1180px;margin:0 auto;padding:14px 20px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}nav::-webkit-scrollbar{display:none}
+    nav a{color:var(--muted);text-decoration:none;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:8px 14px;font-weight:800;white-space:nowrap}
+    nav a:focus-visible,nav a:hover{color:var(--text);border-color:var(--line);outline:3px solid rgba(86,182,233,.25);outline-offset:2px}
+    main{max-width:760px;margin:0 auto;padding:48px 20px}
+    .card{background:linear-gradient(180deg,rgba(18,60,91,.72),rgba(13,42,68,.86));border:1px solid rgba(126,215,255,.18);border-radius:8px;padding:20px;margin-top:14px}
+    .muted{color:var(--muted)}
+    a.btn{display:inline-flex;background:linear-gradient(135deg,#56B6E9,#7ED7FF);color:#052033;padding:10px 14px;border-radius:999px;text-decoration:none;font-weight:900}
   </style>
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="/index.html">Accueil</a>
+  <header class="topbar">
+    <nav aria-label="Navigation Ocean Sentinelle">
+      <a href="/">Accueil</a>
       <a href="/projet/">Le Projet</a>
+      <a href="/data/BARAG_PROXY.public_status.json">Données</a>
       <a href="/dashboard/">Dashboard</a>
+      <a href="/dashboard/simulations/library/">Bibliothèque</a>
+      <a href="/dashboard/transparence/infrastructure/">Transparence</a>
     </nav>
   </header>
 
   <main>
     <h1>Page déplacée</h1>
     <div class="card">
-      <p>La page “Le Projet” est désormais publiée à l’adresse canonique <strong>/projet/</strong>.</p>
-      <p>Le contenu public conserve le cadrage : données publiques ou historiques, shadow mode, non décisionnel.</p>
-      <p>Rappel : SCENARIO ≠ MEASURED. Les alertes sont interdites sur cette surface.</p>
+      <p>La page « Le Projet » est désormais publiée à l'adresse canonique <strong>/projet/</strong>.</p>
+      <p class="muted">Le contenu public conserve le cadrage : données publiques ou historiques, shadow mode, non décisionnel.</p>
+      <p class="muted">Rappel : SCENARIO ≠ MEASURED. Aucune alerte opérationnelle n'est produite sur cette surface.</p>
       <a class="btn" href="/projet/">Ouvrir Le Projet</a>
     </div>
   </main>

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oceansentinelle.fr/data/schema/scenario_template.schema.json",
+  "title": "Ocean Sentinel Scenario Template",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "scenario_id",
+    "title",
+    "type",
+    "shadow_mode",
+    "alert_allowed",
+    "decision_ready",
+    "source_status",
+    "freshness_status",
+    "limits",
+    "uncertainty"
+  ],
+  "properties": {
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,80}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 140
+    },
+    "type": {
+      "const": "SCENARIO"
+    },
+    "shadow_mode": {
+      "const": true
+    },
+    "alert_allowed": {
+      "const": false
+    },
+    "decision_ready": {
+      "const": false
+    },
+    "source_status": {
+      "type": "string",
+      "enum": ["PUBLIC", "HISTORICAL", "MIXED_PUBLIC_HISTORICAL"]
+    },
+    "freshness_status": {
+      "type": "string",
+      "enum": ["STALE", "EXPIRED", "UNKNOWN"]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 120
+      },
+      "default": []
+    },
+    "limits": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 240
+      }
+    },
+    "uncertainty": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 240
+    },
+    "public_disclaimer": {
+      "type": "string",
+      "default": "Scenario output only; shadow_mode=true; alert_allowed=false; decision_ready=false."
+    }
+  }
+}
