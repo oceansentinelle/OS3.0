@@ -13,7 +13,6 @@
             <ul class="nav-links">
                 <li><a href="index.html">Accueil</a></li>
                 <li><a href="about.html">Le Projet</a></li>
-                <li><a href="api.html">API & Alertes</a></li>
             </ul>
         </nav>
     </header>
@@ -38,8 +37,8 @@
             <ul class="objectives-list">
                 <li><strong>Centraliser</strong> les données océanographiques de sources multiples</li>
                 <li><strong>Détecter</strong> automatiquement les anomalies environnementales</li>
-                <li><strong>Alerter</strong> les professionnels en temps réel</li>
-                <li><strong>Fournir</strong> une API REST pour l'intégration dans d'autres systèmes</li>
+                <li><strong>Documenter</strong> les données publiques ou historiques disponibles</li>
+                <li><strong>Séparer</strong> les scénarios des mesures et afficher les limites</li>
             </ul>
         </div>
 
@@ -73,7 +72,7 @@
                 </div>
                 <div class="tech-item">
                     <strong>Base de Données</strong>
-                    <p>PostgreSQL 16 + TimescaleDB</p>
+                    <p>Base relationnelle et stockage de séries historiques</p>
                 </div>
                 <div class="tech-item">
                     <strong>Cache</strong>
@@ -95,13 +94,13 @@
         </div>
 
         <div class="content-section">
-            <h2>🚨 Système d'Alertes</h2>
-            <p>Détection automatique des seuils critiques :</p>
-            <ul class="alerts-list">
-                <li><strong>Acidification :</strong> pH < 7.8 (critique) ou < 7.9 (warning)</li>
-                <li><strong>Hypoxie :</strong> O₂ < 150 µmol/kg (critique) ou < 175 µmol/kg (warning)</li>
-                <li><strong>Eutrophisation :</strong> Chlorophylle-a > seuils définis</li>
-                <li><strong>Anomalies thermiques :</strong> Écarts significatifs par rapport aux moyennes saisonnières</li>
+            <h2>Scénarios en shadow mode</h2>
+            <p>Les éléments ci-dessous sont des hypothèses de travail non décisionnelles :</p>
+            <ul class="scenario-list">
+                <li><strong>Acidification :</strong> contexte à sourcer avant toute interprétation</li>
+                <li><strong>Hypoxie :</strong> scénario proxy, non assimilable à une mesure</li>
+                <li><strong>Eutrophisation :</strong> hypothèse documentaire, à sourcer</li>
+                <li><strong>Anomalies thermiques :</strong> exploration scientifique sans décision automatique</li>
             </ul>
         </div>
 
@@ -129,15 +128,15 @@
 
         <div class="cta-section">
             <h2>Prêt à explorer les données ?</h2>
-            <a href="api.html" class="btn btn-primary">Accéder aux API →</a>
+            <a href="index.html" class="btn btn-primary">Retour à l'accueil →</a>
         </div>
     </div>
 
     <footer>
         <div class="footer-content">
-            <p><strong>Ocean Sentinelle V3.0</strong> - Surveillance Océanographique du Bassin d'Arcachon</p>
+            <p><strong>Ocean Sentinelle V3.0</strong> - Transparence environnementale du Bassin d'Arcachon</p>
             <p style="margin-top: 10px; font-size: 14px;">
-                Données : ERDDAP COAST-HF (Ifremer) • Hub'Eau (BRGM) • API : http://76.13.43.3:8000
+                Données publiques ou historiques : ERDDAP COAST-HF (Ifremer) • Hub'Eau (BRGM)
             </p>
         </div>
     </footer>
