@@ -6,7 +6,7 @@
         ["Simulations IA", "/dashboard/simulations/"],
         ["Bibliothèque", "/dashboard/simulations/library/"],
         ["OSINT v1.2", "/dashboard/transparence/osint/"],
-        ["Transparence", "/dashboard/transparence/infrastructure/"],
+        ["Infrastructure Overview", "/dashboard/transparence/infrastructure/"],
         ["Podcast", "/podcast/"]
     ];
 
