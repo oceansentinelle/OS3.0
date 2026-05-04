@@ -3,437 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ocean Sentinelle - Surveillance Océanographique Temps Réel</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: #1a2332;
-            background: linear-gradient(135deg, #0a1929 0%, #1e3a5f 25%, #2d5f7e 50%, #3a7ca5 75%, #4a9aba 100%);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(ellipse at 20% 30%, rgba(74, 154, 186, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 70%, rgba(45, 95, 126, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(30, 58, 95, 0.1) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            background: linear-gradient(180deg, rgba(10, 25, 41, 0.95) 0%, rgba(30, 58, 95, 0.9) 100%);
-            backdrop-filter: blur(10px);
-            padding: 20px 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 40px rgba(74, 154, 186, 0.1);
-            margin-bottom: 40px;
-            border-bottom: 1px solid rgba(74, 154, 186, 0.2);
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #d0dae6 0%, #f5f7fa 50%, #d0dae6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 10px rgba(245, 247, 250, 0.3));
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #f5f7fa;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #c5d0dd, #f5f7fa);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #ffffff;
-            text-shadow: 0 0 10px rgba(245, 247, 250, 0.5);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .hero {
-            background: linear-gradient(135deg, rgba(10, 25, 41, 0.8) 0%, rgba(30, 58, 95, 0.7) 100%);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 60px;
-            text-align: center;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.4),
-                0 0 80px rgba(74, 154, 186, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            margin-bottom: 40px;
-            border: 1px solid rgba(74, 154, 186, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(74, 154, 186, 0.1) 0%, transparent 70%);
-            animation: wave 15s ease-in-out infinite;
-        }
-
-        @keyframes wave {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(5%, 5%) rotate(90deg); }
-            50% { transform: translate(-5%, 5%) rotate(180deg); }
-            75% { transform: translate(-5%, -5%) rotate(270deg); }
-        }
-
-        h1 {
-            font-size: 48px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #d0dae6 50%, #b8c5d6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 0 40px rgba(245, 247, 250, 0.3);
-            filter: drop-shadow(0 0 20px rgba(208, 218, 230, 0.4));
-        }
-
-        .subtitle {
-            font-size: 24px;
-            color: #f5f7fa;
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .description {
-            font-size: 18px;
-            color: #e8ecf1;
-            max-width: 800px;
-            margin: 0 auto 40px;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 15px 40px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 16px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: inline-block;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #4a9aba 0%, #3a7ca5 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(74, 154, 186, 0.4), 0 0 20px rgba(74, 154, 186, 0.2);
-            border: 1px solid rgba(107, 197, 232, 0.3);
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-primary:hover::before {
-            left: 100%;
-        }
-
-        .btn-secondary {
-            background: rgba(10, 25, 41, 0.5);
-            color: #ffffff;
-            border: 2px solid #d0dae6;
-            box-shadow: 0 4px 15px rgba(74, 154, 186, 0.2);
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(74, 154, 186, 0.2);
-            border-color: #f5f7fa;
-            box-shadow: 0 4px 20px rgba(245, 247, 250, 0.4);
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .feature-card {
-            background: linear-gradient(135deg, rgba(10, 25, 41, 0.7) 0%, rgba(30, 58, 95, 0.6) 100%);
-            backdrop-filter: blur(15px);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 
-                0 10px 30px rgba(0, 0, 0, 0.3),
-                0 0 40px rgba(74, 154, 186, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(74, 154, 186, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 
-                0 15px 40px rgba(0, 0, 0, 0.4),
-                0 0 60px rgba(74, 154, 186, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            border-color: rgba(107, 197, 232, 0.4);
-        }
-
-        .feature-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-
-        .feature-title {
-            font-size: 24px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #d0dae6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 15px;
-        }
-
-        .feature-text {
-            color: #e8ecf1;
-            font-size: 16px;
-        }
-
-        .stats {
-            background: linear-gradient(135deg, rgba(10, 25, 41, 0.7) 0%, rgba(30, 58, 95, 0.6) 100%);
-            backdrop-filter: blur(15px);
-            border-radius: 15px;
-            padding: 40px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            text-align: center;
-            box-shadow: 
-                0 10px 30px rgba(0, 0, 0, 0.3),
-                0 0 40px rgba(74, 154, 186, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(74, 154, 186, 0.2);
-        }
-
-        .stat-number {
-            font-size: 48px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #f5f7fa 0%, #d0dae6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 10px rgba(245, 247, 250, 0.3));
-        }
-
-        .stat-label {
-            font-size: 16px;
-            color: #f5f7fa;
-            margin-top: 10px;
-        }
-
-        footer {
-            background: linear-gradient(180deg, rgba(10, 25, 41, 0.95) 0%, rgba(10, 25, 41, 1) 100%);
-            backdrop-filter: blur(10px);
-            padding: 30px 0;
-            margin-top: 60px;
-            text-align: center;
-            border-top: 1px solid rgba(74, 154, 186, 0.2);
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            color: #e8ecf1;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 32px;
-            }
-
-            .subtitle {
-                font-size: 18px;
-            }
-
-            .hero {
-                padding: 40px 20px;
-            }
-
-            .nav-links {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
-    </style>
+    <title>Ocean Sentinelle - Accueil</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/assets/os_nav.css">
+    <script src="/assets/os_nav.js" defer></script>
 </head>
-<body>
-    <header>
-        <nav>
-            <div class="logo">🌊 Ocean Sentinelle</div>
-            <ul class="nav-links">
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="about.html">Le Projet</a></li>
-                <li><a href="api.html">API & Alertes</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <div class="container">
-        <div class="hero">
-            <h1>🌊 Ocean Sentinelle</h1>
-            <p class="subtitle">Surveillance Océanographique en Temps Réel</p>
+<body data-route="/">
+    <main class="container">
+        <section class="hero">
+            <p class="eyebrow">Shadow mode public</p>
+            <h1>Ocean Sentinelle</h1>
+            <p class="subtitle">Observatoire prudent du Bassin d'Arcachon</p>
             <p class="description">
-                Plateforme de monitoring environnemental pour le Bassin d'Arcachon. 
-                Données océanographiques temps réel, alertes écologiques et API professionnelle.
+                Ocean Sentinelle consolide des mesures environnementales, des scenarios et des notes
+                de transparence sans automatiser de decision. Les vues publiques distinguent toujours
+                <strong>SCENARIO</strong> et <strong>MEASURED</strong>.
             </p>
             <div class="cta-buttons">
-                <a href="about.html" class="btn btn-primary">Découvrir le Projet</a>
-                <a href="api.html" class="btn btn-secondary">Accéder aux API</a>
+                <a href="/projet/" class="btn btn-primary">Comprendre le projet</a>
+                <a href="/dashboard/" class="btn btn-secondary">Voir le dashboard</a>
             </div>
-        </div>
+        </section>
 
-        <div class="features">
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3 class="feature-title">Données Temps Réel</h3>
+        <section class="features" aria-label="Principes publics">
+            <article class="feature-card">
+                <div class="feature-icon" aria-hidden="true">01</div>
+                <h2 class="feature-title">Non decisionnel</h2>
                 <p class="feature-text">
-                    Température, salinité, oxygène dissous, pH, turbidité. 
-                    Mesures actualisées toutes les heures depuis les stations COAST-HF.
+                    Les informations publiees aident a lire un contexte. Elles ne prescrivent aucune
+                    action operationnelle.
                 </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🚨</div>
-                <h3 class="feature-title">Alertes Écologiques</h3>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon" aria-hidden="true">02</div>
+                <h2 class="feature-title">Sources separees</h2>
                 <p class="feature-text">
-                    Détection automatique des anomalies : acidification, hypoxie, 
-                    eutrophisation. Notifications pour les professionnels.
+                    Les mesures observees, les simulations et les analyses documentaires sont presentees
+                    comme des categories distinctes.
                 </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🔌</div>
-                <h3 class="feature-title">API REST</h3>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon" aria-hidden="true">03</div>
+                <h2 class="feature-title">Publication prudente</h2>
                 <p class="feature-text">
-                    Accès programmatique aux données. Documentation Swagger, 
-                    endpoints JSON, intégration facile dans vos applications.
+                    Aucune alerte publique n'est emise tant que le processus de decision n'est pas qualifie.
                 </p>
-            </div>
-        </div>
-
-        <div class="stats">
-            <div>
-                <div class="stat-number">2</div>
-                <div class="stat-label">Sources Actives</div>
-            </div>
-            <div>
-                <div class="stat-number">24/7</div>
-                <div class="stat-label">Surveillance</div>
-            </div>
-            <div>
-                <div class="stat-number">8</div>
-                <div class="stat-label">Paramètres Mesurés</div>
-            </div>
-            <div>
-                <div class="stat-number">API</div>
-                <div class="stat-label">Accès Professionnel</div>
-            </div>
-        </div>
-    </div>
+            </article>
+        </section>
+    </main>
 
     <footer>
         <div class="footer-content">
-            <p><strong>Ocean Sentinelle V3.0</strong> - Surveillance Océanographique du Bassin d'Arcachon</p>
-            <p style="margin-top: 10px; font-size: 14px;">
-                Données : ERDDAP COAST-HF (Ifremer) • Hub'Eau (BRGM) • API : http://76.13.43.3:8000
-            </p>
+            <p><strong>Ocean Sentinelle</strong> - shadow mode, non decisionnel.</p>
+            <p>Donnees et scenarios presentes avec provenance et limites.</p>
         </div>
     </footer>
 </body>

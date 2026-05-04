@@ -1,0 +1,99 @@
+--- /etc/nginx/sites-available/oceansentinelle.current
++++ /etc/nginx/sites-available/oceansentinelle.hardened
+@@
+ server {
+     listen 80;
+     listen [::]:80;
+     server_name oceansentinelle.fr www.oceansentinelle.fr;
+     root /var/www/oceansentinelle;
+     index index.html;
+ 
++    error_page 404 /404.html;
++    location = /404.html {
++        internal;
++    }
++
+     location /data/ {
+         try_files $uri $uri/ =404;
+     }
+ 
+     location = /api {
+         proxy_pass http://127.0.0.1:8000;
+         proxy_set_header Host $host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header X-Forwarded-Proto $scheme;
+     }
+ 
+     location /api/ {
+         proxy_pass http://127.0.0.1:8000;
+         proxy_set_header Host $host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header X-Forwarded-Proto $scheme;
+     }
+ 
+-    location / {
+-        try_files $uri $uri/ /index.html;
+-    }
++    location = / {
++        try_files /index.html =404;
++    }
++
++    location = /projet {
++        return 301 /projet/;
++    }
++    location = /projet/ {
++        try_files /projet/index.html =404;
++    }
++
++    location = /dashboard {
++        return 301 /dashboard/;
++    }
++    location = /dashboard/ {
++        try_files /dashboard/index.html =404;
++    }
++
++    location = /dashboard/simulations {
++        return 301 /dashboard/simulations/;
++    }
++    location = /dashboard/simulations/ {
++        try_files /dashboard/simulations/index.html =404;
++    }
++
++    location = /dashboard/simulations/library {
++        return 301 /dashboard/simulations/library/;
++    }
++    location = /dashboard/simulations/library/ {
++        try_files /dashboard/simulations/library/index.html =404;
++    }
++
++    location = /dashboard/transparence/osint {
++        return 301 /dashboard/transparence/osint/;
++    }
++    location = /dashboard/transparence/osint/ {
++        try_files /dashboard/transparence/osint/index.html =404;
++    }
++
++    location = /dashboard/transparence/infrastructure {
++        return 301 /dashboard/transparence/infrastructure/;
++    }
++    location = /dashboard/transparence/infrastructure/ {
++        try_files /dashboard/transparence/infrastructure/index.html =404;
++    }
++
++    location = /podcast {
++        return 301 /podcast/;
++    }
++    location = /podcast/ {
++        try_files /podcast/index.html =404;
++    }
++
++    location ~* \.(?:css|js|png|jpg|jpeg|webp|svg|ico|json|txt|xml)$ {
++        try_files $uri =404;
++    }
++
++    location / {
++        return 404;
++    }
+ }

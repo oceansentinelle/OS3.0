@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Ocean Sentinelle</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/assets/os_nav.css">
+    <script src="/assets/os_nav.js" defer></script>
+</head>
+<body data-route="/dashboard/">
+    <main class="container">
+        <section class="page-header">
+            <p class="eyebrow">Vue consolidee</p>
+            <h1>Dashboard</h1>
+            <p class="page-subtitle">Synthese publique en shadow mode, sans recommandation operationnelle.</p>
+        </section>
+        <section class="metrics" aria-label="Etat de publication">
+            <article class="metric-card">
+                <div class="metric-value">MEASURED</div>
+                <p>Les mesures observees restent separees des scenarios.</p>
+            </article>
+            <article class="metric-card">
+                <div class="metric-value">SCENARIO</div>
+                <p>Les simulations sont etiquetees comme hypotheses de travail.</p>
+            </article>
+            <article class="metric-card">
+                <div class="metric-value">HOLD</div>
+                <p>Aucune alerte publique tant que la decision n'est pas qualifiee.</p>
+            </article>
+        </section>
+        <section class="content-section">
+            <h2>Routes associees</h2>
+            <div class="route-grid">
+                <a class="route-card" href="/dashboard/simulations/"><h3>Simulations IA</h3><p>Lecture des scenarios et garde-fous.</p></a>
+                <a class="route-card" href="/dashboard/transparence/infrastructure/"><h3>Transparence</h3><p>Details de publication et limites.</p></a>
+            </div>
+        </section>
+    </main>
+    <footer><div class="footer-content"><p>Dashboard public - non decisionnel.</p></div></footer>
+</body>
+</html>
