@@ -4,6 +4,7 @@ set -eu
 BASE_URL="${BASE_URL:-http://localhost}"
 PUBLIC_DIR="${PUBLIC_DIR:-public}"
 CANONICAL_ROUTES="/ /projet/ /dashboard/ /dashboard/simulations/ /dashboard/simulations/library/ /dashboard/transparence/osint/ /dashboard/transparence/infrastructure/ /podcast/"
+REDIRECT_ROUTES="/simulations/ /transparence/"
 CANONICAL_HTML="
 $PUBLIC_DIR/index.html
 $PUBLIC_DIR/projet/index.html
@@ -23,6 +24,15 @@ for route in $CANONICAL_ROUTES; do
         200|301|302) echo "OK $route $status" ;;
         *) echo "FAIL $route expected 200/301/302 got ${status:-none}"; exit 1 ;;
     esac
+done
+
+for route in $REDIRECT_ROUTES; do
+    status="$(curl -sI "$BASE_URL$route" | awk 'NR==1 {print $2}')"
+    if [ "$status" != "301" ]; then
+        echo "FAIL $route expected 301 got ${status:-none}"
+        exit 1
+    fi
+    echo "OK $route 301"
 done
 
 random_route="/__missing_ocean_sentinel_$(date +%s)__/"
@@ -88,6 +98,10 @@ for file in $CANONICAL_HTML; do
     inline_nav_count="$(grep -ci '<nav' "$file" || true)"
     if [ "$css_count" != "1" ] || [ "$js_count" != "1" ] || [ "$mount_count" != "1" ] || [ "$inline_nav_count" != "0" ]; then
         echo "FAIL $file css=$css_count js=$js_count mount=$mount_count inline_nav=$inline_nav_count"
+        exit 1
+    fi
+    if grep -q 'id=\\"os-topnav\\"' "$file"; then
+        echo "FAIL $file contains escaped broken os-topnav mount"
         exit 1
     fi
     echo "OK $file nav-assets=1 mount=1 inline-nav=0"

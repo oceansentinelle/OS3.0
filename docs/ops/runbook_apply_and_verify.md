@@ -39,7 +39,21 @@ Expected files:
 
 Canonical HTML pages should include only one nav mount and no inline nav.
 
+Idempotent nav patch option on the VPS:
+
+```sh
+cd /path/to/deployed/repo-or-scripts
+WEBROOT=/var/www/oceansentinelle sh scripts/patch_webroot_nav.sh
+```
+
 ## Apply Nginx Patch
+
+Idempotent nginx patch option on the VPS:
+
+```sh
+cd /path/to/deployed/repo-or-scripts
+SITE=/etc/nginx/sites-available/oceansentinelle WEBROOT=/var/www/oceansentinelle sh scripts/patch_nginx_no_phantom.sh
+```
 
 Minimal patch intent:
 
@@ -128,6 +142,12 @@ sudo mkdir -p /var/www/oceansentinelle/assets/_quarantine
 sudo tar -C /var/www/oceansentinelle -czf "/var/www/oceansentinelle/assets/_quarantine/legacy-assets-$STAMP.tar.gz" $(sed 's#^/##' /tmp/os-assets-unreferenced.txt)
 ```
 
+Idempotent script option:
+
+```sh
+WEBROOT=/var/www/oceansentinelle sh scripts/quarantine_legacy_assets.sh
+```
+
 ## Rollback
 
 Nginx:
@@ -145,4 +165,3 @@ sudo tar -C /var/www -xzf /var/backups/oceansentinelle-webroot-<STAMP>.tar.gz
 sudo nginx -t
 sudo systemctl reload nginx
 ```
-

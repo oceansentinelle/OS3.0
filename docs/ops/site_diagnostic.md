@@ -4,6 +4,19 @@ Date: 2026-05-04
 Target: `oceansentinelle.fr`
 Mode: read-only production diagnostic, no destructive action
 
+## Current 10-Line Diagnostic
+
+1. Production now returns `404` for `/no-such-route`, so the phantom route bug is partly mitigated.
+2. Nginx currently has `location / { try_files $uri $uri/ =404; }`.
+3. `/data/` remains `403` and `/data/BARAG_PROXY.public_status.json` remains `200` with `no-store`.
+4. `/api` remains `301`, `/api/` remains `302 /dashboard/`, and `/api/health` reaches the proxied app.
+5. Canonical pages still use `os_nav_v2.css/js`, while backup pages and repo artifacts use `os_nav.css/js`.
+6. Several canonical pages still contain inline `<nav>`/`<header>` blocks, producing double-source navigation.
+7. No broken escaped mount was found in the latest prod scan, but the patch script still repairs `id=\"os-topnav\"`.
+8. `/dashboard/simulations/` now has a minimal dark theme, but remains a placeholder and should use the shared theme.
+9. `podcast/index.html` still contains a forbidden phrase; several legacy assets also contain forbidden claims.
+10. Recommendation: converge all canonical pages to `os_nav` only, remove inline nav, quarantine legacy forbidden assets.
+
 ## Diagnostic
 
 ### Nginx Effective Config
@@ -126,7 +139,17 @@ content-length: 13991
 etag: "69f7d340-36a7"
 ```
 
-Conclusion: `/no-such-route` is a phantom 200 serving the homepage.
+Historical conclusion from the earlier incident: `/no-such-route` was a phantom 200 serving the
+homepage. Current prod retest on 2026-05-04 shows the route now returns `404`; keep
+`scripts/patch_nginx_no_phantom.sh` to enforce and repair this invariant if drift returns.
+
+Current retest:
+
+```text
+/no-such-route:
+HTTP/2 404
+content-length: 162
+```
 
 ### Navigation Inventory
 
@@ -148,8 +171,8 @@ Summary:
 | `/dashboard/transparence/osint/` | `/var/www/oceansentinelle/dashboard/transparence/osint/index.html` | `os_nav_v2` + inline | 200 | double source | remove inline nav |
 | `/dashboard/transparence/infrastructure/` | `/var/www/oceansentinelle/dashboard/transparence/infrastructure/index.html` | `os_nav_v2` + inline | 200 | double source | remove inline nav |
 | `/podcast/` | `/var/www/oceansentinelle/podcast/index.html` | `os_nav_v2` only | 200 | forbidden term in HTML | rewrite sentence |
-| `/simulations/` | `/var/www/oceansentinelle/simulations/index.html` | `os_nav_v2` only | 200 | legacy marketing route still public | redirect or keep as explicit canonical bridge |
-| `/transparence/` | `/var/www/oceansentinelle/transparence/index.html` | `os_nav_v2` only | 200 | legacy marketing route still public | redirect or keep as explicit canonical bridge |
+| `/simulations/` | redirects to `/dashboard/simulations/` | n/a | 301 | bridge route now explicit | keep redirect |
+| `/transparence/` | redirects to `/dashboard/transparence/infrastructure/` | n/a | 301 | bridge route now explicit | keep redirect |
 
 Root cause: `os_nav_v2.js` injects a nav, then hides legacy navs at runtime. This prevents some
 visual duplication, but HTML still contains two competing navigation systems.
@@ -289,4 +312,3 @@ public/dashboard/simulations/index.html
 ```
 
 Nginx patch is intentionally runbook-first and not applied in production during this diagnostic step.
-
